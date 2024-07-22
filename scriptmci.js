@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoMessages = {
         n: "CASILLA N°. Esta casilla se reserva para el número de Registro dado al MCI por la Aduana de partida.",
         1: "CASILLA 1. Se individualizará al transportista que emite, suscribe y presenta el MCI a la Aduana de partida, indicando la denominación o razón social de la empresa, la dirección de su oficina matriz con indicación de la ciudad y país respectivos. A esta información deberá agregarse el logotipo y/o nombre comercial de la empresa y la misma puede ser impresa junto con el formato.",
-        2: "CASILLA 2. Se indicará el número del Certificado de Idoneidad del transportista autorizado. Esta información puede ser impresa junto con el formato.",
+        2: "CASILLA 2. Se indicará el número del Permiso Originario. Esta información puede ser impresa junto con el formato.",
         3: "CASILLA 3. Se indicará(n) el(los) número(s) de (los) Permiso(s) de Prestación de Servicios del transportista autorizado correspondiente a los países por los cuales efectuará la operación de transporte internacional de mercancías por carretera. Puede imprimirse junto con el formato los números de todos los Permisos de Prestación de Servicios que posea el transportista autorizado.",
         4: "CASILLA 4. Se indicará la marca del vehículo habilitado.",
         5: "CASILLA 5. Se indicará el año de fabricación del vehículo habilitado.",
