@@ -23,10 +23,24 @@ function calculateCubicaje() {
     const containerVolume = containerHeight * containerWidth * containerDepth;
     const productVolume = productHeight * productWidth * productDepth;
 
-    // Verificar si el producto cabe en el contenedor
-    if (productVolume > containerVolume || productWeight > containerMaxWeight) {
-        resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor o excede la capacidad de peso.</div>";
-    } else {
-        resultDiv.innerHTML = "<div id='success'>El producto cabe en el contenedor.</div>";
+    // Verificar si el producto cabe en el volumen del contenedor
+    if (productVolume > containerVolume) {
+        resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por volumen.</div>";
+        return;
     }
+
+    // Verificar si las dimensiones individuales son válidas
+    if (productHeight > containerHeight || productWidth > containerWidth || productDepth > containerDepth) {
+        resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por dimensiones.</div>";
+        return;
+    }
+
+    // Verificar si el peso es válido
+    if (productWeight > containerMaxWeight) {
+        resultDiv.innerHTML = "<div id='error'>El producto excede el peso máximo permitido.</div>";
+        return;
+    }
+
+    resultDiv.innerHTML = "<div id='success'>El producto cabe en el contenedor.</div>";
 }
+
