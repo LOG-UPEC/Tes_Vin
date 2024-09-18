@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #005073;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+h1 {
+    margin: 0;
+}
+
+.intro-section, .team-section, .beneficiaries-section, .objectives-section, .links-section, .conclusion-section {
+    background-color: white;
+    margin: 1.5rem auto;
+    padding: 20px;
+    max-width: 900px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 1rem;
+}
+
+.team, .beneficiaries {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.team-member, .beneficiary {
+    text-align: center;
+}
+
+.team-member img, .beneficiary img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+.links {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.button {
+    background-color: #005073;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #004261;
+}
+
+p {
+    text-align: justify;
+    line-height: 1.6;
+}
