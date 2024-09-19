@@ -41,7 +41,7 @@ h2 {
 .team-member img, .beneficiary img {
     width: 400px;
     height: auto;
-    border-radius: 50%;
+    border-radius: 8%;
     margin-bottom: 10px;
 }
 
