@@ -40,10 +40,12 @@ h2 {
 
 .team-member img, .beneficiary img {
     width: 400px;
-    height: auto;
+    height: 400px; /* Forzar la imagen a un cuadrado */
+    object-fit: cover; /* Mantiene el contenido centrado y recorta si es necesario */
     border-radius: 15px;
     margin-bottom: 5px;
 }
+
 
 ul {
     list-style: none;
