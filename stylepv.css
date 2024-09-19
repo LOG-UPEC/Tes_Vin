@@ -39,8 +39,8 @@ h2 {
 }
 
 .team-member img, .beneficiary img {
-    width: 150px;
-    height: 150px;
+    width: 400px;
+    height: auto;
     border-radius: 50%;
     margin-bottom: 10px;
 }
