@@ -40,11 +40,25 @@ h2 {
 
 .team-member img, .beneficiary img {
     width: 400px;
-    height: 400px; /* Forzar la imagen a un cuadrado */
-    object-fit: cover; /* Mantiene el contenido centrado y recorta si es necesario */
+    height: auto;
     border-radius: 15px;
-    margin-bottom: 5px;
+    margin-bottom: 0; /* Elimina el espacio debajo de la imagen */
 }
+
+.team-member p {
+    margin-top: 5px; /* Reduce el espacio entre la imagen y el texto */
+    font-size: 1rem; /* Ajusta el tamaño del texto si es necesario */
+}
+
+.team-member {
+    margin: 0; /* Elimina márgenes extra */
+    padding: 0; /* Elimina paddings extra */
+}
+
+.team-section h2 {
+    margin-bottom: 10px; /* Reduce el espacio debajo del título */
+}
+
 
 
 ul {
