@@ -18,15 +18,15 @@ body {
 h1 {
     text-align: center;
     font-size: 2em;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Reducido de 20px a 10px */
     color: #343a40;
 }
 
 /* Encabezados secundarios */
 h2 {
     font-size: 1.8em;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin-top: 10px; /* Reducido de 20px a 10px */
+    margin-bottom: 5px; /* Reducido de 10px a 5px */
     text-align: center;
     color: #495057;
 }
@@ -41,7 +41,7 @@ h2 {
 /* Estilos para la sección de los encargados del proyecto */
 .team-member, .beneficiary {
     text-align: center;
-    margin-bottom: 30px; /* Espacio entre cada bloque */
+    margin-bottom: 10px; /* Reducido de 30px a 10px */
 }
 
 /* Imágenes de los encargados y beneficiarios */
@@ -50,12 +50,12 @@ h2 {
     height: 300px; /* Altura fija para mantener la proporción cuadrada */
     object-fit: cover; /* Recorta la imagen si no es cuadrada */
     border-radius: 50%; /* Hace que la imagen sea circular */
-    margin-bottom: 10px; /* Reduce el espacio debajo de la imagen */
+    margin-bottom: 5px; /* Reducido de 10px a 5px */
 }
 
 /* Estilos para el nombre o descripción de las imágenes */
 .team-member p, .beneficiary p {
-    margin-top: 5px; /* Reduce el espacio entre la imagen y el texto */
+    margin-top: 5px; /* Mantiene el margen pequeño entre la imagen y el texto */
     font-size: 1.2em;
     color: #6c757d;
 }
@@ -63,7 +63,7 @@ h2 {
 /* Botones con enlaces a documentos */
 button {
     display: inline-block;
-    margin: 10px;
+    margin: 5px; /* Reducido el margen de 10px a 5px */
     padding: 10px 20px;
     font-size: 1em;
     color: #fff;
@@ -81,11 +81,11 @@ button:hover {
 
 /* Estilos para las secciones */
 section {
-    padding: 20px 0;
+    padding: 10px 0; /* Reducido el relleno vertical de 20px a 10px */
 }
 
 section p {
-    margin-top: 10px; /* Espacio entre párrafos */
+    margin-top: 5px; /* Reducido el espacio entre párrafos */
     text-align: justify;
 }
 
@@ -100,7 +100,7 @@ section p {
 
 /* Footer o conclusión del proyecto */
 footer {
-    margin-top: 40px;
+    margin-top: 20px; /* Reducido de 40px a 20px */
     text-align: center;
     font-size: 1.2em;
     color: #495057;
