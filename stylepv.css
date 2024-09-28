@@ -1,3 +1,4 @@
+/* General */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f4f8;
@@ -5,6 +6,7 @@ body {
     padding: 0;
 }
 
+/* Header */
 header {
     background-color: #005073;
     color: white;
@@ -16,6 +18,7 @@ h1 {
     margin: 0;
 }
 
+/* Sections */
 .intro-section, .team-section, .beneficiaries-section, .objectives-section, .links-section, .conclusion-section {
     background-color: white;
     margin: 1.5rem auto;
@@ -24,6 +27,7 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Encargados del proyecto y beneficiarios */
 h2 {
     margin-bottom: 1rem;
 }
@@ -32,19 +36,33 @@ h2 {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 0 auto;
 }
 
 .team-member, .beneficiary {
     text-align: center;
+    margin: 0; /* Se reduce margen extra */
 }
 
+/* Imágenes */
 .team-member img, .beneficiary img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 10px;
+    width: 300px; /* Ancho ajustado */
+    height: auto; /* Mantener proporciones */
+    border-radius: 15px; /* Esquinas redondeadas */
+    margin-bottom: 5px; /* Espacio reducido entre imagen y texto */
+    object-fit: cover; /* Asegura que la imagen no se deforme */
 }
 
+/* Texto bajo la imagen */
+.team-member p, .beneficiary p {
+    margin-top: 5px; /* Reducido el espacio entre imagen y texto */
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Listado de objetivos */
 ul {
     list-style: none;
     padding: 0;
@@ -52,8 +70,10 @@ ul {
 
 ul li {
     margin-bottom: 10px;
+    font-size: 1.1rem;
 }
 
+/* Botones */
 .links {
     display: flex;
     justify-content: space-around;
@@ -74,6 +94,7 @@ ul li {
     background-color: #004261;
 }
 
+/* Texto general */
 p {
     text-align: justify;
     line-height: 1.6;
