@@ -1,96 +1,107 @@
+/* Reset básico para eliminar márgenes y rellenos por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales para la página */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f4f8;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #005073;
-    color: white;
-    text-align: center;
-    padding: 1.5rem 0;
-}
-
-h1 {
-    margin: 0;
-}
-
-.intro-section, .team-section, .beneficiaries-section, .objectives-section, .links-section, .conclusion-section {
-    background-color: white;
-    margin: 1.5rem auto;
+    line-height: 1.6;
+    background-color: #f8f9fa; /* Fondo claro */
+    color: #333;
     padding: 20px;
-    max-width: 900px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Título principal */
+h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+/* Encabezados secundarios */
 h2 {
-    margin-bottom: 1rem;
+    font-size: 1.8em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #495057;
 }
 
-.team, .beneficiaries {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
 }
 
+/* Estilos para la sección de los encargados del proyecto */
 .team-member, .beneficiary {
     text-align: center;
+    margin-bottom: 30px; /* Espacio entre cada bloque */
 }
 
+/* Imágenes de los encargados y beneficiarios */
 .team-member img, .beneficiary img {
-    width: 400px;
-    height: auto;
-    border-radius: 15px;
-    margin-bottom: 0; /* Elimina el espacio debajo de la imagen */
+    width: 300px; /* Ancho fijo de la imagen */
+    height: 300px; /* Altura fija para mantener la proporción cuadrada */
+    object-fit: cover; /* Recorta la imagen si no es cuadrada */
+    border-radius: 50%; /* Hace que la imagen sea circular */
+    margin-bottom: 10px; /* Reduce el espacio debajo de la imagen */
 }
 
-.team-member p {
+/* Estilos para el nombre o descripción de las imágenes */
+.team-member p, .beneficiary p {
     margin-top: 5px; /* Reduce el espacio entre la imagen y el texto */
-    font-size: 1rem; /* Ajusta el tamaño del texto si es necesario */
+    font-size: 1.2em;
+    color: #6c757d;
 }
 
-.team-member {
-    margin: 0; /* Elimina márgenes extra */
-    padding: 0; /* Elimina paddings extra */
-}
-
-.team-section h2 {
-    margin-bottom: 10px; /* Reduce el espacio debajo del título */
-}
-
-
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    margin-bottom: 10px;
-}
-
-.links {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
-.button {
-    background-color: #005073;
-    color: white;
+/* Botones con enlaces a documentos */
+button {
+    display: inline-block;
+    margin: 10px;
     padding: 10px 20px;
-    text-decoration: none;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
     border-radius: 5px;
-    font-size: 1rem;
+    cursor: pointer;
     text-align: center;
+    text-decoration: none;
 }
 
-.button:hover {
-    background-color: #004261;
+button:hover {
+    background-color: #0056b3; /* Cambio de color al pasar el mouse */
 }
 
-p {
+/* Estilos para las secciones */
+section {
+    padding: 20px 0;
+}
+
+section p {
+    margin-top: 10px; /* Espacio entre párrafos */
     text-align: justify;
-    line-height: 1.6;
+}
+
+/* Estilos para las imágenes de la asociación y la empresa */
+.beneficiary img {
+    width: 250px; /* Tamaño diferente si es necesario */
+    height: 250px;
+    object-fit: cover; /* Recorte en caso de que la imagen no sea cuadrada */
+    border-radius: 15px; /* Bordes redondeados */
+    margin-bottom: 5px;
+}
+
+/* Footer o conclusión del proyecto */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 1.2em;
+    color: #495057;
 }
