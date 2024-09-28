@@ -38,35 +38,40 @@ h2 {
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px; /* Reducción de espacio entre los contenedores */
-    margin: 0 auto;
-    padding: 0; /* Eliminar márgenes adicionales */
+    gap: 10px; /* Reduce the space between containers */
+    margin: 0;
+    padding: 0; /* Eliminate extra margin */
 }
 
 .team-member, .beneficiary {
     text-align: center;
     margin: 0;
-    padding: 0; /* Eliminar espacios adicionales */
+    padding: 0; /* Eliminate additional spaces */
+    display: flex; /* Ensure that elements stack properly */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Imágenes */
+/* Images */
 .team-member img, .beneficiary img {
-    width: 250px; /* Ajustado para que sean más pequeñas */
+    width: 250px; /* Adjusted for smaller width */
     height: auto;
     border-radius: 15px;
-    margin-bottom: 0; /* Eliminar espacio entre imagen y texto */
+    margin: 0; /* Completely eliminate space between the image and the text */
     object-fit: cover;
 }
 
-/* Texto debajo de las imágenes */
+/* Text under images */
 .team-member p, .beneficiary p {
-    margin-top: 0.3rem; /* Reducir aún más el margen */
+    margin-top: 0.2rem; /* Further reduced the margin */
     font-size: 1.1rem;
     color: #333;
-    line-height: 1.2; /* Reducir el espacio entre líneas */
+    line-height: 1.2; /* Reduce line spacing */
+    padding: 0; /* No extra padding */
 }
 
-/* Listado de objetivos */
+/* Objectives list */
 ul {
     list-style: none;
     padding: 0;
@@ -77,7 +82,7 @@ ul li {
     font-size: 1.1rem;
 }
 
-/* Botones */
+/* Buttons */
 .links {
     display: flex;
     justify-content: space-around;
@@ -98,7 +103,7 @@ ul li {
     background-color: #004261;
 }
 
-/* Texto general */
+/* General text */
 p {
     text-align: justify;
     line-height: 1.6;
