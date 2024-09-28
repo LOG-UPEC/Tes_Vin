@@ -35,46 +35,55 @@ h2 {
 
 .team, .beneficiaries {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px; /* Reduce the space between containers */
-    margin: 0;
-    padding: 0; /* Eliminate extra margin */
+    gap: 10px; /* Reduce el espacio entre los contenedores */
+    margin: 0 auto;
+    padding: 0;
 }
 
 .team-member, .beneficiary {
     text-align: center;
     margin: 0;
-    padding: 0; /* Eliminate additional spaces */
-    display: flex; /* Ensure that elements stack properly */
+    padding: 0; /* Eliminar espacios adicionales */
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-/* Images */
+/* Eliminar margen adicional en contenedores */
+.team-member, .beneficiary {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Imágenes */
 .team-member img, .beneficiary img {
-    width: 250px; /* Adjusted for smaller width */
+    width: 250px;
     height: auto;
     border-radius: 15px;
-    margin: 0; /* Completely eliminate space between the image and the text */
+    margin: 0; /* Eliminar cualquier margen residual */
+    padding: 0; /* Sin padding para imágenes */
     object-fit: cover;
+    display: block; /* Asegurar que la imagen se ajuste correctamente */
 }
 
-/* Text under images */
+/* Texto debajo de las imágenes */
 .team-member p, .beneficiary p {
-    margin-top: 0.2rem; /* Further reduced the margin */
-    font-size: 1.1rem;
+    margin: 0.1rem 0 0 0; /* Reducir al máximo el espacio entre imagen y texto */
+    padding: 0; /* Sin padding */
+    font-size: 1rem; /* Tamaño de texto ajustado */
     color: #333;
-    line-height: 1.2; /* Reduce line spacing */
-    padding: 0; /* No extra padding */
+    line-height: 1.2; /* Reducir el espaciado entre líneas */
 }
 
-/* Objectives list */
+/* Objetivos */
 ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 ul li {
@@ -82,7 +91,7 @@ ul li {
     font-size: 1.1rem;
 }
 
-/* Buttons */
+/* Botones */
 .links {
     display: flex;
     justify-content: space-around;
@@ -108,4 +117,3 @@ p {
     text-align: justify;
     line-height: 1.6;
 }
-
