@@ -21,7 +21,7 @@ h1 {
 /* Sections */
 .intro-section, .team-section, .beneficiaries-section, .objectives-section, .links-section, .conclusion-section {
     background-color: white;
-    margin: 1.5rem auto;
+    margin: 1rem auto;
     padding: 20px;
     max-width: 900px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -30,6 +30,7 @@ h1 {
 /* Encargados del proyecto y beneficiarios */
 h2 {
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .team, .beneficiaries {
@@ -37,29 +38,32 @@ h2 {
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px; /* Reducción de espacio entre los contenedores */
     margin: 0 auto;
+    padding: 0; /* Eliminar márgenes adicionales */
 }
 
 .team-member, .beneficiary {
     text-align: center;
-    margin: 0; /* Se reduce margen extra */
+    margin: 0;
+    padding: 0; /* Eliminar espacios adicionales */
 }
 
 /* Imágenes */
 .team-member img, .beneficiary img {
-    width: 300px; /* Ancho ajustado */
-    height: auto; /* Mantener proporciones */
-    border-radius: 15px; /* Esquinas redondeadas */
-    margin-bottom: 5px; /* Espacio reducido entre imagen y texto */
-    object-fit: cover; /* Asegura que la imagen no se deforme */
+    width: 250px; /* Ajustado para que sean más pequeñas */
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 0; /* Eliminar espacio entre imagen y texto */
+    object-fit: cover;
 }
 
-/* Texto bajo la imagen */
+/* Texto debajo de las imágenes */
 .team-member p, .beneficiary p {
-    margin-top: 5px; /* Reducido el espacio entre imagen y texto */
+    margin-top: 0.3rem; /* Reducir aún más el margen */
     font-size: 1.1rem;
     color: #333;
+    line-height: 1.2; /* Reducir el espacio entre líneas */
 }
 
 /* Listado de objetivos */
@@ -99,3 +103,4 @@ p {
     text-align: justify;
     line-height: 1.6;
 }
+
