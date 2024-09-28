@@ -1,49 +1,87 @@
-/* Encabezado del proyecto */
-h2 {
-    font-size: 2.5rem;
+/* Estilos generales */
+body {
     margin: 0;
     padding: 0;
+}
+
+/* Encabezado principal del proyecto */
+h2 {
+    font-size: 2.5rem;
+    margin: 0; /* Sin margen para eliminar espacio */
+    padding: 0; /* Sin relleno */
     text-align: center;
 }
 
-/* Estilos para la sección de equipo */
-.team-member img, .beneficiary img {
-    width: 300px; /* Ajuste del tamaño de la imagen */
-    height: auto;
-    border-radius: 50%; /* Redondeado completo */
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+/* Contenedor general del proyecto */
+#encargados {
+    margin: 0; /* Sin margen superior ni inferior */
+    padding: 0; /* Sin relleno adicional */
 }
 
-/* Contenedor del equipo */
+/* Imagen del encargado */
+.team-member img, .beneficiary img {
+    width: 250px; /* Ajuste del tamaño de la imagen */
+    height: 250px; /* Asegura que sea un cuadrado */
+    border-radius: 50%; /* Imagen circular */
+    display: block;
+    margin: 0 auto; /* Centrar la imagen */
+}
+
+/* Contenedor de la imagen y el nombre */
 .team-member {
     text-align: center;
-    margin-bottom: 10px; /* Reducido para evitar mucho espacio en blanco */
-    padding-bottom: 0;
+    margin-bottom: 0; /* Eliminar espacio innecesario debajo de cada miembro */
+    padding: 0; /* Sin relleno adicional */
 }
 
-.beneficiary {
-    text-align: center;
-    margin-bottom: 10px; /* Reducido para ajustar el espacio */
+/* Texto del nombre debajo de la imagen */
+.team-member p {
+    margin-top: 10px; /* Espacio mínimo entre imagen y texto */
+    font-size: 1.2rem;
+    padding: 0;
 }
 
-/* Espaciado entre el título y la imagen */
+/* Espaciado del título "Encargados del Proyecto" */
 #encargados-title {
-    margin-top: 0;
-    margin-bottom: 20px; /* Reducido para menor espacio entre el título y la imagen */
+    margin: 10px 0; /* Reducir márgenes alrededor del título */
     font-size: 2rem;
 }
 
-/* Encargados del proyecto */
+/* Espacio superior entre el título y la primera imagen */
+.encargado1 {
+    margin-top: 0px; /* Eliminar espacio superior */
+}
+
+/* Sección completa de "Encargados del Proyecto" */
+.section {
+    padding: 0; /* Eliminar cualquier relleno que cree espacio extra */
+    margin: 0;
+}
+
+/* Asegura que no haya espacio extra en los elementos principales */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Eliminar cualquier espacio o margen sobrante alrededor de la imagen */
+.team-member img {
+    object-fit: cover; /* Asegura que la imagen mantenga el aspecto al ajustar el tamaño */
+    max-width: 100%; /* Asegura que la imagen no sea más grande que su contenedor */
+}
+
+/* Contenedor principal para el proyecto */
+.container {
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la página */
+    padding: 0; /* Elimina cualquier relleno por defecto */
+    margin: 0; /* Elimina cualquier margen por defecto */
+}
+
+/* Evitar márgenes o rellenos en el contenedor de los encargados */
 #encargados {
-    margin: 0; /* Reducir espacio en la sección */
-    padding: 10px 0; /* Ajuste del padding para menos espacio superior e inferior */
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    flex-direction: column;
+    gap: 20px; /* Espacio entre los elementos */
 }
-
-/* Texto debajo de la imagen */
-.team-member p {
-    margin-top: 5px; /* Reducir el espacio entre la imagen y el texto */
-    font-size: 1rem;
-}
-
