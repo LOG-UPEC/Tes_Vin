@@ -34,29 +34,21 @@ h2 {
 }
 
 .team, .beneficiaries {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px; /* Reduce el espacio entre los contenedores */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 10px; /* Ajusta el espacio entre las tarjetas */
+    justify-content: center;
+    align-items: start;
     margin: 0 auto;
     padding: 0;
 }
 
+/* Cada miembro del equipo o beneficiario */
 .team-member, .beneficiary {
     text-align: center;
     margin: 0;
-    padding: 0; /* Eliminar espacios adicionales */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Eliminar margen adicional en contenedores */
-.team-member, .beneficiary {
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 0;
+    display: block;
 }
 
 /* Imágenes */
@@ -64,19 +56,19 @@ h2 {
     width: 250px;
     height: auto;
     border-radius: 15px;
-    margin: 0; /* Eliminar cualquier margen residual */
-    padding: 0; /* Sin padding para imágenes */
+    margin: 0 !important; /* Sin margen */
+    padding: 0 !important; /* Sin padding */
     object-fit: cover;
-    display: block; /* Asegurar que la imagen se ajuste correctamente */
+    display: inline-block; /* Mantener el flujo con el texto */
 }
 
 /* Texto debajo de las imágenes */
 .team-member p, .beneficiary p {
-    margin: 0.1rem 0 0 0; /* Reducir al máximo el espacio entre imagen y texto */
-    padding: 0; /* Sin padding */
-    font-size: 1rem; /* Tamaño de texto ajustado */
+    margin-top: 0.2rem !important; /* Espacio mínimo entre imagen y texto */
+    padding: 0 !important; /* Sin padding */
+    font-size: 1rem;
     color: #333;
-    line-height: 1.2; /* Reducir el espaciado entre líneas */
+    line-height: 1.2; /* Asegurar un espaciado más cerrado */
 }
 
 /* Objetivos */
@@ -117,3 +109,4 @@ p {
     text-align: justify;
     line-height: 1.6;
 }
+
