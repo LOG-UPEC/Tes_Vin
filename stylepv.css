@@ -51,8 +51,8 @@ h2 {
 }
 
 /* Imágenes */
-.team-member img, .beneficiary img {
-    width: 250px;
+.team-member img, .beneficiary img, evidencia img {
+    width: 150px;
     height: auto;
     border-radius: 15px;
     margin: 0 auto !important; /* Sin margen */
