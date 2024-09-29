@@ -19,7 +19,7 @@ h1 {
 }
 
 /* Sections */
-.intro-section, .team-section, .beneficiaries-section, .objectives-section, .links-section, .conclusion-section {
+.intro-section, .team-section, .beneficiaries-section, .objectives-section, .links-section, .conclusion-section, .evidencia-section {
     background-color: white;
     margin: 1rem auto;
     padding: 20px;
