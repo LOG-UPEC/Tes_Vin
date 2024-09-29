@@ -55,25 +55,25 @@ h2 {
     width: 150px;
     height: auto;
     border-radius: 15px;
-    margin: 0 auto !important; /* Sin margen */
-    padding: 0 !important; /* Sin padding */
+    margin: 0 auto; /* Centrado horizontal */
+    padding: 0 !important;
     object-fit: cover;
-    display: block; /* Alineación centrada */
+    display: block; /* Necesario para que el margen auto funcione */
 }
 
 /* Texto debajo de las imágenes */
 .team-member p, .beneficiary p {
-    margin-top: 0.1rem !important; /* Espacio mínimo entre imagen y texto */
-    padding: 0 !important; /* Sin padding */
+    margin-top: 0.1rem !important;
+    padding: 0 !important;
     font-size: 1rem;
     color: #333;
-    line-height: 1.1; /* Espaciado más cerrado */
+    line-height: 1.1;
     text-align: center;
 }
 
 /* Ajuste global de márgenes y padding */
 img {
-    margin-bottom: 0 !important; /* Eliminar márgenes inferiores */
+    margin-bottom: 0 !important;
     padding: 0 !important;
 }
 
