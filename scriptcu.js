@@ -49,6 +49,33 @@ function calculateCubicaje() {
         return;
     }
 
-    resultDiv.innerHTML = "<div id='success'>El producto cabe en el contenedor (considerando el margen de maniobra).</div>";
-}
+    // Cálculos adicionales
+    const productsPerRowWidth = Math.floor(adjustedContainerWidth / productWidth);
+    const productsPerRowDepth = Math.floor(adjustedContainerDepth / productDepth);
+    const productsPerHeight = Math.floor(adjustedContainerHeight / productHeight);
+    
+    const totalProducts = productsPerRowWidth * productsPerRowDepth * productsPerHeight;
 
+    const usedVolume = totalProducts * productVolume;
+    const usedWeight = totalProducts * productWeight;
+
+    const volumeUsage = (usedVolume / containerVolume) * 100;
+    const volumeUnused = 100 - volumeUsage;
+    const weightUsage = (usedWeight / containerMaxWeight) * 100;
+
+    const loadDensity = usedWeight / usedVolume;
+
+    // Mostrar resultados
+    resultDiv.innerHTML = `
+        <div id='success'>
+            <p>El producto cabe en el contenedor (considerando el margen de maniobra).</p>
+            <p><strong>Total productos por fila (ancho):</strong> ${productsPerRowWidth}</p>
+            <p><strong>Total productos por fila (largo):</strong> ${productsPerRowDepth}</p>
+            <p><strong>Total productos en altura:</strong> ${productsPerHeight}</p>
+            <p><strong>Porcentaje de espacio utilizado:</strong> ${volumeUsage.toFixed(2)}%</p>
+            <p><strong>Porcentaje de espacio sin uso:</strong> ${volumeUnused.toFixed(2)}%</p>
+            <p><strong>Porcentaje de peso utilizado:</strong> ${weightUsage.toFixed(2)}%</p>
+            <p><strong>Densidad de carga:</strong> ${loadDensity.toFixed(2)} kg/m³</p>
+        </div>
+    `;
+}
