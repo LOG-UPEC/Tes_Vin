@@ -43,19 +43,21 @@ function calculateCubicaje() {
         return;
     }
 
-    // Calcular el total máximo de productos que caben en el contenedor por dimensiones
+    // Cálculos de capacidad inicial sin considerar el peso
     const productsPerRowWidth = Math.floor(adjustedContainerWidth / productWidth);
     const productsPerRowDepth = Math.floor(adjustedContainerDepth / productDepth);
-    const productsPerHeight = Math.floor(adjustedContainerHeight / productHeight);
+    let productsPerHeight = Math.floor(adjustedContainerHeight / productHeight);
     
-    let maxProductsByDimensions = productsPerRowWidth * productsPerRowDepth * productsPerHeight;
+    let totalProducts = productsPerRowWidth * productsPerRowDepth * productsPerHeight;
+    let usedWeight = totalProducts * productWeight;
 
-    // Ajustar el número de productos al límite de peso
-    let maxProductsByWeight = Math.floor(containerMaxWeight / productWeight);
-    let totalProducts = Math.min(maxProductsByDimensions, maxProductsByWeight);
-    
-    // Calcular el peso y volumen utilizados
-    const usedWeight = totalProducts * productWeight;
+    // Ajustar la cantidad de productos para no superar el peso máximo
+    while (usedWeight > containerMaxWeight && productsPerHeight > 0) {
+        productsPerHeight--;  // Reducir en una fila de altura
+        totalProducts = productsPerRowWidth * productsPerRowDepth * productsPerHeight;
+        usedWeight = totalProducts * productWeight;
+    }
+
     const usedVolume = totalProducts * productVolume;
     const volumeUsage = (usedVolume / containerVolume) * 100;
     const volumeUnused = 100 - volumeUsage;
@@ -69,7 +71,6 @@ function calculateCubicaje() {
             <p><strong>Total productos por fila (ancho):</strong> ${productsPerRowWidth}</p>
             <p><strong>Total productos por fila (largo):</strong> ${productsPerRowDepth}</p>
             <p><strong>Total productos en altura:</strong> ${productsPerHeight}</p>
-            <p><strong>Total productos permitidos:</strong> ${totalProducts}</p>
             <p><strong>Porcentaje de espacio utilizado:</strong> ${volumeUsage.toFixed(2)}%</p>
             <p><strong>Porcentaje de espacio sin uso:</strong> ${volumeUnused.toFixed(2)}%</p>
             <p><strong>Porcentaje de peso utilizado:</strong> ${weightUsage.toFixed(2)}%</p>
