@@ -1,72 +1,54 @@
-/* Reiniciar márgenes y configurar el box-sizing */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
     background-color: #f9f9f9;
     color: #333;
     line-height: 1.6;
 }
 
-/* Encabezado principal */
-header {
-    width: 100%;
-    background-color: #4285f4;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2rem;
-}
-
-/* Ícono de regresar - siempre en la esquina superior izquierda */
-.regresar-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 55px;
-    height: auto;
-    cursor: pointer;
-}
-
-/* Secciones de contenido principal */
-.section {
-    background-color: #fff;
-    margin: 20px auto;
+/* Contenido principal */
+main {
     padding: 20px;
-    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Sección de contenido */
+.section {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
     border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.section h2 {
+/* Encabezados */
+h2 {
     font-size: 1.5rem;
     color: #4285f4;
     margin-bottom: 10px;
 }
 
-.section h3 {
+h3 {
     font-size: 1.2rem;
     color: #333;
     margin-top: 15px;
     margin-bottom: 10px;
 }
 
-.section p, .section ul {
+/* Párrafos y listas */
+p, ul {
     font-size: 1rem;
     color: #555;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 ul {
@@ -78,52 +60,71 @@ ul li {
     margin-bottom: 5px;
 }
 
-/* Botones para enlaces */
-.links a {
-    display: inline-block;
-    background-color: #4285f4;
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    margin: 5px;
-    transition: background-color 0.3s;
+/* Imagen de producto (ajustable para otro contenido visual) */
+.product-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
-.links a:hover {
-    background-color: #357ae8;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
+/* Contenedor de información adicional */
+#info {
+    border: 1px solid #ccc;
     padding: 15px;
-    font-size: 0.9rem;
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    max-width: 100%;
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: #333;
 }
 
-/* Responsive Design */
+/* Contenedor selector */
+.selector {
+    margin-bottom: 20px;
+}
+
+/* Icono de regresar */
+.regresar-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 55px;
+    height: auto;
+}
+
+/* Estilos Responsivos */
 @media (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+
     .section {
         padding: 15px;
     }
 
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    .section h2 {
+    h2 {
         font-size: 1.3rem;
     }
 
-    .section h3 {
+    h3 {
         font-size: 1.1rem;
     }
 
-    .links a {
+    #info {
         font-size: 0.9rem;
-        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-image {
+        max-width: 100%;
+        border-radius: 5px;
+    }
+
+    .regresar-icon {
+        width: 45px;
     }
 }
