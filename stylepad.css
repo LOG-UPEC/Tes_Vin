@@ -8,7 +8,7 @@
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #f9f9f9;
     color: #333;
     line-height: 1.6;
 }
@@ -18,14 +18,18 @@ header {
     width: 100%;
     background-color: #4285f4;
     color: white;
-    padding: 20px;
+    padding: 10px 0;
     text-align: center;
+    position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
+    margin: 0;
     font-size: 2rem;
 }
+
+/* Ícono de regresar - siempre en la esquina superior izquierda */
 .regresar-icon {
     position: absolute;
     left: 10px;
@@ -33,7 +37,9 @@ header h1 {
     transform: translateY(-50%);
     width: 55px;
     height: auto;
+    cursor: pointer;
 }
+
 /* Secciones de contenido principal */
 .section {
     background-color: #fff;
