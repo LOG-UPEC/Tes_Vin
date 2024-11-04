@@ -1,7 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #f0f4f8;
     margin: 0;
     padding: 0;
 }
@@ -13,9 +12,9 @@ header {
     padding: 1rem 0;
 }
 
-
 h1, h2 {
     margin: 0.5rem 0;
+}
 
 .form-section {
     background-color: #fff;
