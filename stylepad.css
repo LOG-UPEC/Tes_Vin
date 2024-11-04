@@ -1,13 +1,14 @@
-/* Configuración base */
+/* Reiniciar márgenes y configurar el box-sizing */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: #f0f0f0;
     color: #333;
     line-height: 1.6;
 }
@@ -16,90 +17,53 @@ body {
 header {
     background-color: #4285f4;
     color: white;
-    padding: 15px 0;
+    padding: 10px 0;
     text-align: center;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    font-size: 2rem;
     margin: 0;
 }
 
-/* Ícono de regresar */
 .regresar-icon {
     position: absolute;
+    left: 10px;
     top: 50%;
-    left: 15px;
     transform: translateY(-50%);
-    width: 45px;
+    width: 55px;
     height: auto;
-    cursor: pointer;
-    transition: transform 0.3s ease;
 }
 
-.regresar-icon:hover {
-    transform: translateY(-50%) scale(1.1);
-}
-
-/* Contenido principal */
-main {
+/* Secciones de contenido principal */
+.section {
+    background-color: #fff;
+    margin: 20px auto;
     padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.main-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-/* Imagen de producto u otros elementos visuales */
-.product-image {
-    max-width: 700px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Caja de selección o cualquier otro input adicional */
-.selector {
-    margin-bottom: 20px;
-}
-
-/* Caja de información principal */
-#info {
-    border: 1px solid #ccc;
-    padding: 15px;
-    background-color: #e6f2ff;
-    border-radius: 10px;
     max-width: 800px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para encabezados de secciones dentro del main */
-main h2 {
+.section h2 {
     font-size: 1.5rem;
     color: #4285f4;
     margin-bottom: 10px;
 }
 
-main h3 {
+.section h3 {
     font-size: 1.2rem;
     color: #333;
     margin-top: 15px;
     margin-bottom: 10px;
 }
 
-/* Listado */
+.section p, .section ul {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
 ul {
     padding-left: 20px;
 }
@@ -109,7 +73,7 @@ ul li {
     margin-bottom: 5px;
 }
 
-/* Botones */
+/* Botones para enlaces */
 .links a {
     display: inline-block;
     background-color: #4285f4;
@@ -133,29 +97,23 @@ footer {
     text-align: center;
     padding: 15px;
     font-size: 0.9rem;
-    margin-top: 20px;
 }
 
-/* Estilos responsivos */
+/* Responsive Design */
 @media (max-width: 768px) {
-    .main-content {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .product-image {
-        max-width: 90%;
+    .section {
+        padding: 15px;
     }
 
     header h1 {
         font-size: 1.5rem;
     }
-    
-    main h2 {
+
+    .section h2 {
         font-size: 1.3rem;
     }
 
-    main h3 {
+    .section h3 {
         font-size: 1.1rem;
     }
 
@@ -165,8 +123,3 @@ footer {
     }
 }
 
-@media (max-width: 480px) {
-    .product-image {
-        max-width: 100%;
-    }
-}
