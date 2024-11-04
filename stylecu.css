@@ -6,14 +6,24 @@ body {
 }
 
 header {
-    background-color: #005073;
-    color: #fff;
+    background-color: #4285f4;
+    color: white;
+    padding: 10px 0;
     text-align: center;
-    padding: 1rem 0;
+    position: relative;
 }
 
-h1, h2 {
-    margin: 0.5rem 0;
+header h1 {
+    margin: 0;
+}
+
+.regresar-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 55px;
+    height: auto;
 }
 
 .form-section {
