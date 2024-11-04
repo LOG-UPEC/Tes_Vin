@@ -1,56 +1,105 @@
-/* Estilos generales */
-body {
-    font-family: Arial, sans-serif;
+/* Configuración base */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     color: #333;
     line-height: 1.6;
+}
+
+/* Encabezado principal */
+header {
+    background-color: #4285f4;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* Ícono de regresar */
+.regresar-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    width: 45px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.regresar-icon:hover {
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* Contenido principal */
 main {
     padding: 20px;
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
     flex-direction: column;
-    align-items: center;
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Sección de contenido */
-.section {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
+.main-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Imagen de producto u otros elementos visuales */
+.product-image {
+    max-width: 700px;
+    height: auto;
     border-radius: 10px;
-    padding: 20px;
-    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Caja de selección o cualquier otro input adicional */
+.selector {
+    margin-bottom: 20px;
+}
+
+/* Caja de información principal */
+#info {
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #e6f2ff;
+    border-radius: 10px;
     max-width: 800px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Encabezados */
-h2 {
+/* Estilos para encabezados de secciones dentro del main */
+main h2 {
     font-size: 1.5rem;
     color: #4285f4;
     margin-bottom: 10px;
 }
 
-h3 {
+main h3 {
     font-size: 1.2rem;
     color: #333;
     margin-top: 15px;
     margin-bottom: 10px;
 }
 
-/* Párrafos y listas */
-p, ul {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 15px;
-}
-
+/* Listado */
 ul {
     padding-left: 20px;
 }
@@ -60,71 +109,64 @@ ul li {
     margin-bottom: 5px;
 }
 
-/* Imagen de producto (ajustable para otro contenido visual) */
-.product-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 20px;
+/* Botones */
+.links a {
+    display: inline-block;
+    background-color: #4285f4;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin: 5px;
+    transition: background-color 0.3s;
 }
 
-/* Contenedor de información adicional */
-#info {
-    border: 1px solid #ccc;
+.links a:hover {
+    background-color: #357ae8;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
     padding: 15px;
-    background-color: #e3f2fd;
-    border-radius: 10px;
-    max-width: 100%;
+    font-size: 0.9rem;
     margin-top: 20px;
-    font-size: 0.95rem;
-    color: #333;
 }
 
-/* Contenedor selector */
-.selector {
-    margin-bottom: 20px;
-}
-
-/* Icono de regresar */
-.regresar-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 55px;
-    height: auto;
-}
-
-/* Estilos Responsivos */
+/* Estilos responsivos */
 @media (max-width: 768px) {
-    main {
-        padding: 15px;
+    .main-content {
+        flex-direction: column;
+        align-items: center;
     }
 
-    .section {
-        padding: 15px;
+    .product-image {
+        max-width: 90%;
     }
 
-    h2 {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    main h2 {
         font-size: 1.3rem;
     }
 
-    h3 {
+    main h3 {
         font-size: 1.1rem;
     }
 
-    #info {
+    .links a {
         font-size: 0.9rem;
+        padding: 8px 12px;
     }
 }
 
 @media (max-width: 480px) {
     .product-image {
         max-width: 100%;
-        border-radius: 5px;
-    }
-
-    .regresar-icon {
-        width: 45px;
     }
 }
