@@ -43,18 +43,16 @@ function calculateCubicaje() {
         return;
     }
 
-    // Cálculos para productos por fila
+    // Calcular el total máximo de productos que caben en el contenedor por dimensiones
     const productsPerRowWidth = Math.floor(adjustedContainerWidth / productWidth);
     const productsPerRowDepth = Math.floor(adjustedContainerDepth / productDepth);
     const productsPerHeight = Math.floor(adjustedContainerHeight / productHeight);
     
-    // Calcular el total máximo de productos que caben según el volumen y dimensiones
-    let totalProducts = productsPerRowWidth * productsPerRowDepth * productsPerHeight;
+    let maxProductsByDimensions = productsPerRowWidth * productsPerRowDepth * productsPerHeight;
 
-    // Ajustar el número de productos para no exceder la capacidad de peso del contenedor
-    while (totalProducts * productWeight > containerMaxWeight) {
-        totalProducts--;
-    }
+    // Ajustar el número de productos al límite de peso
+    let maxProductsByWeight = Math.floor(containerMaxWeight / productWeight);
+    let totalProducts = Math.min(maxProductsByDimensions, maxProductsByWeight);
     
     // Calcular el peso y volumen utilizados
     const usedWeight = totalProducts * productWeight;
