@@ -102,6 +102,11 @@ main {
         font-size: 1.2rem;
     }
 
+    .guide-container p strong {
+    color: #4285f4;
+    font-weight: bold;
+    }
+    
     .guide-container p {
         font-size: 0.9rem;
     }
