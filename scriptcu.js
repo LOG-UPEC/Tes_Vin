@@ -15,6 +15,69 @@ function applyPreset() {
         document.getElementById("containerMaxWeight").value = maxWeight;
         document.getElementById("safeHeight").value = safeHeight;
     }
+    if (window.scene) initThreeJS(); // Reconstruir escena si cambia preset
+}
+
+let scene, camera, renderer, container, products = [];
+
+function initThreeJS() {
+    // Limpiar escena anterior
+    if (scene) {
+        while (scene.children.length > 0) scene.remove(scene.children[0]);
+        products = [];
+    }
+
+    // Configurar escena
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(400, 400);
+    document.getElementById('threejs-container').innerHTML = '';
+    document.getElementById('threejs-container').appendChild(renderer.domElement);
+
+    // Contenedor
+    const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100; // Convertir a metros
+    const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100;
+    const containerDepth = parseFloat(document.getElementById("containerDepth").value) / 100;
+    const containerGeometry = new THREE.BoxGeometry(containerWidth, containerHeight, containerDepth);
+    const containerEdges = new THREE.EdgesGeometry(containerGeometry);
+    const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
+    const containerWireframe = new THREE.LineSegments(containerEdges, containerMaterial);
+    containerWireframe.position.set(containerWidth / 2, containerHeight / 2, containerDepth / 2);
+    scene.add(containerWireframe);
+
+    camera.position.set(containerWidth, containerHeight, containerDepth);
+    camera.lookAt(containerWidth / 2, containerHeight / 2, containerDepth / 2);
+
+    animate();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+function addProducts(result) {
+    const productWidth = parseFloat(document.getElementById("productWidth").value) / 100;
+    const productHeight = parseFloat(document.getElementById("productHeight").value) / 100;
+    const productDepth = parseFloat(document.getElementById("productDepth").value) / 100;
+
+    const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+    for (let x = 0; x < result.productsPerWidth; x++) {
+        for (let z = 0; z < result.productsPerDepth; z++) {
+            for (let y = 0; y < result.productsPerHeight; y++) {
+                const product = new THREE.Mesh(geometry, material);
+                product.position.set(
+                    x * productWidth + productWidth / 2,
+                    y * productHeight + productHeight / 2,
+                    z * productDepth + productDepth / 2
+                );
+                products.push(product);
+                scene.add(product);
+            }
+        }
+    }
 }
 
 function calculateCubicaje() {
@@ -170,8 +233,9 @@ function calculateCubicaje() {
             </div>
         `;
         document.getElementById("exportPdf").style.display = "block";
-        window.bestResult = bestResult; // Guardar resultado para exportación
+        window.bestResult = bestResult;
         window.shapeText = shapeText;
+        addProducts(bestResult); // Añadir productos a la escena 3D
     }
 }
 
@@ -207,3 +271,5 @@ function exportToPdf() {
 document.getElementById("fragile").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
 });
+
+initThreeJS(); // Inicializar escena al cargar
