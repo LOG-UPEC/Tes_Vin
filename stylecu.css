@@ -52,13 +52,21 @@ label {
     color: #555;
 }
 
-input[type="number"] {
+input[type="number"], select {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
+}
+
+.checklist div {
+    margin: 5px 0;
+}
+
+.checklist input[type="radio"], .checklist input[type="checkbox"] {
+    margin-right: 5px;
 }
 
 button {
