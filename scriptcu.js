@@ -43,15 +43,15 @@ function initThreeJS() {
     document.getElementById('threejs-container').appendChild(renderer.domElement);
 
     // Configurar controles de órbita
-    try {
+    if (typeof THREE.OrbitControls === 'undefined') {
+        console.error("OrbitControls no está definido. Verifica que la librería se cargó.");
+    } else {
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.screenSpacePanning = false;
         controls.minDistance = 0.5;
         controls.maxDistance = 10;
-    } catch (e) {
-        console.error("Error al inicializar OrbitControls:", e);
     }
 
     const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100 || 1;
@@ -301,4 +301,11 @@ document.getElementById("fragile").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
 });
 
-initThreeJS();
+// Esperar a que Three.js se cargue antes de inicializar
+window.addEventListener('load', function() {
+    if (window.THREE) {
+        initThreeJS();
+    } else {
+        console.error("Three.js no se cargó correctamente al iniciar.");
+    }
+});
