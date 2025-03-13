@@ -15,6 +15,15 @@
     <section class="form-section">
         <h2>Ingrese las medidas del contenedor</h2>
         <div class="form-group">
+            <label for="containerPreset">Preset de Contenedor:</label>
+            <select id="containerPreset" onchange="applyPreset()">
+                <option value="custom" selected>Personalizado</option>
+                <option value="20ft">Contenedor 20 pies</option>
+                <option value="40ft">Contenedor 40 pies</option>
+                <option value="euroPallet">Pallet Europeo</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="containerHeight">Alto (cm):</label>
             <input type="number" id="containerHeight" placeholder="Ej. 239" step="0.1">
         </div>
@@ -57,11 +66,56 @@
             <input type="number" id="productWeight" placeholder="Ej. 0.5" step="0.01">
         </div>
 
+        <h2>Restricciones del Producto</h2>
+        <div class="form-group checklist">
+            <label>Orientación Permitida:</label>
+            <div>
+                <input type="radio" id="noRestrictions" name="orientation" value="none" checked>
+                <label for="noRestrictions">Sin restricciones</label>
+            </div>
+            <div>
+                <input type="radio" id="horizontalOnly" name="orientation" value="horizontal">
+                <label for="horizontalOnly">Solo horizontal (sin giro vertical)</label>
+            </div>
+            <div>
+                <input type="radio" id="verticalOnly" name="orientation" value="vertical">
+                <label for="verticalOnly">Solo vertical</label>
+            </div>
+            <div>
+                <input type="radio" id="fixedPosition" name="orientation" value="fixed">
+                <label for="fixedPosition">Posición fija (como ingresada)</label>
+            </div>
+        </div>
+
+        <div class="form-group checklist">
+            <label>Propiedades Adicionales:</label>
+            <div>
+                <input type="checkbox" id="fragile" name="fragile">
+                <label for="fragile">Frágil</label>
+                <input type="number" id="maxStack" placeholder="Máx. filas (ej. 5)" step="1" min="1" style="width: 150px; margin-left: 10px;" disabled>
+            </div>
+            <div>
+                <input type="checkbox" id="nonStackable" name="nonStackable">
+                <label for="nonStackable">No apilable (solo 1 fila)</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="shape">Forma del Producto:</label>
+            <select id="shape">
+                <option value="prism" selected>Prisma Rectangular</option>
+                <option value="cylinder">Cilindro</option>
+                <option value="sphere">Esfera</option>
+            </select>
+        </div>
+
         <button onclick="calculateCubicaje()">Calcular Cubicaje</button>
         
         <div id="result"></div>
+        <button id="exportPdf" style="display: none;" onclick="exportToPdf()">Exportar a PDF</button>
     </section>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="scriptcu.js"></script>
 </body>
 </html>
