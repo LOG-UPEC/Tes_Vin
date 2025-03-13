@@ -18,9 +18,15 @@ function applyPreset() {
     if (window.scene) initThreeJS(); // Reconstruir escena si cambia preset
 }
 
-let scene, camera, renderer, container, products = [];
+let scene, camera, renderer, products = [];
 
 function initThreeJS() {
+    console.log("Inicializando Three.js...");
+    if (!window.THREE) {
+        console.error("Three.js no está definido. Verifica que la librería se cargó.");
+        return;
+    }
+
     // Limpiar escena anterior
     if (scene) {
         while (scene.children.length > 0) scene.remove(scene.children[0]);
@@ -29,16 +35,19 @@ function initThreeJS() {
 
     // Configurar escena
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xcccccc); // Fondo gris claro
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Añadir luz
+    scene.add(ambientLight);
     camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(400, 400);
     document.getElementById('threejs-container').innerHTML = '';
     document.getElementById('threejs-container').appendChild(renderer.domElement);
 
     // Contenedor
-    const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100; // Convertir a metros
-    const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100;
-    const containerDepth = parseFloat(document.getElementById("containerDepth").value) / 100;
+    const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100 || 1;
+    const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100 || 1;
+    const containerDepth = parseFloat(document.getElementById("containerDepth").value) / 100 || 1;
     const containerGeometry = new THREE.BoxGeometry(containerWidth, containerHeight, containerDepth);
     const containerEdges = new THREE.EdgesGeometry(containerGeometry);
     const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
@@ -46,7 +55,9 @@ function initThreeJS() {
     containerWireframe.position.set(containerWidth / 2, containerHeight / 2, containerDepth / 2);
     scene.add(containerWireframe);
 
-    camera.position.set(containerWidth, containerHeight, containerDepth);
+    // Ajustar cámara
+    const maxDim = Math.max(containerWidth, containerHeight, containerDepth);
+    camera.position.set(maxDim * 3, maxDim * 3, maxDim * 3);
     camera.lookAt(containerWidth / 2, containerHeight / 2, containerDepth / 2);
 
     animate();
@@ -58,9 +69,10 @@ function animate() {
 }
 
 function addProducts(result) {
-    const productWidth = parseFloat(document.getElementById("productWidth").value) / 100;
-    const productHeight = parseFloat(document.getElementById("productHeight").value) / 100;
-    const productDepth = parseFloat(document.getElementById("productDepth").value) / 100;
+    console.log("Añadiendo productos:", result);
+    const productWidth = parseFloat(document.getElementById("productWidth").value) / 100 || 0.1;
+    const productHeight = parseFloat(document.getElementById("productHeight").value) / 100 || 0.1;
+    const productDepth = parseFloat(document.getElementById("productDepth").value) / 100 || 0.1;
 
     const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
@@ -235,7 +247,8 @@ function calculateCubicaje() {
         document.getElementById("exportPdf").style.display = "block";
         window.bestResult = bestResult;
         window.shapeText = shapeText;
-        addProducts(bestResult); // Añadir productos a la escena 3D
+        initThreeJS(); // Reconstruir escena
+        addProducts(bestResult); // Añadir productos
     }
 }
 
