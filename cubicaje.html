@@ -3,50 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cubicaje</title>
+    <title>Cubicaje Optimizado - OPTITRANS</title>
     <link rel="stylesheet" href="stylecu.css">
 </head>
 <body>
     <header>
         <a href="inicio.html"><img src="regresar.svg" alt="Regresar" class="regresar-icon"></a>
-        <h1>Calculadora de Cubicaje</h1>
+        <h1>Calculadora de Cubicaje Optimizado</h1>
     </header>
 
     <section class="form-section">
         <h2>Ingrese las medidas del contenedor</h2>
         <div class="form-group">
             <label for="containerHeight">Alto (cm):</label>
-            <input type="number" id="containerHeight" placeholder="Ingrese alto">
+            <input type="number" id="containerHeight" placeholder="Ej. 239" step="0.1">
         </div>
         <div class="form-group">
             <label for="containerWidth">Ancho (cm):</label>
-            <input type="number" id="containerWidth" placeholder="Ingrese ancho">
+            <input type="number" id="containerWidth" placeholder="Ej. 235" step="0.1">
         </div>
         <div class="form-group">
-            <label for="containerDepth">Profundidad (cm):</label>
-            <input type="number" id="containerDepth" placeholder="Ingrese profundidad">
+            <label for="containerDepth">Largo (cm):</label>
+            <input type="number" id="containerDepth" placeholder="Ej. 590" step="0.1">
         </div>
         <div class="form-group">
             <label for="containerMaxWeight">Capacidad Máxima (kg):</label>
-            <input type="number" id="containerMaxWeight" placeholder="Ingrese capacidad máxima">
+            <input type="number" id="containerMaxWeight" placeholder="Ej. 28000" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="safeHeight">Altura Segura Máxima (cm):</label>
+            <input type="number" id="safeHeight" placeholder="Ej. 450" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="margin">Margen de Maniobra (%):</label>
+            <input type="number" id="margin" placeholder="Ej. 5" step="0.1" min="0" max="20">
         </div>
 
         <h2>Ingrese las medidas del producto</h2>
         <div class="form-group">
             <label for="productHeight">Alto (cm):</label>
-            <input type="number" id="productHeight" placeholder="Ingrese alto del producto">
+            <input type="number" id="productHeight" placeholder="Ej. 10" step="0.1">
         </div>
         <div class="form-group">
             <label for="productWidth">Ancho (cm):</label>
-            <input type="number" id="productWidth" placeholder="Ingrese ancho del producto">
+            <input type="number" id="productWidth" placeholder="Ej. 20" step="0.1">
         </div>
         <div class="form-group">
-            <label for="productDepth">Profundidad (cm):</label>
-            <input type="number" id="productDepth" placeholder="Ingrese profundidad del producto">
+            <label for="productDepth">Largo (cm):</label>
+            <input type="number" id="productDepth" placeholder="Ej. 30" step="0.1">
         </div>
         <div class="form-group">
             <label for="productWeight">Peso (kg):</label>
-            <input type="number" id="productWeight" placeholder="Ingrese peso del producto">
+            <input type="number" id="productWeight" placeholder="Ej. 0.5" step="0.01">
         </div>
 
         <button onclick="calculateCubicaje()">Calcular Cubicaje</button>
