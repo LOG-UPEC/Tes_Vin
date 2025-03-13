@@ -18,7 +18,7 @@ function applyPreset() {
     if (window.scene) initThreeJS(); // Reconstruir escena si cambia preset
 }
 
-let scene, camera, renderer, products = [];
+let scene, camera, renderer, controls, products = [];
 
 function initThreeJS() {
     console.log("Inicializando Three.js...");
@@ -44,6 +44,14 @@ function initThreeJS() {
     document.getElementById('threejs-container').innerHTML = '';
     document.getElementById('threejs-container').appendChild(renderer.domElement);
 
+    // Configurar controles de órbita
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // Suavizar movimientos
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = false;
+    controls.minDistance = 0.5; // Zoom mínimo
+    controls.maxDistance = 10; // Zoom máximo
+
     // Contenedor
     const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100 || 1;
     const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100 || 1;
@@ -65,6 +73,7 @@ function initThreeJS() {
 
 function animate() {
     requestAnimationFrame(animate);
+    controls.update(); // Actualizar controles
     renderer.render(scene, camera);
 }
 
@@ -76,15 +85,25 @@ function addProducts(result) {
 
     const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+
     for (let x = 0; x < result.productsPerWidth; x++) {
         for (let z = 0; z < result.productsPerDepth; z++) {
             for (let y = 0; y < result.productsPerHeight; y++) {
+                // Crear el cubo
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
                     x * productWidth + productWidth / 2,
                     y * productHeight + productHeight / 2,
                     z * productDepth + productDepth / 2
                 );
+
+                // Añadir bordes al cubo
+                const edges = new THREE.EdgesGeometry(geometry);
+                const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+                const edgesLine = new THREE.LineSegments(edges, edgesMaterial);
+                edgesLine.position.copy(product.position);
+                scene.add(edgesLine);
+
                 products.push(product);
                 scene.add(product);
             }
