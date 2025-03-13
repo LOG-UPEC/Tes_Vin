@@ -1,79 +1,123 @@
+// Presets de contenedores
+const containerPresets = {
+    "20ft": { height: 239, width: 235, depth: 590, maxWeight: 28000, safeHeight: 239 },
+    "40ft": { height: 239, width: 235, depth: 1200, maxWeight: 30480, safeHeight: 239 },
+    "euroPallet": { height: 144, width: 80, depth: 120, maxWeight: 1500, safeHeight: 200 }
+};
+
+function applyPreset() {
+    const preset = document.getElementById("containerPreset").value;
+    if (preset !== "custom") {
+        const { height, width, depth, maxWeight, safeHeight } = containerPresets[preset];
+        document.getElementById("containerHeight").value = height;
+        document.getElementById("containerWidth").value = width;
+        document.getElementById("containerDepth").value = depth;
+        document.getElementById("containerMaxWeight").value = maxWeight;
+        document.getElementById("safeHeight").value = safeHeight;
+    }
+}
+
 function calculateCubicaje() {
-    // Obtener valores de los inputs
     const containerHeight = parseFloat(document.getElementById("containerHeight").value);
     const containerWidth = parseFloat(document.getElementById("containerWidth").value);
     const containerDepth = parseFloat(document.getElementById("containerDepth").value);
     const containerMaxWeight = parseFloat(document.getElementById("containerMaxWeight").value);
-    const safeHeight = parseFloat(document.getElementById("safeHeight").value) || containerHeight; // Por defecto, altura total
-    const margin = parseFloat(document.getElementById("margin").value) / 100 || 0.05; // Por defecto, 5%
+    const safeHeight = parseFloat(document.getElementById("safeHeight").value) || containerHeight;
+    const margin = parseFloat(document.getElementById("margin").value) / 100 || 0.05;
 
     const productHeight = parseFloat(document.getElementById("productHeight").value);
     const productWidth = parseFloat(document.getElementById("productWidth").value);
     const productDepth = parseFloat(document.getElementById("productDepth").value);
     const productWeight = parseFloat(document.getElementById("productWeight").value);
 
+    const orientation = document.querySelector('input[name="orientation"]:checked').value;
+    const isFragile = document.getElementById("fragile").checked;
+    const maxStack = isFragile ? parseInt(document.getElementById("maxStack").value) || Infinity : Infinity;
+    const isNonStackable = document.getElementById("nonStackable").checked;
+    const shape = document.getElementById("shape").value;
+
     const resultDiv = document.getElementById("result");
 
-    // Validar entradas
     if (isNaN(containerHeight) || isNaN(containerWidth) || isNaN(containerDepth) || isNaN(containerMaxWeight) ||
         isNaN(productHeight) || isNaN(productWidth) || isNaN(productDepth) || isNaN(productWeight) ||
         containerHeight <= 0 || containerWidth <= 0 || containerDepth <= 0 || containerMaxWeight <= 0 ||
-        productHeight <= 0 || productWidth <= 0 || productDepth <= 0 || productWeight <= 0) {
+        productHeight <= 0 || productWidth <= 0 || productDepth <= 0 || productWeight <= 0 ||
+        (isFragile && (isNaN(maxStack) || maxStack <= 0))) {
         resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas correctamente (valores positivos).</div>";
+        document.getElementById("exportPdf").style.display = "none";
         return;
     }
 
-    // Ajustar dimensiones del contenedor con margen
     const adjustedContainerHeight = containerHeight * (1 - margin);
     const adjustedContainerWidth = containerWidth * (1 - margin);
     const adjustedContainerDepth = containerDepth * (1 - margin);
 
-    // Volumen del contenedor (en cm³)
+    let volumeFactor = 1.0;
+    switch (shape) {
+        case "cylinder": volumeFactor = 0.785; break;
+        case "sphere": volumeFactor = 0.524; break;
+    }
+    const productVolume = productHeight * productWidth * productDepth * volumeFactor;
     const containerVolume = adjustedContainerHeight * adjustedContainerWidth * adjustedContainerDepth;
-    const productVolume = productHeight * productWidth * productDepth;
 
-    // Verificar si el producto cabe en el volumen total
     if (productVolume > containerVolume) {
         resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por volumen (con margen).</div>";
+        document.getElementById("exportPdf").style.display = "none";
         return;
     }
 
-    // Definir posibles giros del producto (6 combinaciones básicas)
-    const orientations = [
-        [productWidth, productDepth, productHeight],  // Normal
-        [productWidth, productHeight, productDepth],  // Giro en Y
-        [productDepth, productWidth, productHeight],  // Giro en X
-        [productDepth, productHeight, productWidth],  // Giro en X e Y
-        [productHeight, productWidth, productDepth],  // Giro en Z
-        [productHeight, productDepth, productWidth]   // Giro en Z e Y
-    ];
+    let orientations = [];
+    switch (orientation) {
+        case "none":
+            orientations = [
+                [productWidth, productDepth, productHeight],
+                [productWidth, productHeight, productDepth],
+                [productDepth, productWidth, productHeight],
+                [productDepth, productHeight, productWidth],
+                [productHeight, productWidth, productDepth],
+                [productHeight, productDepth, productWidth]
+            ];
+            break;
+        case "horizontal":
+            orientations = [
+                [productWidth, productDepth, productHeight],
+                [productDepth, productWidth, productHeight]
+            ];
+            break;
+        case "vertical":
+            orientations = [
+                [productWidth, productDepth, productHeight],
+                [productDepth, productWidth, productHeight]
+            ].filter(([w, d, h]) => h === productHeight);
+            break;
+        case "fixed":
+            orientations = [[productWidth, productDepth, productHeight]];
+            break;
+    }
 
     let bestResult = null;
 
-    // Probar cada orientación
     for (const [pWidth, pDepth, pHeight] of orientations) {
-        // Verificar si cabe en las dimensiones ajustadas
         if (pWidth > adjustedContainerWidth || pDepth > adjustedContainerDepth || pHeight > adjustedContainerHeight) {
-            continue; // Esta orientación no cabe
+            continue;
         }
 
-        // Calcular productos por dimensión
         const productsPerWidth = Math.floor(adjustedContainerWidth / pWidth);
         const productsPerDepth = Math.floor(adjustedContainerDepth / pDepth);
         let productsPerHeight = Math.floor(adjustedContainerHeight / pHeight);
 
-        // Total inicial
+        if (isNonStackable) productsPerHeight = 1;
+        if (isFragile && productsPerHeight > maxStack) productsPerHeight = maxStack;
+
         let totalProducts = productsPerWidth * productsPerDepth * productsPerHeight;
         let totalWeight = totalProducts * productWeight;
 
-        // Ajustar por peso máximo
         while (totalWeight > containerMaxWeight && productsPerHeight > 0) {
             productsPerHeight--;
             totalProducts = productsPerWidth * productsPerDepth * productsPerHeight;
             totalWeight = totalProducts * productWeight;
         }
 
-        // Ajustar por altura segura
         const totalHeight = productsPerHeight * pHeight;
         if (totalHeight > safeHeight) {
             productsPerHeight = Math.floor(safeHeight / pHeight);
@@ -83,12 +127,11 @@ function calculateCubicaje() {
 
         if (totalProducts <= 0) continue;
 
-        // Calcular métricas
         const usedVolume = totalProducts * productVolume;
         const volumeUsage = (usedVolume / containerVolume) * 100;
         const weightUsage = (totalWeight / containerMaxWeight) * 100;
-        const loadDensity = totalWeight / (usedVolume / 1000000); // kg/m³ (cm³ a m³)
-        const centerOfGravity = (productsPerHeight * pHeight) / 2; // Altura media en cm
+        const loadDensity = totalWeight / (usedVolume / 1000000);
+        const centerOfGravity = (productsPerHeight * pHeight) / 2;
 
         const result = {
             totalProducts,
@@ -102,16 +145,16 @@ function calculateCubicaje() {
             orientation: `${pWidth}x${pDepth}x${pHeight}`
         };
 
-        // Seleccionar la mejor orientación (máximo productos)
         if (!bestResult || totalProducts > bestResult.totalProducts) {
             bestResult = result;
         }
     }
 
-    // Mostrar resultados
     if (!bestResult) {
         resultDiv.innerHTML = "<div id='error'>No se encontró una orientación válida para el producto en el contenedor.</div>";
+        document.getElementById("exportPdf").style.display = "none";
     } else {
+        const shapeText = shape === "prism" ? "Prisma" : shape === "cylinder" ? "Cilindro (78.5%)" : "Esfera (52.4%)";
         resultDiv.innerHTML = `
             <div id='success'>
                 <p><strong>Orientación óptima (Ancho x Largo x Alto):</strong> ${bestResult.orientation} cm</p>
@@ -123,7 +166,44 @@ function calculateCubicaje() {
                 <p><strong>Porcentaje de peso utilizado:</strong> ${bestResult.weightUsage.toFixed(2)}%</p>
                 <p><strong>Densidad de carga:</strong> ${bestResult.loadDensity.toFixed(2)} kg/m³</p>
                 <p><strong>Centro de gravedad:</strong> ${bestResult.centerOfGravity.toFixed(2)} cm (Altura segura: ${safeHeight} cm)</p>
+                <p><strong>Forma ajustada:</strong> ${shapeText}</p>
             </div>
         `;
+        document.getElementById("exportPdf").style.display = "block";
+        window.bestResult = bestResult; // Guardar resultado para exportación
+        window.shapeText = shapeText;
     }
 }
+
+function exportToPdf() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.setFontSize(16);
+    doc.text("Resultado de Cubicaje - OPTITRANS", 10, 10);
+    doc.setFontSize(12);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 20);
+
+    const result = window.bestResult;
+    const shapeText = window.shapeText;
+    const text = [
+        `Orientación óptima (Ancho x Largo x Alto): ${result.orientation} cm`,
+        `Total productos: ${result.totalProducts}`,
+        `Productos por ancho: ${result.productsPerWidth}`,
+        `Productos por largo: ${result.productsPerDepth}`,
+        `Productos en altura: ${result.productsPerHeight}`,
+        `Porcentaje de espacio utilizado: ${result.volumeUsage.toFixed(2)}%`,
+        `Porcentaje de peso utilizado: ${result.weightUsage.toFixed(2)}%`,
+        `Densidad de carga: ${result.loadDensity.toFixed(2)} kg/m³`,
+        `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${safeHeight} cm)`,
+        `Forma ajustada: ${shapeText}`
+    ];
+
+    doc.text(text, 10, 30, { maxWidth: 180 });
+    doc.save("cubicaje_optitrans.pdf");
+}
+
+// Habilitar/deshabilitar input de máximo de filas según "Frágil"
+document.getElementById("fragile").addEventListener("change", function() {
+    document.getElementById("maxStack").disabled = !this.checked;
+});
