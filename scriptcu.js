@@ -15,26 +15,28 @@ function applyPreset() {
         document.getElementById("containerMaxWeight").value = maxWeight;
         document.getElementById("safeHeight").value = safeHeight;
     }
-    if (window.scene) initThreeJS();
+    if (window.scene) initThreeJS(); // Reconstruir escena si cambia preset
 }
 
-let scene, camera, renderer, controls, products = [];
+let scene, camera, renderer, products = [];
 
 function initThreeJS() {
     console.log("Inicializando Three.js...");
-    if (!THREE) {
+    if (!window.THREE) {
         console.error("Three.js no está definido. Verifica que la librería se cargó.");
         return;
     }
 
+    // Limpiar escena anterior
     if (scene) {
         while (scene.children.length > 0) scene.remove(scene.children[0]);
         products = [];
     }
 
+    // Configurar escena
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xcccccc);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.background = new THREE.Color(0xcccccc); // Fondo gris claro
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Añadir luz
     scene.add(ambientLight);
     camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -42,14 +44,7 @@ function initThreeJS() {
     document.getElementById('threejs-container').innerHTML = '';
     document.getElementById('threejs-container').appendChild(renderer.domElement);
 
-    // Configurar controles de órbita
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.minDistance = 0.5;
-    controls.maxDistance = 10;
-
+    // Contenedor
     const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100 || 1;
     const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100 || 1;
     const containerDepth = parseFloat(document.getElementById("containerDepth").value) / 100 || 1;
@@ -60,6 +55,7 @@ function initThreeJS() {
     containerWireframe.position.set(containerWidth / 2, containerHeight / 2, containerDepth / 2);
     scene.add(containerWireframe);
 
+    // Ajustar cámara
     const maxDim = Math.max(containerWidth, containerHeight, containerDepth);
     camera.position.set(maxDim * 3, maxDim * 3, maxDim * 3);
     camera.lookAt(containerWidth / 2, containerHeight / 2, containerDepth / 2);
@@ -69,7 +65,6 @@ function initThreeJS() {
 
 function animate() {
     requestAnimationFrame(animate);
-    if (controls) controls.update();
     renderer.render(scene, camera);
 }
 
@@ -81,7 +76,6 @@ function addProducts(result) {
 
     const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
-
     for (let x = 0; x < result.productsPerWidth; x++) {
         for (let z = 0; z < result.productsPerDepth; z++) {
             for (let y = 0; y < result.productsPerHeight; y++) {
@@ -91,13 +85,6 @@ function addProducts(result) {
                     y * productHeight + productHeight / 2,
                     z * productDepth + productDepth / 2
                 );
-
-                const edges = new THREE.EdgesGeometry(geometry);
-                const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-                const edgesLine = new THREE.LineSegments(edges, edgesMaterial);
-                edgesLine.position.copy(product.position);
-                scene.add(edgesLine);
-
                 products.push(product);
                 scene.add(product);
             }
@@ -260,8 +247,8 @@ function calculateCubicaje() {
         document.getElementById("exportPdf").style.display = "block";
         window.bestResult = bestResult;
         window.shapeText = shapeText;
-        initThreeJS();
-        addProducts(bestResult);
+        initThreeJS(); // Reconstruir escena
+        addProducts(bestResult); // Añadir productos
     }
 }
 
@@ -293,15 +280,9 @@ function exportToPdf() {
     doc.save("cubicaje_optitrans.pdf");
 }
 
+// Habilitar/deshabilitar input de máximo de filas según "Frágil"
 document.getElementById("fragile").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
 });
 
-// Esperar a que se cargue
-window.addEventListener('load', function() {
-    if (typeof THREE !== 'undefined') {
-        initThreeJS();
-    } else {
-        console.error("Three.js no se cargó correctamente al iniciar.");
-    }
-});
+initThreeJS(); // Inicializar escena al cargar
