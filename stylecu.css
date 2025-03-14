@@ -1,113 +1,94 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
-    background-color: #f5f5f5; /* Fondo claro y suave */
-}
-
-h1 {
-    color: #2c3e50; /* Azul oscuro elegante */
-    margin-bottom: 20px;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background: #ffffff; /* Fondo blanco para el contenedor */
+    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.input-section div {
-    margin: 10px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+h1 {
+    text-align: center;
+    color: #333;
 }
 
-input, select, button {
-    margin: 5px;
-    padding: 8px;
-    border: 1px solid #ddd; /* Borde gris claro */
+h2 {
+    color: #555;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+label {
+    display: inline-block;
+    width: 200px;
+    margin: 5px 0;
+}
+
+input[type="number"], select {
+    width: 150px;
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: #3498db; /* Azul suave al enfocar */
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
 button {
-    background-color: #3498db; /* Azul claro y profesional */
+    background-color: #4CAF50;
     color: white;
-    border: none;
     padding: 10px 20px;
-    cursor: pointer;
+    border: none;
     border-radius: 4px;
-    transition: background-color 0.3s;
+    cursor: pointer;
+    margin: 10px 0;
 }
 
 button:hover {
-    background-color: #2980b9; /* Azul más oscuro al pasar el ratón */
+    background-color: #45a049;
 }
 
 #result {
     margin-top: 20px;
-    text-align: left;
     padding: 10px;
-    background: #f9f9f9; /* Fondo claro para los resultados */
+    border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+#success {
+    color: #2e7d32;
+}
+
+#error {
+    color: #d32f2f;
 }
 
 #threejs-container {
     width: 400px;
     height: 400px;
     margin: 20px auto;
-    background: #ecf0f1; /* Gris muy claro para el contenedor 3D */
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background: #eee;
 }
 
-#chartCanvas {
-    display: block;
-    width: 400px;
-    height: 200px;
-    margin: 20px auto;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+/* Estilo para los botones de zoom */
+.zoom-controls {
+    text-align: center;
+    margin-top: 10px;
 }
 
-#success {
-    color: #27ae60; /* Verde suave para éxito */
+.zoom-controls button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #2196F3;
 }
 
-#error {
-    color: #e74c3c; /* Rojo suave para errores */
-}
-
-#exportPdf, #zoomIn, #zoomOut {
-    display: none;
-    margin: 5px;
-}
-
-#exportPdf {
-    background-color: #2ecc71; /* Verde claro para exportar */
-}
-
-#exportPdf:hover {
-    background-color: #27ae60;
-}
-
-#zoomIn, #zoomOut {
-    background-color: #3498db; /* Azul para zoom */
-}
-
-#zoomIn:hover, #zoomOut:hover {
-    background-color: #2980b9;
+.zoom-controls button:hover {
+    background-color: #1976D2;
 }
