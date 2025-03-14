@@ -20,6 +20,7 @@ function applyPreset() {
 
 let scene, camera, renderer, products = [];
 let cameraDistance = 3; // Distancia inicial de la cámara
+let chart; // Variable para el gráfico de Chart.js
 
 function initThreeJS() {
     console.log("Inicializando Three.js...");
@@ -81,6 +82,37 @@ function updateCameraPosition(maxDim, containerWidth, containerHeight, container
     camera.lookAt(containerWidth / 2, containerHeight / 2, containerDepth / 2);
 }
 
+// Funciones para los botones de zoom
+function zoomIn() {
+    const maxDim = Math.max(
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+    cameraDistance -= maxDim * 0.2; // Acercar
+    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+    updateCameraPosition(maxDim, 
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+}
+
+function zoomOut() {
+    const maxDim = Math.max(
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+    cameraDistance += maxDim * 0.2; // Alejar
+    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+    updateCameraPosition(maxDim, 
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+}
+
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
@@ -88,14 +120,12 @@ function animate() {
 
 function addProducts(result) {
     console.log("Añadiendo productos:", result);
-    // Obtener las dimensiones del producto según la orientación óptima
     const [pWidth, pDepth, pHeight] = result.orientation.split('x').map(parseFloat);
-    const productWidth = pWidth / 100; // Convertir a metros
+    const productWidth = pWidth / 100;
     const productHeight = pHeight / 100;
     const productDepth = pDepth / 100;
-    const gap = 0.01; // Espacio entre productos (en metros)
+    const gap = 0.01;
 
-    // Obtener dimensiones ajustadas del contenedor
     const margin = parseFloat(document.getElementById("margin").value) / 100 || 0.05;
     const containerWidth = (parseFloat(document.getElementById("containerWidth").value) * (1 - margin)) / 100 || 1;
     const containerHeight = (parseFloat(document.getElementById("containerHeight").value) * (1 - margin)) / 100 || 1;
@@ -104,20 +134,16 @@ function addProducts(result) {
     const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
 
-    // Añadir bordes
     const edgesGeometry = new THREE.EdgesGeometry(geometry);
     const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
-    // Calcular el espacio total ocupado por los productos (incluyendo gaps)
     const totalWidth = result.productsPerWidth * productWidth + (result.productsPerWidth - 1) * gap;
     const totalDepth = result.productsPerDepth * productDepth + (result.productsPerDepth - 1) * gap;
     const totalHeight = result.productsPerHeight * productHeight + (result.productsPerHeight - 1) * gap;
 
-    // Calcular offset para centrar los productos dentro del contenedor ajustado
     const offsetX = (containerWidth - totalWidth) / 2;
     const offsetZ = (containerDepth - totalDepth) / 2;
 
-    // Apilar desde la base hacia arriba
     for (let y = 0; y < result.productsPerHeight; y++) {
         for (let x = 0; x < result.productsPerWidth; x++) {
             for (let z = 0; z < result.productsPerDepth; z++) {
@@ -137,6 +163,42 @@ function addProducts(result) {
             }
         }
     }
+}
+
+function createChart(volumeUsage, weightUsage) {
+    const ctx = document.getElementById('resultsChart').getContext('2d');
+    if (chart) chart.destroy(); // Destruir gráfico anterior si existe
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Espacio Utilizado (%)', 'Peso Utilizado (%)'],
+            datasets: [{
+                label: 'Porcentajes',
+                data: [volumeUsage, weightUsage],
+                backgroundColor: ['#4CAF50', '#2196F3'],
+                borderColor: ['#388E3C', '#1976D2'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Porcentaje (%)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
 }
 
 function calculateCubicaje() {
@@ -298,86 +360,74 @@ function calculateCubicaje() {
             </div>
         `;
         document.getElementById("exportPdf").style.display = "block";
-        document.getElementById("zoomIn").style.display = "inline-block";
-        document.getElementById("zoomOut").style.display = "inline-block";
         window.bestResult = bestResult;
         window.shapeText = shapeText;
-        initThreeJS(); // Reconstruir escena
-        addProducts(bestResult); // Añadir productos
-        createChart(bestResult); // Crear gráfico de barras
+        window.inputData = {
+            containerHeight,
+            containerWidth,
+            containerDepth,
+            containerMaxWeight,
+            safeHeight,
+            margin: margin * 100,
+            productHeight,
+            productWidth,
+            productDepth,
+            productWeight
+        };
+        initThreeJS();
+        addProducts(bestResult);
+        createChart(bestResult.volumeUsage, bestResult.weightUsage); // Crear el gráfico de barras
     }
-}
-
-function createChart(result) {
-    const ctx = document.getElementById('chartCanvas').getContext('2d');
-    if (window.myChart) window.myChart.destroy(); // Destruir gráfico anterior si existe
-    window.myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Espacio Utilizado', 'Peso Utilizado'],
-            datasets: [{
-                label: 'Porcentaje (%)',
-                data: [result.volumeUsage, result.weightUsage],
-                backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100
-                }
-            },
-            plugins: {
-                legend: { position: 'top' },
-                title: { display: true, text: 'Porcentajes de Uso' }
-            }
-        }
-    });
 }
 
 function exportToPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    
+    let yPosition = 10;
 
     // Título
     doc.setFontSize(16);
-    doc.text("Resultado de Cubicaje - OPTITRANS", 10, 10);
+    doc.text("Resultado de Cubicaje - OPTITRANS", 10, yPosition);
+    yPosition += 10;
+
+    // Fecha
     doc.setFontSize(12);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 20);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, yPosition);
+    yPosition += 10;
 
-    // Información del Contenedor
-    doc.text("Medidas del Contenedor:", 10, 30);
-    const containerHeight = document.getElementById("containerHeight").value;
-    const containerWidth = document.getElementById("containerWidth").value;
-    const containerDepth = document.getElementById("containerDepth").value;
-    const containerMaxWeight = document.getElementById("containerMaxWeight").value;
-    const safeHeight = document.getElementById("safeHeight").value;
-    const margin = document.getElementById("margin").value;
-    doc.text(`Alto: ${containerHeight} cm`, 10, 40);
-    doc.text(`Ancho: ${containerWidth} cm`, 10, 50);
-    doc.text(`Largo: ${containerDepth} cm`, 10, 60);
-    doc.text(`Capacidad Máxima: ${containerMaxWeight} kg`, 10, 70);
-    doc.text(`Altura Segura Máxima: ${safeHeight} cm`, 10, 80);
-    doc.text(`Margen de Maniobra: ${margin} %`, 10, 90);
-
-    // Información del Producto
-    doc.text("Medidas del Producto:", 10, 100);
-    const productHeight = document.getElementById("productHeight").value;
-    const productWidth = document.getElementById("productWidth").value;
-    const productDepth = document.getElementById("productDepth").value;
-    const productWeight = document.getElementById("productWeight").value;
-    doc.text(`Alto: ${productHeight} cm`, 10, 110);
-    doc.text(`Ancho: ${productWidth} cm`, 10, 120);
-    doc.text(`Largo: ${productDepth} cm`, 10, 130);
-    doc.text(`Peso: ${productWeight} kg`, 10, 140);
+    // Información ingresada por el usuario
+    doc.setFontSize(14);
+    doc.text("Datos Ingresados", 10, yPosition);
+    yPosition += 8;
+    doc.setFontSize(12);
+    const inputData = window.inputData;
+    const inputText = [
+        "Medidas del Contenedor:",
+        `Alto: ${inputData.containerHeight} cm`,
+        `Ancho: ${inputData.containerWidth} cm`,
+        `Largo: ${inputData.containerDepth} cm`,
+        `Capacidad Máxima: ${inputData.containerMaxWeight} kg`,
+        `Altura Segura: ${inputData.safeHeight} cm`,
+        `Margen de Maniobra: ${inputData.margin}%`,
+        "",
+        "Medidas del Producto:",
+        `Alto: ${inputData.productHeight} cm`,
+        `Ancho: ${inputData.productWidth} cm`,
+        `Largo: ${inputData.productDepth} cm`,
+        `Peso: ${inputData.productWeight} kg`
+    ];
+    doc.text(inputText, 10, yPosition, { maxWidth: 180 });
+    yPosition += inputText.length * 5 + 10;
 
     // Resultados
+    doc.setFontSize(14);
+    doc.text("Resultados", 10, yPosition);
+    yPosition += 8;
+    doc.setFontSize(12);
     const result = window.bestResult;
     const shapeText = window.shapeText;
-    const text = [
+    const resultText = [
         `Orientación óptima (Ancho x Largo x Alto): ${result.orientation} cm`,
         `Total productos: ${result.totalProducts}`,
         `Productos por ancho: ${result.productsPerWidth}`,
@@ -389,62 +439,36 @@ function exportToPdf() {
         `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${safeHeight} cm)`,
         `Forma ajustada: ${shapeText}`
     ];
-    doc.text(text, 10, 150, { maxWidth: 180 });
+    doc.text(resultText, 10, yPosition, { maxWidth: 180 });
+    yPosition += resultText.length * 5 + 10;
 
-    // Captura del gráfico 3D
-    html2canvas(document.getElementById('threejs-container')).then(canvas => {
+    // Añadir el gráfico 3D
+    const canvas = document.querySelector('#threejs-container canvas');
+    if (canvas) {
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 180;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        doc.addPage();
-        doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-        doc.save("cubicaje_optitrans.pdf");
-    });
+        doc.setFontSize(14);
+        doc.text("Visualización 3D", 10, yPosition);
+        yPosition += 8;
+        doc.addImage(imgData, 'PNG', 10, yPosition, 50, 50); // Escala de 400x400 a 50x50 mm
+        yPosition += 60;
+    }
 
-    // Captura del gráfico de barras
-    html2canvas(document.getElementById('chartCanvas')).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 180;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        doc.addPage();
-        doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-    });
+    // Añadir el diagrama de barras
+    const chartCanvas = document.getElementById('resultsChart');
+    if (chartCanvas) {
+        const chartImgData = chartCanvas.toDataURL('image/png');
+        doc.setFontSize(14);
+        doc.text("Gráfico de Porcentajes", 10, yPosition);
+        yPosition += 8;
+        doc.addImage(chartImgData, 'PNG', 10, yPosition, 80, 40); // Escala de 400x200 a 80x40 mm
+    }
+
+    doc.save("cubicaje_optitrans.pdf");
 }
 
 // Habilitar/deshabilitar input de máximo de filas según "Frágil"
 document.getElementById("fragile").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
-});
-
-// Control de zoom con botones
-document.getElementById("zoomIn").addEventListener("click", () => {
-    const maxDim = Math.max(
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
-    );
-    cameraDistance -= 0.1;
-    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
-    updateCameraPosition(maxDim, 
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
-    );
-});
-
-document.getElementById("zoomOut").addEventListener("click", () => {
-    const maxDim = Math.max(
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
-    );
-    cameraDistance += 0.1;
-    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
-    updateCameraPosition(maxDim,
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
-    );
 });
 
 initThreeJS(); // Inicializar escena al cargar
