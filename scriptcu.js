@@ -124,7 +124,7 @@ function addProducts(result) {
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
                     offsetX + x * (productWidth + gap) + productWidth / 2,
-                    y * (productHeight + gap) + productHeight / 2, // Apilar desde y=0
+                    y * (productHeight + gap) + productHeight / 2,
                     offsetZ + z * (productDepth + gap) + productDepth / 2
                 );
 
@@ -218,6 +218,7 @@ function calculateCubicaje() {
     }
 
     let bestResult = null;
+    let bestBaseArea = 0;
 
     for (const [pWidth, pDepth, pHeight] of orientations) {
         if (pWidth > adjustedContainerWidth || pDepth > adjustedContainerDepth || pHeight > adjustedContainerHeight) {
@@ -255,6 +256,8 @@ function calculateCubicaje() {
         const loadDensity = totalWeight / (usedVolume / 1000000);
         const centerOfGravity = (productsPerHeight * pHeight) / 2;
 
+        const baseArea = pWidth * pDepth;
+
         const result = {
             totalProducts,
             productsPerWidth,
@@ -264,11 +267,14 @@ function calculateCubicaje() {
             weightUsage,
             loadDensity,
             centerOfGravity,
-            orientation: `${pWidth}x${pDepth}x${pHeight}`
+            orientation: `${pWidth}x${pDepth}x${pHeight}`,
+            baseArea
         };
 
-        if (!bestResult || totalProducts > bestResult.totalProducts) {
+        if (!bestResult || totalProducts > bestResult.totalProducts || 
+            (totalProducts === bestResult.totalProducts && baseArea > bestBaseArea)) {
             bestResult = result;
+            bestBaseArea = baseArea;
         }
     }
 
@@ -292,22 +298,83 @@ function calculateCubicaje() {
             </div>
         `;
         document.getElementById("exportPdf").style.display = "block";
+        document.getElementById("zoomIn").style.display = "inline-block";
+        document.getElementById("zoomOut").style.display = "inline-block";
         window.bestResult = bestResult;
         window.shapeText = shapeText;
         initThreeJS(); // Reconstruir escena
         addProducts(bestResult); // Añadir productos
+        createChart(bestResult); // Crear gráfico de barras
     }
+}
+
+function createChart(result) {
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    if (window.myChart) window.myChart.destroy(); // Destruir gráfico anterior si existe
+    window.myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Espacio Utilizado', 'Peso Utilizado'],
+            datasets: [{
+                label: 'Porcentaje (%)',
+                data: [result.volumeUsage, result.weightUsage],
+                backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Porcentajes de Uso' }
+            }
+        }
+    });
 }
 
 function exportToPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    
+
+    // Título
     doc.setFontSize(16);
     doc.text("Resultado de Cubicaje - OPTITRANS", 10, 10);
     doc.setFontSize(12);
     doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 20);
 
+    // Información del Contenedor
+    doc.text("Medidas del Contenedor:", 10, 30);
+    const containerHeight = document.getElementById("containerHeight").value;
+    const containerWidth = document.getElementById("containerWidth").value;
+    const containerDepth = document.getElementById("containerDepth").value;
+    const containerMaxWeight = document.getElementById("containerMaxWeight").value;
+    const safeHeight = document.getElementById("safeHeight").value;
+    const margin = document.getElementById("margin").value;
+    doc.text(`Alto: ${containerHeight} cm`, 10, 40);
+    doc.text(`Ancho: ${containerWidth} cm`, 10, 50);
+    doc.text(`Largo: ${containerDepth} cm`, 10, 60);
+    doc.text(`Capacidad Máxima: ${containerMaxWeight} kg`, 10, 70);
+    doc.text(`Altura Segura Máxima: ${safeHeight} cm`, 10, 80);
+    doc.text(`Margen de Maniobra: ${margin} %`, 10, 90);
+
+    // Información del Producto
+    doc.text("Medidas del Producto:", 10, 100);
+    const productHeight = document.getElementById("productHeight").value;
+    const productWidth = document.getElementById("productWidth").value;
+    const productDepth = document.getElementById("productDepth").value;
+    const productWeight = document.getElementById("productWeight").value;
+    doc.text(`Alto: ${productHeight} cm`, 10, 110);
+    doc.text(`Ancho: ${productWidth} cm`, 10, 120);
+    doc.text(`Largo: ${productDepth} cm`, 10, 130);
+    doc.text(`Peso: ${productWeight} kg`, 10, 140);
+
+    // Resultados
     const result = window.bestResult;
     const shapeText = window.shapeText;
     const text = [
@@ -322,14 +389,62 @@ function exportToPdf() {
         `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${safeHeight} cm)`,
         `Forma ajustada: ${shapeText}`
     ];
+    doc.text(text, 10, 150, { maxWidth: 180 });
 
-    doc.text(text, 10, 30, { maxWidth: 180 });
-    doc.save("cubicaje_optitrans.pdf");
+    // Captura del gráfico 3D
+    html2canvas(document.getElementById('threejs-container')).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 180;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        doc.save("cubicaje_optitrans.pdf");
+    });
+
+    // Captura del gráfico de barras
+    html2canvas(document.getElementById('chartCanvas')).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 180;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    });
 }
 
 // Habilitar/deshabilitar input de máximo de filas según "Frágil"
 document.getElementById("fragile").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
+});
+
+// Control de zoom con botones
+document.getElementById("zoomIn").addEventListener("click", () => {
+    const maxDim = Math.max(
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+    cameraDistance -= 0.1;
+    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+    updateCameraPosition(maxDim, 
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+});
+
+document.getElementById("zoomOut").addEventListener("click", () => {
+    const maxDim = Math.max(
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
+    cameraDistance += 0.1;
+    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+    updateCameraPosition(maxDim,
+        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
+        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
+        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    );
 });
 
 initThreeJS(); // Inicializar escena al cargar
