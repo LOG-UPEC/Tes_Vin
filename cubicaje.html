@@ -3,121 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cubicaje Optimizado - OPTITRANS</title>
+    <title>Cubicaje OPTITRANS</title>
     <link rel="stylesheet" href="stylecu.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header>
-        <a href="inicio.html"><img src="regresar.svg" alt="Regresar" class="regresar-icon"></a>
-        <h1>Calculadora de Cubicaje Optimizado</h1>
-    </header>
-
-    <section class="form-section">
-        <h2>Ingrese las medidas del contenedor</h2>
-        <div class="form-group">
-            <label for="containerPreset">Preset de Contenedor:</label>
+    <h1>Cubicaje OPTITRANS</h1>
+    <div class="container">
+        <div class="input-section">
+            <h2>Seleccione el tipo de contenedor</h2>
             <select id="containerPreset" onchange="applyPreset()">
-                <option value="custom" selected>Personalizado</option>
+                <option value="custom">Personalizado</option>
                 <option value="20ft">Contenedor 20 pies</option>
                 <option value="40ft">Contenedor 40 pies</option>
                 <option value="euroPallet">Pallet Europeo</option>
             </select>
-        </div>
-        <div class="form-group">
-            <label for="containerHeight">Alto (cm):</label>
-            <input type="number" id="containerHeight" placeholder="Ej. 239" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="containerWidth">Ancho (cm):</label>
-            <input type="number" id="containerWidth" placeholder="Ej. 235" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="containerDepth">Largo (cm):</label>
-            <input type="number" id="containerDepth" placeholder="Ej. 590" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="containerMaxWeight">Capacidad Máxima (kg):</label>
-            <input type="number" id="containerMaxWeight" placeholder="Ej. 28000" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="safeHeight">Altura Segura Máxima (cm):</label>
-            <input type="number" id="safeHeight" placeholder="Ej. 450" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="margin">Margen de Maniobra (%):</label>
-            <input type="number" id="margin" placeholder="Ej. 5" step="0.1" min="0" max="20">
-        </div>
-
-        <h2>Ingrese las medidas del producto</h2>
-        <div class="form-group">
-            <label for="productHeight">Alto (cm):</label>
-            <input type="number" id="productHeight" placeholder="Ej. 10" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="productWidth">Ancho (cm):</label>
-            <input type="number" id="productWidth" placeholder="Ej. 20" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="productDepth">Largo (cm):</label>
-            <input type="number" id="productDepth" placeholder="Ej. 30" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="productWeight">Peso (kg):</label>
-            <input type="number" id="productWeight" placeholder="Ej. 0.5" step="0.01">
-        </div>
-
-        <h2>Restricciones del Producto</h2>
-        <div class="form-group checklist">
-            <label>Orientación Permitida:</label>
             <div>
-                <input type="radio" id="noRestrictions" name="orientation" value="none" checked>
-                <label for="noRestrictions">Sin restricciones</label>
+                <label>Alto (cm):</label><input type="number" id="containerHeight" value="144">
+                <label>Ancho (cm):</label><input type="number" id="containerWidth" value="80">
+                <label>Largo (cm):</label><input type="number" id="containerDepth" value="120">
+                <label>Capacidad Máxima (kg):</label><input type="number" id="containerMaxWeight" value="1500">
+                <label>Altura Segura Máxima (cm):</label><input type="number" id="safeHeight" value="200">
+                <label>Margen de Maniobra (%):</label><input type="number" id="margin" value="5" min="0" max="50" step="1">
+            </div>
+            <h2>Ingrese las medidas del producto</h2>
+            <div>
+                <label>Alto (cm):</label><input type="number" id="productHeight" value="10">
+                <label>Ancho (cm):</label><input type="number" id="productWidth" value="20">
+                <label>Largo (cm):</label><input type="number" id="productDepth" value="30">
+                <label>Peso (kg):</label><input type="number" id="productWeight" value="0.5" step="0.1">
             </div>
             <div>
-                <input type="radio" id="horizontalOnly" name="orientation" value="horizontal">
-                <label for="horizontalOnly">Solo horizontal (sin giro vertical)</label>
+                <label>Orientación:</label>
+                <input type="radio" id="orientationNone" name="orientation" value="none" checked> Ninguna
+                <input type="radio" id="orientationHorizontal" name="orientation" value="horizontal"> Horizontal
+                <input type="radio" id="orientationVertical" name="orientation" value="vertical"> Vertical
+                <input type="radio" id="orientationFixed" name="orientation" value="fixed"> Fija
             </div>
             <div>
-                <input type="radio" id="verticalOnly" name="orientation" value="vertical">
-                <label for="verticalOnly">Solo vertical</label>
+                <label>Frágil:</label><input type="checkbox" id="fragile">
+                <label>Máximo de Filas:</label><input type="number" id="maxStack" disabled>
+                <label>No Apilable:</label><input type="checkbox" id="nonStackable">
             </div>
             <div>
-                <input type="radio" id="fixedPosition" name="orientation" value="fixed">
-                <label for="fixedPosition">Posición fija (como ingresada)</label>
+                <label>Forma:</label>
+                <select id="shape">
+                    <option value="prism">Prisma</option>
+                    <option value="cylinder">Cilindro</option>
+                    <option value="sphere">Esfera</option>
+                </select>
             </div>
+            <button onclick="calculateCubicaje()">Calcular Cubicaje</button>
+            <button id="exportPdf">Exportar a PDF</button>
+            <button id="zoomIn">Zoom In</button>
+            <button id="zoomOut">Zoom Out</button>
         </div>
-
-        <div class="form-group checklist">
-            <label>Propiedades Adicionales:</label>
-            <div>
-                <input type="checkbox" id="fragile" name="fragile">
-                <label for="fragile">Frágil</label>
-                <input type="number" id="maxStack" placeholder="Máx. filas (ej. 5)" step="1" min="1" style="width: 150px; margin-left: 10px;" disabled>
-            </div>
-            <div>
-                <input type="checkbox" id="nonStackable" name="nonStackable">
-                <label for="nonStackable">No apilable (solo 1 fila)</label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="shape">Forma del Producto:</label>
-            <select id="shape">
-                <option value="prism" selected>Prisma Rectangular</option>
-                <option value="cylinder">Cilindro</option>
-                <option value="sphere">Esfera</option>
-            </select>
-        </div>
-
-        <button onclick="calculateCubicaje()">Calcular Cubicaje</button>
-        
         <div id="result"></div>
-        <button id="exportPdf" style="display: none;" onclick="exportToPdf()">Exportar a PDF</button>
         <div id="threejs-container"></div>
-    </section>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <canvas id="chartCanvas" style="display: block; width: 400px; height: 200px; margin: 20px auto;"></canvas>
+    </div>
     <script src="scriptcu.js"></script>
 </body>
 </html>
