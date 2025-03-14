@@ -469,7 +469,7 @@ function exportToPdf() {
 // Función para el botón de atrás
 function goBack() {
     // Por ahora, recarga la página como placeholder. Puedes cambiarlo a window.location.href = 'URL_DE_PAGINA_ANTERIOR';
-    window.location.reload();
+    window.location.href(https://log-upec.github.io/Tes_Vin/inicio.html);
 }
 
 // Habilitar/deshabilitar input de máximo de filas según "Frágil"
