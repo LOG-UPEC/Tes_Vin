@@ -22,7 +22,7 @@ let scene, camera, renderer, controls, products = [];
 
 function initThreeJS() {
     console.log("Inicializando Three.js...");
-    if (!window.THREE) {
+    if (!THREE) {
         console.error("Three.js no está definido. Verifica que la librería se cargó.");
         return;
     }
@@ -43,16 +43,12 @@ function initThreeJS() {
     document.getElementById('threejs-container').appendChild(renderer.domElement);
 
     // Configurar controles de órbita
-    if (typeof THREE.OrbitControls === 'undefined') {
-        console.error("OrbitControls no está definido. Verifica que la librería se cargó.");
-    } else {
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.screenSpacePanning = false;
-        controls.minDistance = 0.5;
-        controls.maxDistance = 10;
-    }
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = false;
+    controls.minDistance = 0.5;
+    controls.maxDistance = 10;
 
     const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100 || 1;
     const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100 || 1;
@@ -301,9 +297,9 @@ document.getElementById("fragile").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
 });
 
-// Esperar a que Three.js se cargue antes de inicializar
+// Esperar a que se cargue
 window.addEventListener('load', function() {
-    if (window.THREE) {
+    if (typeof THREE !== 'undefined') {
         initThreeJS();
     } else {
         console.error("Three.js no se cargó correctamente al iniciar.");
