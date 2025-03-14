@@ -89,9 +89,9 @@ function zoomIn() {
         parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
         parseFloat(document.getElementById("containerDepth").value) / 100 || 1
     );
-    cameraDistance -= maxDim * 0.2; // Acercar
+    cameraDistance -= maxDim * 0.2;
     cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
-    updateCameraPosition(maxDim, 
+    updateCameraPosition(maxDim,
         parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
         parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
         parseFloat(document.getElementById("containerDepth").value) / 100 || 1
@@ -104,9 +104,9 @@ function zoomOut() {
         parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
         parseFloat(document.getElementById("containerDepth").value) / 100 || 1
     );
-    cameraDistance += maxDim * 0.2; // Alejar
+    cameraDistance += maxDim * 0.2;
     cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
-    updateCameraPosition(maxDim, 
+    updateCameraPosition(maxDim,
         parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
         parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
         parseFloat(document.getElementById("containerDepth").value) / 100 || 1
@@ -167,7 +167,7 @@ function addProducts(result) {
 
 function createChart(volumeUsage, weightUsage) {
     const ctx = document.getElementById('resultsChart').getContext('2d');
-    if (chart) chart.destroy(); // Destruir gráfico anterior si existe
+    if (chart) chart.destroy();
 
     chart = new Chart(ctx, {
         type: 'bar',
@@ -376,7 +376,7 @@ function calculateCubicaje() {
         };
         initThreeJS();
         addProducts(bestResult);
-        createChart(bestResult.volumeUsage, bestResult.weightUsage); // Crear el gráfico de barras
+        createChart(bestResult.volumeUsage, bestResult.weightUsage);
     }
 }
 
@@ -449,7 +449,7 @@ function exportToPdf() {
         doc.setFontSize(14);
         doc.text("Visualización 3D", 10, yPosition);
         yPosition += 8;
-        doc.addImage(imgData, 'PNG', 10, yPosition, 50, 50); // Escala de 400x400 a 50x50 mm
+        doc.addImage(imgData, 'PNG', 10, yPosition, 50, 50);
         yPosition += 60;
     }
 
@@ -460,10 +460,16 @@ function exportToPdf() {
         doc.setFontSize(14);
         doc.text("Gráfico de Porcentajes", 10, yPosition);
         yPosition += 8;
-        doc.addImage(chartImgData, 'PNG', 10, yPosition, 80, 40); // Escala de 400x200 a 80x40 mm
+        doc.addImage(chartImgData, 'PNG', 10, yPosition, 80, 40);
     }
 
     doc.save("cubicaje_optitrans.pdf");
+}
+
+// Función para el botón de atrás
+function goBack() {
+    // Por ahora, recarga la página como placeholder. Puedes cambiarlo a window.location.href = 'URL_DE_PAGINA_ANTERIOR';
+    window.location.reload();
 }
 
 // Habilitar/deshabilitar input de máximo de filas según "Frágil"
