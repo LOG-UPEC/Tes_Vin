@@ -64,8 +64,8 @@ function initThreeJS() {
     // Añadir listener para zoom con la rueda del mouse
     canvas.addEventListener('wheel', (event) => {
         event.preventDefault();
-        cameraDistance += event.deltaY * 0.005; // Ajusta la velocidad del zoom
-        cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10)); // Límites del zoom
+        cameraDistance += event.deltaY * 0.005;
+        cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
         updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth);
     });
 
@@ -88,9 +88,11 @@ function animate() {
 
 function addProducts(result) {
     console.log("Añadiendo productos:", result);
-    const productWidth = parseFloat(document.getElementById("productWidth").value) / 100 || 0.1;
-    const productHeight = parseFloat(document.getElementById("productHeight").value) / 100 || 0.1;
-    const productDepth = parseFloat(document.getElementById("productDepth").value) / 100 || 0.1;
+    // Obtener las dimensiones del producto según la orientación óptima
+    const [pWidth, pDepth, pHeight] = result.orientation.split('x').map(parseFloat);
+    const productWidth = pWidth / 100; // Convertir a metros
+    const productHeight = pHeight / 100;
+    const productDepth = pDepth / 100;
     const gap = 0.01; // Espacio entre productos (en metros)
 
     const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
@@ -98,20 +100,19 @@ function addProducts(result) {
 
     // Añadir bordes
     const edgesGeometry = new THREE.EdgesGeometry(geometry);
-    const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 }); // Bordes negros
+    const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
-    for (let x = 0; x < result.productsPerWidth; x++) {
-        for (let z = 0; z < result.productsPerDepth; z++) {
-            for (let y = 0; y < result.productsPerHeight; y++) {
-                // Crear el cubo del producto
+    // Apilar desde la base hacia arriba
+    for (let y = 0; y < result.productsPerHeight; y++) {
+        for (let x = 0; x < result.productsPerWidth; x++) {
+            for (let z = 0; z < result.productsPerDepth; z++) {
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
                     x * (productWidth + gap) + productWidth / 2,
-                    y * (productHeight + gap) + productHeight / 2,
+                    y * (productHeight + gap) + productHeight / 2, // Apilar desde y=0
                     z * (productDepth + gap) + productDepth / 2
                 );
 
-                // Añadir bordes al cubo
                 const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
                 edges.position.copy(product.position);
 
@@ -192,7 +193,7 @@ function calculateCubicaje() {
             break;
         case "vertical":
             orientations = [
-                [productWidth, productGrade, productHeight],
+                [productWidth, productDepth, productHeight],
                 [productDepth, productWidth, productHeight]
             ].filter(([w, d, h]) => h === productHeight);
             break;
