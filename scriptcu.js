@@ -95,6 +95,12 @@ function addProducts(result) {
     const productDepth = pDepth / 100;
     const gap = 0.01; // Espacio entre productos (en metros)
 
+    // Obtener dimensiones ajustadas del contenedor
+    const margin = parseFloat(document.getElementById("margin").value) / 100 || 0.05;
+    const containerWidth = (parseFloat(document.getElementById("containerWidth").value) * (1 - margin)) / 100 || 1;
+    const containerHeight = (parseFloat(document.getElementById("containerHeight").value) * (1 - margin)) / 100 || 1;
+    const containerDepth = (parseFloat(document.getElementById("containerDepth").value) * (1 - margin)) / 100 || 1;
+
     const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
 
@@ -102,15 +108,24 @@ function addProducts(result) {
     const edgesGeometry = new THREE.EdgesGeometry(geometry);
     const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
+    // Calcular el espacio total ocupado por los productos (incluyendo gaps)
+    const totalWidth = result.productsPerWidth * productWidth + (result.productsPerWidth - 1) * gap;
+    const totalDepth = result.productsPerDepth * productDepth + (result.productsPerDepth - 1) * gap;
+    const totalHeight = result.productsPerHeight * productHeight + (result.productsPerHeight - 1) * gap;
+
+    // Calcular offset para centrar los productos dentro del contenedor ajustado
+    const offsetX = (containerWidth - totalWidth) / 2;
+    const offsetZ = (containerDepth - totalDepth) / 2;
+
     // Apilar desde la base hacia arriba
     for (let y = 0; y < result.productsPerHeight; y++) {
         for (let x = 0; x < result.productsPerWidth; x++) {
             for (let z = 0; z < result.productsPerDepth; z++) {
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
-                    x * (productWidth + gap) + productWidth / 2,
+                    offsetX + x * (productWidth + gap) + productWidth / 2,
                     y * (productHeight + gap) + productHeight / 2, // Apilar desde y=0
-                    z * (productDepth + gap) + productDepth / 2
+                    offsetZ + z * (productDepth + gap) + productDepth / 2
                 );
 
                 const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
