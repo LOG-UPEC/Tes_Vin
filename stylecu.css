@@ -2,13 +2,13 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-color: #f0f0f0;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background: #fff;
+    background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -19,32 +19,25 @@ h1 {
     color: #333;
 }
 
-h2 {
-    color: #444;
-    margin-top: 20px;
-}
-
-.input-section {
+.section {
     margin-bottom: 20px;
 }
 
-.input-group, .radio-group, .checkbox-group {
-    margin-bottom: 15px;
+h2 {
+    color: #444;
+    margin-top: 0;
 }
 
 label {
-    display: block;
+    display: inline-block;
+    width: 150px;
     margin-bottom: 5px;
-    color: #555;
 }
 
 input[type="number"], select {
-    width: 100%;
-    padding: 8px;
+    width: 150px;
+    padding: 5px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
 }
 
 button {
@@ -61,63 +54,31 @@ button:hover {
     background-color: #45a049;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
 #result {
     margin-top: 20px;
     padding: 10px;
-    background-color: #e6f3ff;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    display: none;
 }
 
-#result.show {
-    display: block;
+#result #error {
+    color: red;
 }
 
-#error {
-    color: #ff0000;
-}
-
-#success {
-    color: #006600;
+#result #success {
+    color: green;
 }
 
 #threejs-container {
-    margin: 20px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    width: 400px;
+    height: 400px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
 }
 
-#resultsChart {
-    margin-top: 20px;
+.product-section {
     border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
     border-radius: 4px;
-}
-
-@media (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
-    input[type="number"], select {
-        width: 100%;
-    }
-    button {
-        width: 100%;
-        margin-bottom: 10px;
-    }
 }
