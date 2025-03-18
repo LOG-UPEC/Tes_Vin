@@ -1,8 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
+    background-color: #f4f4f4;
 }
 
 .container {
@@ -20,26 +20,31 @@ h1 {
 }
 
 h2 {
-    color: #555;
+    color: #444;
     margin-top: 20px;
 }
 
-.section {
+.input-section {
     margin-bottom: 20px;
+}
+
+.input-group, .radio-group, .checkbox-group {
+    margin-bottom: 15px;
 }
 
 label {
     display: block;
-    margin: 10px 0;
+    margin-bottom: 5px;
+    color: #555;
 }
 
-input[type="number"],
-select {
+input[type="number"], select {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 button {
@@ -49,41 +54,70 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin: 5px 0;
+    margin-right: 10px;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-.product {
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+th, td {
     border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
+    padding: 8px;
+    text-align: left;
 }
 
-#threejs-container {
-    width: 400px;
-    height: 400px;
-    margin: 0 auto;
-}
-
-#resultsChart {
-    max-width: 400px;
-    margin: 0 auto;
+th {
+    background-color: #f2f2f2;
 }
 
 #result {
+    margin-top: 20px;
     padding: 10px;
+    background-color: #e6f3ff;
+    border-radius: 4px;
+    display: none;
+}
+
+#result.show {
+    display: block;
+}
+
+#error {
+    color: #ff0000;
+}
+
+#success {
+    color: #006600;
+}
+
+#threejs-container {
+    margin: 20px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-#success {
-    color: #2e7d32;
+#resultsChart {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-#error {
-    color: #d32f2f;
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    input[type="number"], select {
+        width: 100%;
+    }
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }
