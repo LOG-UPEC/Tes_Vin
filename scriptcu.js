@@ -9,11 +9,11 @@ function applyPreset() {
     const preset = document.getElementById("containerPreset").value;
     if (preset !== "custom") {
         const { height, width, depth, maxWeight, safeHeight } = containerPresets[preset];
-        document.getElementById("containerHeight").value = height;
-        document.getElementById("containerWidth").value = width;
-        document.getElementById("containerDepth").value = depth;
-        document.getElementById("containerMaxWeight").value = maxWeight;
-        document.getElementById("safeHeight").value = safeHeight;
+        document.getElementById("altoContenedor").value = height;
+        document.getElementById("anchoContenedor").value = width;
+        document.getElementById("largoContenedor").value = depth;
+        document.getElementById("pesoMaxContenedor").value = maxWeight;
+        document.getElementById("alturaSegura").value = safeHeight;
     }
     if (window.scene) initThreeJS(); // Reconstruir escena si cambia preset
 }
@@ -47,14 +47,14 @@ function initThreeJS() {
     const canvas = document.getElementById('threejs-container').appendChild(renderer.domElement);
 
     // Contenedor
-    const containerWidth = parseFloat(document.getElementById("containerWidth").value) / 100 || 1;
-    const containerHeight = parseFloat(document.getElementById("containerHeight").value) / 100 || 1;
-    const containerDepth = parseFloat(document.getElementById("containerDepth").value) / 100 || 1;
-    const containerGeometry = new THREE.BoxGeometry(containerWidth, containerHeight, containerDepth);
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth); // Ajustado para largo, alto, ancho
     const containerEdges = new THREE.EdgesGeometry(containerGeometry);
     const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
     const containerWireframe = new THREE.LineSegments(containerEdges, containerMaterial);
-    containerWireframe.position.set(containerWidth / 2, containerHeight / 2, containerDepth / 2);
+    containerWireframe.position.set(containerDepth / 2, containerHeight / 2, containerWidth / 2);
     scene.add(containerWireframe);
 
     // Ajustar cámara
@@ -75,41 +75,41 @@ function initThreeJS() {
 
 function updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth) {
     camera.position.set(
-        containerWidth / 2 + cameraDistance,
+        containerDepth / 2 + cameraDistance,
         containerHeight / 2 + cameraDistance,
-        containerDepth / 2 + cameraDistance
+        containerWidth / 2 + cameraDistance
     );
-    camera.lookAt(containerWidth / 2, containerHeight / 2, containerDepth / 2);
+    camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2);
 }
 
 // Funciones para los botones de zoom
 function zoomIn() {
     const maxDim = Math.max(
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
     );
     cameraDistance -= maxDim * 0.2; // Acercar
     cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
-    updateCameraPosition(maxDim, 
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    updateCameraPosition(maxDim,
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
     );
 }
 
 function zoomOut() {
     const maxDim = Math.max(
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
     );
     cameraDistance += maxDim * 0.2; // Alejar
     cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
-    updateCameraPosition(maxDim, 
-        parseFloat(document.getElementById("containerWidth").value) / 100 || 1,
-        parseFloat(document.getElementById("containerHeight").value) / 100 || 1,
-        parseFloat(document.getElementById("containerDepth").value) / 100 || 1
+    updateCameraPosition(maxDim,
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
     );
 }
 
@@ -120,38 +120,39 @@ function animate() {
 
 function addProducts(result) {
     console.log("Añadiendo productos:", result);
-    const [pWidth, pDepth, pHeight] = result.orientation.split('x').map(parseFloat);
+    const [pWidth, pDepth, pHeight] = result.orientacionOptima;
     const productWidth = pWidth / 100;
     const productHeight = pHeight / 100;
     const productDepth = pDepth / 100;
     const gap = 0.01;
 
-    const margin = parseFloat(document.getElementById("margin").value) / 100 || 0.05;
-    const containerWidth = (parseFloat(document.getElementById("containerWidth").value) * (1 - margin)) / 100 || 1;
-    const containerHeight = (parseFloat(document.getElementById("containerHeight").value) * (1 - margin)) / 100 || 1;
-    const containerDepth = (parseFloat(document.getElementById("containerDepth").value) * (1 - margin)) / 100 || 1;
+    const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1;
 
-    const geometry = new THREE.BoxGeometry(productWidth, productHeight, productDepth);
+    const geometry = new THREE.BoxGeometry(productDepth, productHeight, productWidth); // Ajustado a largo, alto, ancho
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
 
     const edgesGeometry = new THREE.EdgesGeometry(geometry);
     const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
-    const totalWidth = result.productsPerWidth * productWidth + (result.productsPerWidth - 1) * gap;
-    const totalDepth = result.productsPerDepth * productDepth + (result.productsPerDepth - 1) * gap;
-    const totalHeight = result.productsPerHeight * productHeight + (result.productsPerHeight - 1) * gap;
+    const totalWidth = result.desglose.productosAncho * productDepth + (result.desglose.productosAncho - 1) * gap;
+    const totalDepth = result.desglose.productosLargo * productWidth + (result.desglose.productosLargo - 1) * gap;
+    const totalHeight = result.desglose.capasCompletas * productHeight + (result.desglose.capasCompletas - 1) * gap;
 
-    const offsetX = (containerWidth - totalWidth) / 2;
-    const offsetZ = (containerDepth - totalDepth) / 2;
+    const offsetX = (containerDepth - totalWidth) / 2;
+    const offsetZ = (containerWidth - totalDepth) / 2;
 
-    for (let y = 0; y < result.productsPerHeight; y++) {
-        for (let x = 0; x < result.productsPerWidth; x++) {
-            for (let z = 0; z < result.productsPerDepth; z++) {
+    // Dibujar filas completas
+    for (let y = 0; y < result.desglose.capasCompletas; y++) {
+        for (let x = 0; x < result.desglose.productosAncho; x++) {
+            for (let z = 0; z < result.desglose.productosLargo; z++) {
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
-                    offsetX + x * (productWidth + gap) + productWidth / 2,
+                    offsetX + x * (productDepth + gap) + productDepth / 2,
                     y * (productHeight + gap) + productHeight / 2,
-                    offsetZ + z * (productDepth + gap) + productDepth / 2
+                    offsetZ + z * (productWidth + gap) + productWidth / 2
                 );
 
                 const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
@@ -161,6 +162,34 @@ function addProducts(result) {
                 scene.add(product);
                 scene.add(edges);
             }
+        }
+    }
+
+    // Dibujar sobrantes
+    if (result.desglose.sobrantes > 0) {
+        const capaSobrante = result.desglose.capasCompletas;
+        let sobrantesRestantes = result.desglose.sobrantes;
+        let filaSobrante = 0;
+
+        while (sobrantesRestantes > 0) {
+            const sobrantesPorFila = Math.min(sobrantesRestantes, result.desglose.productosAncho);
+            for (let x = 0; x < sobrantesPorFila; x++) {
+                const product = new THREE.Mesh(geometry, material);
+                product.position.set(
+                    offsetX + x * (productDepth + gap) + productDepth / 2,
+                    capaSobrante * (productHeight + gap) + productHeight / 2,
+                    0 // Centrado en profundidad para simplicidad
+                );
+
+                const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+                edges.position.copy(product.position);
+
+                products.push(product);
+                scene.add(product);
+                scene.add(edges);
+            }
+            sobrantesRestantes -= sobrantesPorFila;
+            filaSobrante++;
         }
     }
 }
@@ -202,181 +231,182 @@ function createChart(volumeUsage, weightUsage) {
 }
 
 function calculateCubicaje() {
-    const containerHeight = parseFloat(document.getElementById("containerHeight").value);
-    const containerWidth = parseFloat(document.getElementById("containerWidth").value);
-    const containerDepth = parseFloat(document.getElementById("containerDepth").value);
-    const containerMaxWeight = parseFloat(document.getElementById("containerMaxWeight").value);
-    const safeHeight = parseFloat(document.getElementById("safeHeight").value) || containerHeight;
-    const margin = parseFloat(document.getElementById("margin").value) / 100 || 0.05;
-
-    const productHeight = parseFloat(document.getElementById("productHeight").value);
-    const productWidth = parseFloat(document.getElementById("productWidth").value);
-    const productDepth = parseFloat(document.getElementById("productDepth").value);
-    const productWeight = parseFloat(document.getElementById("productWeight").value);
-
-    const orientation = document.querySelector('input[name="orientation"]:checked').value;
-    const isFragile = document.getElementById("fragile").checked;
-    const maxStack = isFragile ? parseInt(document.getElementById("maxStack").value) || Infinity : Infinity;
-    const isNonStackable = document.getElementById("nonStackable").checked;
+    const contenedor = {
+        alto: parseFloat(document.getElementById("altoContenedor").value) || 0,
+        ancho: parseFloat(document.getElementById("anchoContenedor").value) || 0,
+        largo: parseFloat(document.getElementById("largoContenedor").value) || 0,
+        pesoMax: parseFloat(document.getElementById("pesoMaxContenedor").value) || 0,
+        alturaSegura: parseFloat(document.getElementById("alturaSegura").value) || 0,
+        margen: parseFloat(document.getElementById("margen").value) / 100 || 0.05
+    };
+    const producto = {
+        alto: parseFloat(document.getElementById("altoProducto").value) || 0,
+        ancho: parseFloat(document.getElementById("anchoProducto").value) || 0,
+        largo: parseFloat(document.getElementById("largoProducto").value) || 0,
+        peso: parseFloat(document.getElementById("pesoProducto").value) || 0,
+        fragil: document.getElementById("fragil").checked,
+        noApilable: document.getElementById("noApilable").checked
+    };
+    const orientacion = document.querySelector('input[name="orientacion"]:checked').value;
     const shape = document.getElementById("shape").value;
 
     const resultDiv = document.getElementById("result");
 
-    if (isNaN(containerHeight) || isNaN(containerWidth) || isNaN(containerDepth) || isNaN(containerMaxWeight) ||
-        isNaN(productHeight) || isNaN(productWidth) || isNaN(productDepth) || isNaN(productWeight) ||
-        containerHeight <= 0 || containerWidth <= 0 || containerDepth <= 0 || containerMaxWeight <= 0 ||
-        productHeight <= 0 || productWidth <= 0 || productDepth <= 0 || productWeight <= 0 ||
-        (isFragile && (isNaN(maxStack) || maxStack <= 0))) {
+    // Validaciones
+    if (isNaN(contenedor.alto) || isNaN(contenedor.ancho) || isNaN(contenedor.largo) || isNaN(contenedor.pesoMax) ||
+        isNaN(producto.alto) || isNaN(producto.ancho) || isNaN(producto.largo) || isNaN(producto.peso) ||
+        contenedor.alto <= 0 || contenedor.ancho <= 0 || contenedor.largo <= 0 || contenedor.pesoMax <= 0 ||
+        producto.alto <= 0 || producto.ancho <= 0 || producto.largo <= 0 || producto.peso <= 0) {
         resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas correctamente (valores positivos).</div>";
         document.getElementById("exportPdf").style.display = "none";
         return;
     }
 
-    const adjustedContainerHeight = containerHeight * (1 - margin);
-    const adjustedContainerWidth = containerWidth * (1 - margin);
-    const adjustedContainerDepth = containerDepth * (1 - margin);
+    // Ajuste por margen
+    const contenedorAjustado = {
+        altoAjustado: contenedor.alto * (1 - contenedor.margen),
+        anchoAjustado: contenedor.ancho * (1 - contenedor.margen),
+        largoAjustado: contenedor.largo * (1 - contenedor.margen),
+        pesoMax: contenedor.pesoMax,
+        alturaSegura: contenedor.alturaSegura
+    };
 
+    // Factor de volumen según forma
     let volumeFactor = 1.0;
     switch (shape) {
         case "cylinder": volumeFactor = 0.785; break;
         case "sphere": volumeFactor = 0.524; break;
     }
-    const productVolume = productHeight * productWidth * productDepth * volumeFactor;
-    const containerVolume = adjustedContainerHeight * adjustedContainerWidth * adjustedContainerDepth;
+    const productoVolumen = producto.alto * producto.ancho * producto.largo * volumeFactor;
+    const contenedorVolumen = contenedorAjustado.altoAjustado * contenedorAjustado.anchoAjustado * contenedorAjustado.largoAjustado;
 
-    if (productVolume > containerVolume) {
+    if (productoVolumen > contenedorVolumen) {
         resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por volumen (con margen).</div>";
         document.getElementById("exportPdf").style.display = "none";
         return;
     }
 
-    let orientations = [];
-    switch (orientation) {
+    // Generar orientaciones
+    let orientaciones = [];
+    switch (orientacion) {
         case "none":
-            orientations = [
-                [productWidth, productDepth, productHeight],
-                [productWidth, productHeight, productDepth],
-                [productDepth, productWidth, productHeight],
-                [productDepth, productHeight, productWidth],
-                [productHeight, productWidth, productDepth],
-                [productHeight, productDepth, productWidth]
+            orientaciones = [
+                [producto.ancho, producto.largo, producto.alto],
+                [producto.ancho, producto.alto, producto.largo],
+                [producto.largo, producto.ancho, producto.alto],
+                [producto.largo, producto.alto, producto.ancho],
+                [producto.alto, producto.ancho, producto.largo],
+                [producto.alto, producto.largo, producto.ancho]
             ];
             break;
         case "horizontal":
-            orientations = [
-                [productWidth, productDepth, productHeight],
-                [productDepth, productWidth, productHeight]
+            orientaciones = [
+                [producto.ancho, producto.largo, producto.alto],
+                [producto.largo, producto.ancho, producto.alto]
             ];
             break;
         case "vertical":
-            orientations = [
-                [productWidth, productDepth, productHeight],
-                [productDepth, productWidth, productHeight]
-            ].filter(([w, d, h]) => h === productHeight);
+            orientaciones = [[producto.ancho, producto.largo, producto.alto]];
             break;
         case "fixed":
-            orientations = [[productWidth, productDepth, productHeight]];
+            orientaciones = [[producto.ancho, producto.largo, producto.alto]];
             break;
     }
 
-    let bestResult = null;
-    let bestBaseArea = 0;
-
-    for (const [pWidth, pDepth, pHeight] of orientations) {
-        if (pWidth > adjustedContainerWidth || pDepth > adjustedContainerDepth || pHeight > adjustedContainerHeight) {
-            continue;
+    // Cálculo óptimo
+    let maxProductos = 0, mejorOrientacion = [], mejorDesglose = {};
+    orientaciones.forEach(orient => {
+        const [anchoP, largoP, altoP] = orient;
+        if (anchoP > contenedorAjustado.anchoAjustado || largoP > contenedorAjustado.largoAjustado || altoP > contenedorAjustado.alturaSegura) {
+            return;
         }
 
-        const productsPerWidth = Math.floor(adjustedContainerWidth / pWidth);
-        const productsPerDepth = Math.floor(adjustedContainerDepth / pDepth);
-        let productsPerHeight = Math.floor(adjustedContainerHeight / pHeight);
+        const productosAncho = Math.floor(contenedorAjustado.anchoAjustado / anchoP);
+        const productosLargo = Math.floor(contenedorAjustado.largoAjustado / largoP);
+        let productosAlto = Math.floor(contenedorAjustado.alturaSegura / altoP);
 
-        if (isNonStackable) productsPerHeight = 1;
-        if (isFragile && productsPerHeight > maxStack) productsPerHeight = maxStack;
+        if (producto.noApilable) productosAlto = 1;
+        if (producto.fragil) productosAlto = Math.min(productosAlto, 3);
 
-        let totalProducts = productsPerWidth * productsPerDepth * productsPerHeight;
-        let totalWeight = totalProducts * productWeight;
+        const productosPorCapa = productosAncho * productosLargo;
+        const totalProductos = productosPorCapa * productosAlto;
+        const pesoTotal = totalProductos * producto.peso;
 
-        while (totalWeight > containerMaxWeight && productsPerHeight > 0) {
-            productsPerHeight--;
-            totalProducts = productsPerWidth * productsPerDepth * productsPerHeight;
-            totalWeight = totalProducts * productWeight;
+        if (pesoTotal <= contenedor.pesoMax && totalProductos > maxProductos) {
+            maxProductos = totalProductos;
+            mejorOrientacion = orient;
+            mejorDesglose = {
+                productosAncho,
+                productosLargo,
+                capasCompletas: productosAlto,
+                sobrantes: 0 // Inicialmente 0
+            };
         }
+    });
 
-        const totalHeight = productsPerHeight * pHeight;
-        if (totalHeight > safeHeight) {
-            productsPerHeight = Math.floor(safeHeight / pHeight);
-            totalProducts = productsPerWidth * productsPerDepth * productsPerHeight;
-            totalWeight = totalProducts * productWeight;
-        }
+    // Calcular sobrantes si el total no llena capas completas
+    const productosPorCapa = mejorDesglose.productosAncho * mejorDesglose.productosLargo;
+    const capasCompletas = Math.floor(maxProductos / productosPorCapa);
+    const sobrantes = maxProductos % productosPorCapa;
+    mejorDesglose.capasCompletas = capasCompletas;
+    mejorDesglose.sobrantes = sobrantes;
 
-        if (totalProducts <= 0) continue;
-
-        const usedVolume = totalProducts * productVolume;
-        const volumeUsage = (usedVolume / containerVolume) * 100;
-        const weightUsage = (totalWeight / containerMaxWeight) * 100;
-        const loadDensity = totalWeight / (usedVolume / 1000000);
-        const centerOfGravity = (productsPerHeight * pHeight) / 2;
-
-        const baseArea = pWidth * pDepth;
-
-        const result = {
-            totalProducts,
-            productsPerWidth,
-            productsPerDepth,
-            productsPerHeight,
-            volumeUsage,
-            weightUsage,
-            loadDensity,
-            centerOfGravity,
-            orientation: `${pWidth}x${pDepth}x${pHeight}`,
-            baseArea
-        };
-
-        if (!bestResult || totalProducts > bestResult.totalProducts || 
-            (totalProducts === bestResult.totalProducts && baseArea > bestBaseArea)) {
-            bestResult = result;
-            bestBaseArea = baseArea;
-        }
-    }
-
-    if (!bestResult) {
+    if (!mejorOrientacion) {
         resultDiv.innerHTML = "<div id='error'>No se encontró una orientación válida para el producto en el contenedor.</div>";
         document.getElementById("exportPdf").style.display = "none";
     } else {
+        const usedVolume = maxProductos * (mejorOrientacion[0] * mejorOrientacion[1] * mejorOrientacion[2] * volumeFactor);
+        const volumeUsage = (usedVolume / contenedorVolumen) * 100;
+        const weightUsage = (maxProductos * producto.peso / contenedor.pesoMax) * 100;
+        const loadDensity = (maxProductos * producto.peso) / (usedVolume / 1000000);
+        const centerOfGravity = (mejorDesglose.capasCompletas * mejorOrientacion[2]) / 2;
+
         const shapeText = shape === "prism" ? "Prisma" : shape === "cylinder" ? "Cilindro (78.5%)" : "Esfera (52.4%)";
         resultDiv.innerHTML = `
             <div id='success'>
-                <p><strong>Orientación óptima (Ancho x Largo x Alto):</strong> ${bestResult.orientation} cm</p>
-                <p><strong>Total productos:</strong> ${bestResult.totalProducts}</p>
-                <p><strong>Productos por ancho:</strong> ${bestResult.productsPerWidth}</p>
-                <p><strong>Productos por largo:</strong> ${bestResult.productsPerDepth}</p>
-                <p><strong>Productos en altura:</strong> ${bestResult.productsPerHeight}</p>
-                <p><strong>Porcentaje de espacio utilizado:</strong> ${bestResult.volumeUsage.toFixed(2)}%</p>
-                <p><strong>Porcentaje de peso utilizado:</strong> ${bestResult.weightUsage.toFixed(2)}%</p>
-                <p><strong>Densidad de carga:</strong> ${bestResult.loadDensity.toFixed(2)} kg/m³</p>
-                <p><strong>Centro de gravedad:</strong> ${bestResult.centerOfGravity.toFixed(2)} cm (Altura segura: ${safeHeight} cm)</p>
+                <p><strong>Orientación óptima (Ancho x Largo x Alto):</strong> ${mejorOrientacion.join('x')} cm</p>
+                <p><strong>Total productos:</strong> ${maxProductos}</p>
+                <p><strong>Productos por ancho:</strong> ${mejorDesglose.productosAncho}</p>
+                <p><strong>Productos por largo:</strong> ${mejorDesglose.productosLargo}</p>
+                <p><strong>Capas completas:</strong> ${mejorDesglose.capasCompletas}</p>
+                <p><strong>Sobrantes:</strong> ${mejorDesglose.sobrantes}</p>
+                <p><strong>Porcentaje de espacio utilizado:</strong> ${volumeUsage.toFixed(2)}%</p>
+                <p><strong>Porcentaje de peso utilizado:</strong> ${weightUsage.toFixed(2)}%</p>
+                <p><strong>Densidad de carga:</strong> ${loadDensity.toFixed(2)} kg/m³</p>
+                <p><strong>Centro de gravedad:</strong> ${centerOfGravity.toFixed(2)} cm (Altura segura: ${contenedor.alturaSegura} cm)</p>
                 <p><strong>Forma ajustada:</strong> ${shapeText}</p>
             </div>
         `;
         document.getElementById("exportPdf").style.display = "block";
-        window.bestResult = bestResult;
+        window.bestResult = {
+            orientacionOptima: mejorOrientacion.join('x'),
+            totalProductos: maxProductos,
+            desglose: mejorDesglose,
+            volumeUsage: volumeUsage,
+            weightUsage: weightUsage,
+            loadDensity: loadDensity,
+            centerOfGravity: centerOfGravity
+        };
         window.shapeText = shapeText;
         window.inputData = {
-            containerHeight,
-            containerWidth,
-            containerDepth,
-            containerMaxWeight,
-            safeHeight,
-            margin: margin * 100,
-            productHeight,
-            productWidth,
-            productDepth,
-            productWeight
+            altoContenedor: contenedor.alto,
+            anchoContenedor: contenedor.ancho,
+            largoContenedor: contenedor.largo,
+            pesoMaxContenedor: contenedor.pesoMax,
+            alturaSegura: contenedor.alturaSegura,
+            margen: contenedor.margen * 100,
+            altoProducto: producto.alto,
+            anchoProducto: producto.ancho,
+            largoProducto: producto.largo,
+            pesoProducto: producto.peso
         };
         initThreeJS();
-        addProducts(bestResult);
-        createChart(bestResult.volumeUsage, bestResult.weightUsage); // Crear el gráfico de barras
+        addProducts({
+            orientacionOptima: mejorOrientacion,
+            desglose: mejorDesglose,
+            contenedor: contenedorAjustado
+        });
+        createChart(volumeUsage, weightUsage); // Crear el gráfico de barras
     }
 }
 
@@ -404,18 +434,18 @@ function exportToPdf() {
     const inputData = window.inputData;
     const inputText = [
         "Medidas del Contenedor:",
-        `Alto: ${inputData.containerHeight} cm`,
-        `Ancho: ${inputData.containerWidth} cm`,
-        `Largo: ${inputData.containerDepth} cm`,
-        `Capacidad Máxima: ${inputData.containerMaxWeight} kg`,
-        `Altura Segura: ${inputData.safeHeight} cm`,
-        `Margen de Maniobra: ${inputData.margin}%`,
+        `Alto: ${inputData.altoContenedor} cm`,
+        `Ancho: ${inputData.anchoContenedor} cm`,
+        `Largo: ${inputData.largoContenedor} cm`,
+        `Capacidad Máxima: ${inputData.pesoMaxContenedor} kg`,
+        `Altura Segura: ${inputData.alturaSegura} cm`,
+        `Margen de Maniobra: ${inputData.margen}%`,
         "",
         "Medidas del Producto:",
-        `Alto: ${inputData.productHeight} cm`,
-        `Ancho: ${inputData.productWidth} cm`,
-        `Largo: ${inputData.productDepth} cm`,
-        `Peso: ${inputData.productWeight} kg`
+        `Alto: ${inputData.altoProducto} cm`,
+        `Ancho: ${inputData.anchoProducto} cm`,
+        `Largo: ${inputData.largoProducto} cm`,
+        `Peso: ${inputData.pesoProducto} kg`
     ];
     doc.text(inputText, 10, yPosition, { maxWidth: 180 });
     yPosition += inputText.length * 5 + 10;
@@ -428,15 +458,16 @@ function exportToPdf() {
     const result = window.bestResult;
     const shapeText = window.shapeText;
     const resultText = [
-        `Orientación óptima (Ancho x Largo x Alto): ${result.orientation} cm`,
-        `Total productos: ${result.totalProducts}`,
-        `Productos por ancho: ${result.productsPerWidth}`,
-        `Productos por largo: ${result.productsPerDepth}`,
-        `Productos en altura: ${result.productsPerHeight}`,
+        `Orientación óptima (Ancho x Largo x Alto): ${result.orientacionOptima} cm`,
+        `Total productos: ${result.totalProductos}`,
+        `Productos por ancho: ${result.desglose.productosAncho}`,
+        `Productos por largo: ${result.desglose.productosLargo}`,
+        `Capas completas: ${result.desglose.capasCompletas}`,
+        `Sobrantes: ${result.desglose.sobrantes}`,
         `Porcentaje de espacio utilizado: ${result.volumeUsage.toFixed(2)}%`,
         `Porcentaje de peso utilizado: ${result.weightUsage.toFixed(2)}%`,
         `Densidad de carga: ${result.loadDensity.toFixed(2)} kg/m³`,
-        `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${safeHeight} cm)`,
+        `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${inputData.alturaSegura} cm)`,
         `Forma ajustada: ${shapeText}`
     ];
     doc.text(resultText, 10, yPosition, { maxWidth: 180 });
@@ -467,7 +498,7 @@ function exportToPdf() {
 }
 
 // Habilitar/deshabilitar input de máximo de filas según "Frágil"
-document.getElementById("fragile").addEventListener("change", function() {
+document.getElementById("fragil").addEventListener("change", function() {
     document.getElementById("maxStack").disabled = !this.checked;
 });
 
