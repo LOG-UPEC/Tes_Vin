@@ -3,87 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cubicaje - OPTITRANS</title>
+    <title>Calculadora de Cubicaje - OPTITRANS</title>
     <link rel="stylesheet" href="stylecu.css">
 </head>
 <body>
     <div class="container">
-        <h1>Cubicaje - OPTITRANS</h1>
-        <div class="input-section">
-            <label for="containerPreset">Seleccionar Preset:</label>
+        <h1>Calculadora de Cubicaje - OPTITRANS</h1>
+        
+        <div class="section">
+            <label for="containerPreset">Seleccione un preset:</label>
             <select id="containerPreset" onchange="applyPreset()">
                 <option value="custom">Personalizado</option>
                 <option value="20ft">20ft</option>
                 <option value="40ft">40ft</option>
                 <option value="euroPallet">Euro Pallet</option>
             </select>
+        </div>
 
+        <div class="section">
             <h2>Ingrese las medidas del contenedor</h2>
-            <div class="input-group">
-                <label>Alto (cm):</label><input type="number" id="altoContenedor" value="239">
-                <label>Ancho (cm):</label><input type="number" id="anchoContenedor" value="235">
-                <label>Largo (cm):</label><input type="number" id="largoContenedor" value="1200">
-                <label>Capacidad Máxima (kg):</label><input type="number" id="pesoMaxContenedor" value="30480">
-                <label>Altura Segura Máxima (cm):</label><input type="number" id="alturaSegura" value="239">
-                <label>Margen de Maniobra (%):</label><input type="number" id="margen" value="5" min="0" max="20">
+            <label>Alto (cm):</label><input type="number" id="altoContenedor" value="239"><br>
+            <label>Ancho (cm):</label><input type="number" id="anchoContenedor" value="235"><br>
+            <label>Largo (cm):</label><input type="number" id="largoContenedor" value="1200"><br>
+            <label>Capacidad Máxima (kg):</label><input type="number" id="pesoMaxContenedor" value="30480"><br>
+            <label>Altura Segura Máxima (cm):</label><input type="number" id="alturaSegura" value="239"><br>
+            <label>Margen de Maniobra (%):</label><input type="number" id="margen" value="5" min="0" max="20"><br>
+        </div>
+
+        <div class="section">
+            <h2>Ingrese la cantidad de productos</h2>
+            <label>Número de productos:</label><input type="number" id="productCount" value="1" min="1" onchange="updateProductFields()">
+            <div id="productsContainer">
+                <div class="product-section" id="product1">
+                    <h3>Producto 1</h3>
+                    <label>Alto (cm):</label><input type="number" id="altoProducto1" value="110"><br>
+                    <label>Ancho (cm):</label><input type="number" id="anchoProducto1" value="63"><br>
+                    <label>Largo (cm):</label><input type="number" id="largoProducto1" value="110"><br>
+                    <label>Peso (kg):</label><input type="number" id="pesoProducto1" value="456"><br>
+                    <label><input type="checkbox" id="fragil1"> Frágil</label><br>
+                    <label><input type="checkbox" id="noApilable1"> No Apilable</label><br>
+                    <label>Máximo de Filas Apiladas:</label><input type="number" id="maxStack1" value="3" disabled><br>
+                </div>
             </div>
+        </div>
 
-            <h2>Ingrese las medidas de los productos</h2>
-            <table id="productsTable">
-                <thead>
-                    <tr>
-                        <th>Alto (cm)</th>
-                        <th>Ancho (cm)</th>
-                        <th>Largo (cm)</th>
-                        <th>Peso (kg)</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="number" class="product-alto" value="110"></td>
-                        <td><input type="number" class="product-ancho" value="63"></td>
-                        <td><input type="number" class="product-largo" value="110"></td>
-                        <td><input type="number" class="product-peso" value="456"></td>
-                        <td><button onclick="removeProduct(this)">Eliminar</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <button onclick="addProductRow()">Agregar Producto</button>
-
+        <div class="section">
             <h2>Opciones de Orientación</h2>
-            <div class="radio-group">
-                <label><input type="radio" name="orientacion" value="none" checked> Ninguna (Permitir todas)</label>
-                <label><input type="radio" name="orientacion" value="horizontal"> Horizontal (Rotar solo en base)</label>
-                <label><input type="radio" name="orientacion" value="vertical"> Vertical (Mantener altura fija)</label>
-                <label><input type="radio" name="orientacion" value="fixed"> Fija</label>
-            </div>
+            <label><input type="radio" name="orientacion" value="none" checked> Ninguna (Permitir todas)</label><br>
+            <label><input type="radio" name="orientacion" value="horizontal"> Horizontal (Rotar solo en base)</label><br>
+            <label><input type="radio" name="orientacion" value="vertical"> Vertical (Mantener altura fija)</label><br>
+            <label><input type="radio" name="orientacion" value="fixed"> Fija</label><br>
+        </div>
 
-            <h2>Restricciones del Producto</h2>
-            <div class="checkbox-group">
-                <label><input type="checkbox" id="fragil"> Frágil</label>
-                <label>Máximo de Filas Apiladas:<input type="number" id="maxStack" disabled value="3" min="1" max="10"></label>
-                <label><input type="checkbox" id="noApilable"> No Apilable</label>
-            </div>
+        <div class="section">
+            <h2>Forma del Producto</h2>
             <select id="shape">
                 <option value="prism">Prisma</option>
                 <option value="cylinder">Cilindro</option>
                 <option value="sphere">Esfera</option>
             </select>
-
-            <button onclick="calcularCubicaje()">Calcular Cubicaje</button>
         </div>
 
+        <button onclick="calcularCubicaje()">Calcular Cubicaje</button>
         <div id="result"></div>
         <button id="exportPdf" style="display: none;" onclick="exportToPdf()">Exportar a PDF</button>
 
-        <div id="threejs-container"></div>
-        <div>
-            <button onclick="zoomIn()">Acercar</button>
+        <div class="section">
+            <h2>Visualización 3D</h2>
+            <div id="threejs-container"></div>
+            <button onclick="zoomIn()">Acerar</button>
             <button onclick="zoomOut()">Alejar</button>
         </div>
-        <canvas id="resultsChart" width="400" height="200"></canvas>
-        <h3>Resultados Gráficos</h3>
+
+        <div class="section">
+            <h2>Resultados Gráficos</h2>
+            <canvas id="resultsChart" width="400" height="200"></canvas>
+        </div>
+
     </div>
 
     <!-- Librerías -->
@@ -92,5 +88,29 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="scriptcu.js"></script>
+
+    <script>
+        function updateProductFields() {
+            const count = document.getElementById("productCount").value;
+            const container = document.getElementById("productsContainer");
+            container.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                container.innerHTML += `
+                    <div class="product-section" id="product${i}">
+                        <h3>Producto ${i}</h3>
+                        <label>Alto (cm):</label><input type="number" id="altoProducto${i}" value="110"><br>
+                        <label>Ancho (cm):</label><input type="number" id="anchoProducto${i}" value="63"><br>
+                        <label>Largo (cm):</label><input type="number" id="largoProducto${i}" value="110"><br>
+                        <label>Peso (kg):</label><input type="number" id="pesoProducto${i}" value="456"><br>
+                        <label><input type="checkbox" id="fragil${i}"> Frágil</label><br>
+                        <label><input type="checkbox" id="noApilable${i}"> No Apilable</label><br>
+                        <label>Máximo de Filas Apiladas:</label><input type="number" id="maxStack${i}" value="3" disabled><br>
+                    </div>
+                `;
+            }
+            if (window.scene) initThreeJS(); // Reconstruir escena si cambia
+        }
+        updateProductFields(); // Inicializar con 1 producto
+    </script>
 </body>
 </html>
