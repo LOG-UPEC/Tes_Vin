@@ -34,6 +34,7 @@ download-btn {
     display: inline-block;
     transition: background-color 0.3s, transform 0.3s;
     margin-top: 10px; /* Espacio superior para separarlo del "Inicio" */
+}
 
 nav ul {
     list-style: none;
