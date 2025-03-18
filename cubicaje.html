@@ -97,6 +97,17 @@
         </div>
     </div>
 
+    <script>
+        // Añadir depuración para confirmar carga del script
+        window.onload = function() {
+            console.log("Página cargada. Verificando scriptcu.js...");
+            if (typeof calcularCubicaje === 'undefined') {
+                console.error("Error: La función calcularCubicaje no está definida. Verifica que scriptcu.js se cargó correctamente.");
+            } else {
+                console.log("Función calcularCubicaje encontrada.");
+            }
+        };
+    </script>
     <script src="scriptcu.js"></script>
 </body>
 </html>
