@@ -1,103 +1,535 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Cubicaje - OPTITRANS</title>
-    <link rel="stylesheet" href="stylecu.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-</head>
-<body>
-    <!-- Franja azul con título y botón de atrás -->
-    <div class="header-bar">
-        <a href="inicio.html"><img src="regresar.svg" alt="Regresar" class="regresar-icon"></a>
-        <h1 class="header-title">Calculadora de Cubicaje - OPTITRANS</h1>
-    </div>
+// Presets de contenedores
+const containerPresets = {
+    "20ft": { height: 239, width: 235, depth: 590, maxWeight: 28000, safeHeight: 239 },
+    "40ft": { height: 239, width: 235, depth: 1200, maxWeight: 30480, safeHeight: 239 },
+    "euroPallet": { height: 144, width: 80, depth: 120, maxWeight: 1500, safeHeight: 200 }
+};
 
-    <div class="container">
-        <div class="section">
-            <h2>Seleccione el tipo de contenedor</h2>
-            <select id="containerPreset" onchange="applyPreset()">
-                <option value="custom">Personalizado</option>
-                <option value="20ft">Contenedor 20 pies</option>
-                <option value="40ft">Contenedor 40 pies</option>
-                <option value="euroPallet">Pallet Europeo</option>
-            </select>
-        </div>
+function applyPreset() {
+    console.log("Aplicando preset...");
+    const preset = document.getElementById("containerPreset").value;
+    if (preset !== "custom") {
+        const { height, width, depth, maxWeight, safeHeight } = containerPresets[preset];
+        document.getElementById("altoContenedor").value = height;
+        document.getElementById("anchoContenedor").value = width;
+        document.getElementById("largoContenedor").value = depth;
+        document.getElementById("pesoMaxContenedor").value = maxWeight;
+        document.getElementById("alturaSegura").value = safeHeight;
+    }
+    if (window.scene) initThreeJS(); // Reconstruir escena si cambia preset
+}
 
-        <div class="section">
-            <h2>Ingrese las medidas del contenedor</h2>
-            <label for="altoContenedor">Alto (cm):</label>
-            <input type="number" id="altoContenedor" step="0.01"><br>
-            <label for="anchoContenedor">Ancho (cm):</label>
-            <input type="number" id="anchoContenedor" step="0.01"><br>
-            <label for="largoContenedor">Largo (cm):</label>
-            <input type="number" id="largoContenedor" step="0.01"><br>
-            <label for="pesoMaxContenedor">Capacidad Máxima (kg):</label>
-            <input type="number" id="pesoMaxContenedor" step="0.01"><br>
-            <label for="alturaSegura">Altura Segura Máxima (cm):</label>
-            <input type="number" id="alturaSegura" step="0.01"><br>
-            <label for="margen">Margen de Maniobra (%):</label>
-            <input type="number" id="margen" value="5" step="0.01"><br>
-        </div>
+let scene, camera, renderer, products = [];
+let cameraDistance = 3; // Distancia inicial de la cámara
+let chart; // Variable para el gráfico de Chart.js
+let controls; // Para OrbitControls
 
-        <div class="section">
-            <h2>Ingrese las medidas del producto</h2>
-            <label for="altoProducto">Alto (cm):</label>
-            <input type="number" id="altoProducto" step="0.01"><br>
-            <label for="anchoProducto">Ancho (cm):</label>
-            <input type="number" id="anchoProducto" step="0.01"><br>
-            <label for="largoProducto">Largo (cm):</label>
-            <input type="number" id="largoProducto" step="0.01"><br>
-            <label for="pesoProducto">Peso (kg):</label>
-            <input type="number" id="pesoProducto" step="0.01"><br>
-        </div>
+function initThreeJS() {
+    console.log("Inicializando Three.js...");
+    if (!window.THREE) {
+        console.error("Three.js no está definido. Verifica que la librería se cargó.");
+        return;
+    }
 
-        <div class="section">
-            <h2>Opciones de Orientación</h2>
-            <label><input type="radio" name="orientacion" id="orientacionNinguna" value="none" checked> Ninguna (Permitir todas)</label><br>
-            <label><input type="radio" name="orientacion" id="orientacionHorizontal" value="horizontal"> Horizontal (Rotar solo en base)</label><br>
-            <label><input type="radio" name="orientacion" id="orientacionVertical" value="vertical"> Vertical (Mantener altura fija)</label><br>
-            <label><input type="radio" name="orientacion" id="orientacionFija" value="fixed"> Fija (Sin rotar)</label><br>
-        </div>
+    // Limpiar escena anterior
+    if (scene) {
+        while (scene.children.length > 0) scene.remove(scene.children[0]);
+        products = [];
+    }
 
-        <div class="section">
-            <h2>Restricciones del Producto</h2>
-            <label for="fragil"><input type="checkbox" id="fragil"> Frágil</label><br>
-            <label for="maxStack">Máximo de Filas Apiladas:</label>
-            <input type="number" id="maxStack" disabled step="1"><br>
-            <label for="noApilable"><input type="checkbox" id="noApilable"> No Apilable</label><br>
-            <label for="shape">Forma del Producto:</label>
-            <select id="shape">
-                <option value="prism">Prisma</option>
-                <option value="cylinder">Cilindro</option>
-                <option value="sphere">Esfera</option>
-            </select><br>
-        </div>
+    // Configurar escena
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xcccccc); // Fondo gris claro
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Añadir luz
+    scene.add(ambientLight);
+    camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(400, 400);
+    document.getElementById('threejs-container').innerHTML = '';
+    const canvas = document.getElementById('threejs-container').appendChild(renderer.domElement);
 
-        <button onclick="calcularCubicaje()">Calcular Cubicaje</button>
+    // Contenedor
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth); // X = largo, Y = alto, Z = ancho
+    const containerEdges = new THREE.EdgesGeometry(containerGeometry);
+    const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
+    const containerWireframe = new THREE.LineSegments(containerEdges, containerMaterial);
+    containerWireframe.position.set(containerDepth / 2, containerHeight / 2, containerWidth / 2);
+    scene.add(containerWireframe);
 
-        <div id="result"></div>
-        <button id="exportPdf" style="display: none;" onclick="exportToPdf()">Exportar a PDF</button>
+    // Ajustar cámara
+    const maxDim = Math.max(containerWidth, containerHeight, containerDepth);
+    cameraDistance = maxDim * 3; // Distancia inicial
+    updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth);
 
-        <div class="section">
-            <h2>Visualización 3D</h2>
-            <div id="threejs-container"></div>
-            <div class="zoom-controls">
-                <button onclick="zoomIn()">Acercar</button>
-                <button onclick="zoomOut()">Alejar</button>
+    // Añadir OrbitControls para rotación
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = false;
+    controls.minDistance = maxDim * 0.5;
+    controls.maxDistance = maxDim * 10;
+
+    // Añadir listener para zoom con la rueda del mouse
+    canvas.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        cameraDistance += event.deltaY * 0.005;
+        cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+        updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth);
+    });
+
+    animate();
+}
+
+function updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth) {
+    camera.position.set(
+        containerDepth / 2 + cameraDistance, // X = largo
+        containerHeight / 2 + cameraDistance, // Y = alto
+        containerWidth / 2 + cameraDistance // Z = ancho
+    );
+    camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2);
+}
+
+// Funciones para los botones de zoom
+function zoomIn() {
+    const maxDim = Math.max(
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
+    );
+    cameraDistance -= maxDim * 0.2; // Acercar
+    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+    updateCameraPosition(maxDim,
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
+    );
+}
+
+function zoomOut() {
+    const maxDim = Math.max(
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
+    );
+    cameraDistance += maxDim * 0.2; // Alejar
+    cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
+    updateCameraPosition(maxDim,
+        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
+    );
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    if (controls) controls.update(); // Actualizar controles
+    renderer.render(scene, camera);
+}
+
+function addProducts(result) {
+    console.log("Añadiendo productos:", result);
+    const [pWidth, pDepth, pHeight] = result.orientacionOptima; // ancho, largo, alto
+    const productWidth = pWidth / 100; // Ancho del producto
+    const productHeight = pHeight / 100; // Alto del producto
+    const productDepth = pDepth / 100; // Largo del producto
+    const gap = 0.01;
+
+    const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1;
+
+    const geometry = new THREE.BoxGeometry(productDepth, productHeight, productWidth); // X = largo, Y = alto, Z = ancho
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+
+    const edgesGeometry = new THREE.EdgesGeometry(geometry);
+    const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+
+    const totalWidth = result.desglose.productosAncho * productDepth + (result.desglose.productosAncho - 1) * gap;
+    const totalDepth = result.desglose.productosLargo * productWidth + (result.desglose.productosLargo - 1) * gap;
+    const totalHeight = result.desglose.capasCompletas * productHeight + (result.desglose.capasCompletas - 1) * gap;
+
+    const offsetX = (containerDepth - totalWidth) / 2;
+    const offsetZ = (containerWidth - totalDepth) / 2;
+
+    // Dibujar filas completas
+    for (let y = 0; y < result.desglose.capasCompletas; y++) {
+        for (let x = 0; x < result.desglose.productosAncho; x++) {
+            for (let z = 0; z < result.desglose.productosLargo; z++) {
+                const product = new THREE.Mesh(geometry, material);
+                product.position.set(
+                    offsetX + x * (productDepth + gap) + productDepth / 2, // X = largo
+                    y * (productHeight + gap) + productHeight / 2, // Y = alto
+                    offsetZ + z * (productWidth + gap) + productWidth / 2 // Z = ancho
+                );
+
+                const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+                edges.position.copy(product.position);
+
+                products.push(product);
+                scene.add(product);
+                scene.add(edges);
+            }
+        }
+    }
+
+    // Dibujar sobrantes
+    if (result.desglose.sobrantes > 0) {
+        const capaSobrante = result.desglose.capasCompletas;
+        let sobrantesRestantes = result.desglose.sobrantes;
+        let filaSobrante = 0;
+
+        while (sobrantesRestantes > 0) {
+            const sobrantesPorFila = Math.min(sobrantesRestantes, result.desglose.productosAncho);
+            for (let x = 0; x < sobrantesPorFila; x++) {
+                const product = new THREE.Mesh(geometry, material);
+                product.position.set(
+                    offsetX + x * (productDepth + gap) + productDepth / 2, // X = largo
+                    capaSobrante * (productHeight + gap) + productHeight / 2, // Y = alto
+                    offsetZ + filaSobrante * (productWidth + gap) + productWidth / 2 // Z = ancho, ajustado por fila
+                );
+
+                const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+                edges.position.copy(product.position);
+
+                products.push(product);
+                scene.add(product);
+                scene.add(edges);
+            }
+            sobrantesRestantes -= sobrantesPorFila;
+            filaSobrante++;
+        }
+    }
+}
+
+function createChart(volumeUsage, weightUsage) {
+    console.log("Creando gráfico con volumeUsage:", volumeUsage, "weightUsage:", weightUsage);
+    const ctx = document.getElementById('resultsChart').getContext('2d');
+    if (chart) chart.destroy(); // Destruir gráfico anterior si existe
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Espacio Utilizado (%)', 'Peso Utilizado (%)'],
+            datasets: [{
+                label: 'Porcentajes',
+                data: [volumeUsage, weightUsage],
+                backgroundColor: ['#4CAF50', '#2196F3'],
+                borderColor: ['#388E3C', '#1976D2'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Porcentaje (%)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function calcularCubicaje() {
+    console.log("Ejecutando calcularCubicaje()...");
+
+    const contenedor = {
+        alto: parseFloat(document.getElementById("altoContenedor").value) || 0,
+        ancho: parseFloat(document.getElementById("anchoContenedor").value) || 0,
+        largo: parseFloat(document.getElementById("largoContenedor").value) || 0,
+        pesoMax: parseFloat(document.getElementById("pesoMaxContenedor").value) || 0,
+        alturaSegura: parseFloat(document.getElementById("alturaSegura").value) || 0,
+        margen: parseFloat(document.getElementById("margen").value) / 100 || 0.05
+    };
+    const producto = {
+        alto: parseFloat(document.getElementById("altoProducto").value) || 0,
+        ancho: parseFloat(document.getElementById("anchoProducto").value) || 0,
+        largo: parseFloat(document.getElementById("largoProducto").value) || 0,
+        peso: parseFloat(document.getElementById("pesoProducto").value) || 0,
+        fragil: document.getElementById("fragil").checked,
+        noApilable: document.getElementById("noApilable").checked
+    };
+    const orientacion = document.querySelector('input[name="orientacion"]:checked').value;
+    const shape = document.getElementById("shape").value;
+
+    const resultDiv = document.getElementById("result");
+
+    // Validaciones
+    console.log("Validando datos:", contenedor, producto);
+    if (isNaN(contenedor.alto) || isNaN(contenedor.ancho) || isNaN(contenedor.largo) || isNaN(contenedor.pesoMax) ||
+        isNaN(producto.alto) || isNaN(producto.ancho) || isNaN(producto.largo) || isNaN(producto.peso) ||
+        contenedor.alto <= 0 || contenedor.ancho <= 0 || contenedor.largo <= 0 || contenedor.pesoMax <= 0 ||
+        producto.alto <= 0 || producto.ancho <= 0 || producto.largo <= 0 || producto.peso <= 0) {
+        console.log("Error: Datos inválidos.");
+        resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas correctamente (valores positivos).</div>";
+        document.getElementById("exportPdf").style.display = "none";
+        return;
+    }
+
+    // Ajuste por margen
+    const contenedorAjustado = {
+        altoAjustado: contenedor.alto * (1 - contenedor.margen),
+        anchoAjustado: contenedor.ancho * (1 - contenedor.margen),
+        largoAjustado: contenedor.largo * (1 - contenedor.margen),
+        pesoMax: contenedor.pesoMax,
+        alturaSegura: contenedor.alturaSegura || contenedor.alto // Usar altura del contenedor si no se especifica
+    };
+
+    // Factor de volumen según forma
+    let volumeFactor = 1.0;
+    switch (shape) {
+        case "cylinder": volumeFactor = 0.785; break;
+        case "sphere": volumeFactor = 0.524; break;
+    }
+    const productoVolumen = producto.alto * producto.ancho * producto.largo * volumeFactor;
+    const contenedorVolumen = contenedorAjustado.altoAjustado * contenedorAjustado.anchoAjustado * contenedorAjustado.largoAjustado;
+
+    console.log("Volumen producto:", productoVolumen, "Volumen contenedor:", contenedorVolumen);
+    if (productoVolumen > contenedorVolumen) {
+        console.log("Error: Producto no cabe en el contenedor.");
+        resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por volumen (con margen).</div>";
+        document.getElementById("exportPdf").style.display = "none";
+        return;
+    }
+
+    // Generar orientaciones
+    let orientaciones = [];
+    switch (orientacion) {
+        case "none":
+            orientaciones = [
+                [producto.ancho, producto.largo, producto.alto],
+                [producto.ancho, producto.alto, producto.largo],
+                [producto.largo, producto.ancho, producto.alto],
+                [producto.largo, producto.alto, producto.ancho],
+                [producto.alto, producto.ancho, producto.largo],
+                [producto.alto, producto.largo, producto.ancho]
+            ];
+            break;
+        case "horizontal":
+            orientaciones = [
+                [producto.ancho, producto.largo, producto.alto],
+                [producto.largo, producto.ancho, producto.alto]
+            ];
+            break;
+        case "vertical":
+            orientaciones = [[producto.ancho, producto.largo, producto.alto]];
+            break;
+        case "fixed":
+            orientaciones = [[producto.ancho, producto.largo, producto.alto]];
+            break;
+    }
+
+    // Cálculo óptimo
+    let maxProductos = 0, mejorOrientacion = [], mejorDesglose = {};
+    orientaciones.forEach(orient => {
+        const [anchoP, largoP, altoP] = orient;
+        if (anchoP > contenedorAjustado.anchoAjustado || largoP > contenedorAjustado.largoAjustado || altoP > contenedorAjustado.alturaSegura) {
+            console.log(`Orientación ${orient} descartada: excede dimensiones.`);
+            return;
+        }
+
+        const productosAncho = Math.floor(contenedorAjustado.anchoAjustado / anchoP);
+        const productosLargo = Math.floor(contenedorAjustado.largoAjustado / largoP);
+        let productosAlto = Math.floor(contenedorAjustado.alturaSegura / altoP);
+
+        if (producto.noApilable) productosAlto = 1;
+        if (producto.fragil) productosAlto = Math.min(productosAlto, 3);
+
+        const productosPorCapa = productosAncho * productosLargo;
+        let totalProductos = productosPorCapa * productosAlto;
+        let pesoTotal = totalProductos * producto.peso;
+
+        // Ajustar productosAlto para no exceder el peso máximo
+        while (pesoTotal > contenedor.pesoMax && productosAlto > 0) {
+            productosAlto--;
+            totalProductos = productosPorCapa * productosAlto;
+            pesoTotal = totalProductos * producto.peso;
+        }
+
+        // Calcular el máximo número de productos posible dentro del peso máximo
+        const maxProductosPorPeso = Math.floor(contenedor.pesoMax / producto.peso);
+        totalProductos = Math.min(maxProductosPorPeso, totalProductos + (maxProductosPorPeso - totalProductos));
+
+        console.log(`Orientación ${orient}: ${totalProductos} productos, peso total: ${pesoTotal}`);
+
+        if (totalProductos > maxProductos) {
+            maxProductos = totalProductos;
+            mejorOrientacion = orient;
+            mejorDesglose = {
+                productosAncho,
+                productosLargo,
+                capasCompletas: Math.floor(totalProductos / productosPorCapa),
+                sobrantes: totalProductos % productosPorCapa
+            };
+        }
+    });
+
+    console.log("Mejor desglose:", mejorDesglose);
+
+    if (!mejorOrientacion.length) {
+        console.log("Error: No se encontró orientación válida.");
+        resultDiv.innerHTML = "<div id='error'>No se encontró una orientación válida para el producto en el contenedor.</div>";
+        document.getElementById("exportPdf").style.display = "none";
+    } else {
+        const usedVolume = maxProductos * (mejorOrientacion[0] * mejorOrientacion[1] * mejorOrientacion[2] * volumeFactor);
+        const volumeUsage = (usedVolume / contenedorVolumen) * 100;
+        const weightUsage = (maxProductos * producto.peso / contenedor.pesoMax) * 100;
+        const loadDensity = (maxProductos * producto.peso) / (usedVolume / 1000000);
+        const centerOfGravity = (mejorDesglose.capasCompletas * mejorOrientacion[2]) / 2;
+
+        const shapeText = shape === "prism" ? "Prisma" : shape === "cylinder" ? "Cilindro (78.5%)" : "Esfera (52.4%)";
+        resultDiv.innerHTML = `
+            <div id='success'>
+                <p><strong>Orientación óptima (Ancho x Largo x Alto):</strong> ${mejorOrientacion.join('x')} cm</p>
+                <p><strong>Total productos:</strong> ${maxProductos}</p>
+                <p><strong>Productos por ancho:</strong> ${mejorDesglose.productosAncho}</p>
+                <p><strong>Productos por largo:</strong> ${mejorDesglose.productosLargo}</p>
+                <p><strong>Capas completas:</strong> ${mejorDesglose.capasCompletas}</p>
+                <p><strong>Sobrantes:</strong> ${mejorDesglose.sobrantes}</p>
+                <p><strong>Porcentaje de espacio utilizado:</strong> ${volumeUsage.toFixed(2)}%</p>
+                <p><strong>Porcentaje de peso utilizado:</strong> ${weightUsage.toFixed(2)}%</p>
+                <p><strong>Densidad de carga:</strong> ${loadDensity.toFixed(2)} kg/m³</p>
+                <p><strong>Centro de gravedad:</strong> ${centerOfGravity.toFixed(2)} cm (Altura segura: ${contenedor.alturaSegura} cm)</p>
+                <p><strong>Forma ajustada:</strong> ${shapeText}</p>
             </div>
-        </div>
+        `;
+        console.log("Mostrando botón exportPdf...");
+        document.getElementById("exportPdf").style.display = "block";
+        window.bestResult = {
+            orientacionOptima: mejorOrientacion.join('x'),
+            totalProductos: maxProductos,
+            desglose: mejorDesglose,
+            volumeUsage: volumeUsage,
+            weightUsage: weightUsage,
+            loadDensity: loadDensity,
+            centerOfGravity: centerOfGravity
+        };
+        window.shapeText = shapeText;
+        window.inputData = {
+            altoContenedor: contenedor.alto,
+            anchoContenedor: contenedor.ancho,
+            largoContenedor: contenedor.largo,
+            pesoMaxContenedor: contenedor.pesoMax,
+            alturaSegura: contenedor.alturaSegura,
+            margen: contenedor.margen * 100,
+            altoProducto: producto.alto,
+            anchoProducto: producto.ancho,
+            largoProducto: producto.largo,
+            pesoProducto: producto.peso
+        };
+        initThreeJS();
+        addProducts({
+            orientacionOptima: mejorOrientacion,
+            desglose: mejorDesglose,
+            contenedor: contenedorAjustado
+        });
+        createChart(volumeUsage, weightUsage); // Crear el gráfico de barras
+    }
+}
 
-        <div class="section">
-            <h2>Resultados Gráficos</h2>
-            <canvas id="resultsChart" width="400" height="200"></canvas>
-        </div>
-    </div>
+function exportToPdf() {
+    console.log("Exportando a PDF...");
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    let yPosition = 10;
 
-    <script src="scriptcu.js"></script>
-</body>
-</html>
+    // Título
+    doc.setFontSize(16);
+    doc.text("Resultado de Cubicaje - OPTITRANS", 10, yPosition);
+    yPosition += 10;
+
+    // Fecha
+    doc.setFontSize(12);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, yPosition);
+    yPosition += 10;
+
+    // Información ingresada por el usuario
+    doc.setFontSize(14);
+    doc.text("Datos Ingresados", 10, yPosition);
+    yPosition += 8;
+    doc.setFontSize(12);
+    const inputData = window.inputData;
+    const inputText = [
+        "Medidas del Contenedor:",
+        `Alto: ${inputData.altoContenedor} cm`,
+        `Ancho: ${inputData.anchoContenedor} cm`,
+        `Largo: ${inputData.largoContenedor} cm`,
+        `Capacidad Máxima: ${inputData.pesoMaxContenedor} kg`,
+        `Altura Segura: ${inputData.alturaSegura} cm`,
+        `Margen de Maniobra: ${inputData.margen}%`,
+        "",
+        "Medidas del Producto:",
+        `Alto: ${inputData.altoProducto} cm`,
+        `Ancho: ${inputData.anchoProducto} cm`,
+        `Largo: ${inputData.largoProducto} cm`,
+        `Peso: ${inputData.pesoProducto} kg`
+    ];
+    doc.text(inputText, 10, yPosition, { maxWidth: 180 });
+    yPosition += inputText.length * 5 + 10;
+
+    // Resultados
+    doc.setFontSize(14);
+    doc.text("Resultados", 10, yPosition);
+    yPosition += 8;
+    doc.setFontSize(12);
+    const result = window.bestResult;
+    const shapeText = window.shapeText;
+    const resultText = [
+        `Orientación óptima (Ancho x Largo x Alto): ${result.orientacionOptima} cm`,
+        `Total productos: ${result.totalProductos}`,
+        `Productos por ancho: ${result.desglose.productosAncho}`,
+        `Productos por largo: ${result.desglose.productosLargo}`,
+        `Capas completas: ${result.desglose.capasCompletas}`,
+        `Sobrantes: ${result.desglose.sobrantes}`,
+        `Porcentaje de espacio utilizado: ${result.volumeUsage.toFixed(2)}%`,
+        `Porcentaje de peso utilizado: ${result.weightUsage.toFixed(2)}%`,
+        `Densidad de carga: ${result.loadDensity.toFixed(2)} kg/m³`,
+        `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${inputData.alturaSegura} cm)`,
+        `Forma ajustada: ${shapeText}`
+    ];
+    doc.text(resultText, 10, yPosition, { maxWidth: 180 });
+    yPosition += resultText.length * 5 + 10;
+
+    // Añadir el gráfico 3D
+    const canvas = document.querySelector('#threejs-container canvas');
+    if (canvas) {
+        const imgData = canvas.toDataURL('image/png');
+        doc.setFontSize(14);
+        doc.text("Visualización 3D", 10, yPosition);
+        yPosition += 8;
+        doc.addImage(imgData, 'PNG', 10, yPosition, 50, 50); // Escala de 400x400 a 50x50 mm
+        yPosition += 60;
+    }
+
+    // Añadir el diagrama de barras
+    const chartCanvas = document.getElementById('resultsChart');
+    if (chartCanvas) {
+        const chartImgData = chartCanvas.toDataURL('image/png');
+        doc.setFontSize(14);
+        doc.text("Gráfico de Porcentajes", 10, yPosition);
+        yPosition += 8;
+        doc.addImage(chartImgData, 'PNG', 10, yPosition, 80, 40); // Escala de 400x200 a 80x40 mm
+    }
+
+    doc.save("cubicaje_optitrans.pdf");
+}
+
+// Habilitar/deshabilitar input de máximo de filas según "Frágil"
+document.getElementById("fragil").addEventListener("change", function() {
+    document.getElementById("maxStack").disabled = !this.checked;
+});
+
+initThreeJS(); // Inicializar escena al cargar
