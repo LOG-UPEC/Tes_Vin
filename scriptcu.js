@@ -51,7 +51,7 @@ function initThreeJS() {
     const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1; // X = largo
     const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1; // Y = alto
     const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1; // Z = ancho
-    const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth); // X = largo, Y = alto, Z = ancho
+    const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth);
     const containerEdges = new THREE.EdgesGeometry(containerGeometry);
     const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
     const containerWireframe = new THREE.LineSegments(containerEdges, containerMaterial);
@@ -60,7 +60,7 @@ function initThreeJS() {
 
     // Ajustar cámara
     const maxDim = Math.max(containerWidth, containerHeight, containerDepth);
-    cameraDistance = maxDim * 1.5; // Reducimos la distancia para una vista más cercana
+    cameraDistance = maxDim * 2; // Ajustamos la distancia para mejor visibilidad
     updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -69,7 +69,7 @@ function initThreeJS() {
     controls.screenSpacePanning = false;
     controls.minDistance = maxDim * 0.5;
     controls.maxDistance = maxDim * 10;
-    controls.target.set(containerDepth / 2, containerHeight / 2, containerWidth / 2); // Centrar la vista
+    controls.target.set(containerDepth / 2, containerHeight / 2, containerWidth / 2);
 
     canvas.addEventListener('wheel', (event) => {
         event.preventDefault();
@@ -82,11 +82,11 @@ function initThreeJS() {
 }
 
 function updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth) {
-    // Vista frontal alineada con el largo (X) como dimensión dominante
+    // Vista desde arriba y ligeramente frontal para mostrar el largo (X) como dimensión dominante
     camera.position.set(
-        containerDepth + cameraDistance, // X (largo)
-        containerHeight / 2, // Y (alto, centrado)
-        containerWidth / 2 // Z (ancho, centrado)
+        containerDepth / 2, // X (centrado en el largo)
+        containerHeight + cameraDistance, // Y (arriba del contenedor)
+        containerWidth / 2 // Z (centrado en el ancho)
     );
     camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2);
 }
@@ -150,17 +150,17 @@ function addProducts(result) {
     const maxProductosAncho = Math.min(result.desglose.productosAncho, Math.floor(containerWidth / productWidth));
     const maxProductosLargo = Math.min(result.desglose.productosLargo, Math.floor(containerDepth / productDepth));
 
-    const totalWidth = maxProductosAncho * productDepth;
-    const totalDepth = maxProductosLargo * productWidth;
+    const totalWidth = maxProductosAncho * productWidth; // Ancho total (Z)
+    const totalDepth = maxProductosLargo * productDepth; // Largo total (X)
     const totalHeight = result.desglose.capasCompletas * productHeight;
 
-    const offsetX = (containerDepth - totalDepth) / 2; // Ajuste para largo
-    const offsetZ = (containerWidth - totalWidth) / 2; // Ajuste para ancho
+    const offsetX = (containerDepth - totalDepth) / 2; // Centrar en el eje X (largo)
+    const offsetZ = (containerWidth - totalWidth) / 2; // Centrar en el eje Z (ancho)
 
     // Dibujar capas completas
     for (let y = 0; y < result.desglose.capasCompletas; y++) {
-        for (let x = 0; x < maxProductosLargo; x++) { // Cambiamos a largo (X)
-            for (let z = 0; z < maxProductosAncho; z++) { // Cambiamos a ancho (Z)
+        for (let x = 0; x < maxProductosLargo; x++) { // Eje X (largo)
+            for (let z = 0; z < maxProductosAncho; z++) { // Eje Z (ancho)
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
                     offsetX + x * productDepth + productDepth / 2, // X = largo
@@ -279,7 +279,7 @@ function calcularCubicaje() {
         producto.alto <= 0 || producto.ancho <= 0 || producto.largo <= 0 || producto.peso <= 0) {
         console.log("Error: Datos inválidos.");
         resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas correctamente (valores positivos).</div>";
-        document.getElementById("exportPdf").style.display = "none";
+        document.getElementAddProductsListener("exportPdf").style.display = "none";
         return;
     }
 
