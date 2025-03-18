@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OptiTrans - Calculadora de Cubicaje</title>
-    <link rel="stylesheet" href="stylecu.css">
-    <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -83,6 +79,12 @@
             <canvas id="resultsChart" width="400" height="200"></canvas>
         </div>
     </div>
-    <script src="scriptcu.js"></script>
+
+    <!-- Cargar librerías al final con defer -->
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.167.1/examples/js/controls/OrbitControls.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script defer src="scriptcu.js"></script>
 </body>
 </html>
