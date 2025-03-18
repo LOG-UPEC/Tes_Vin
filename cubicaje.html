@@ -3,93 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Cubicaje - OPTITRANS</title>
-    <link rel="stylesheet" href="stylecu.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <title>OptiTrans - Calculadora de Cubicaje</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <!-- Franja azul con título y botón de atrás -->
-    <div class="header-bar">
-        <a href="inicio.html"><img src="regresar.svg" alt="Regresar" class="regresar-icon"></a>
-        <h1 class="header-title">Calculadora de Cubicaje - OPTITRANS</h1>
-    </div>
-
     <div class="container">
+        <h1>OptiTrans - Calculadora de Cubicaje</h1>
+
         <div class="section">
-            <h2>Seleccione el tipo de contenedor</h2>
+            <h2>Seleccione el Contenedor</h2>
             <select id="containerPreset" onchange="applyPreset()">
                 <option value="custom">Personalizado</option>
-                <option value="20ft">Contenedor 20 pies</option>
-                <option value="40ft">Contenedor 40 pies</option>
-                <option value="euroPallet">Pallet Europeo</option>
+                <option value="20ft">Contenedor 20ft</option>
+                <option value="40ft">Contenedor 40ft</option>
+                <option value="euroPallet">Euro Pallet</option>
             </select>
         </div>
 
         <div class="section">
             <h2>Ingrese las medidas del contenedor</h2>
-            <label for="altoContenedor">Alto (cm):</label>
-            <input type="number" id="altoContenedor" step="0.01"><br>
-            <label for="anchoContenedor">Ancho (cm):</label>
-            <input type="number" id="anchoContenedor" step="0.01"><br>
-            <label for="largoContenedor">Largo (cm):</label>
-            <input type="number" id="largoContenedor" step="0.01"><br>
-            <label for="pesoMaxContenedor">Capacidad Máxima (kg):</label>
-            <input type="number" id="pesoMaxContenedor" step="0.01"><br>
-            <label for="alturaSegura">Altura Segura Máxima (cm):</label>
-            <input type="number" id="alturaSegura" step="0.01"><br>
-            <label for="margen">Margen de Maniobra (%):</label>
-            <input type="number" id="margen" value="5" step="0.01"><br>
+            <label>Alto (cm): <input type="number" id="altoContenedor" value="239"></label>
+            <label>Ancho (cm): <input type="number" id="anchoContenedor" value="235"></label>
+            <label>Largo (cm): <input type="number" id="largoContenedor" value="1200"></label>
+            <label>Capacidad Máxima (kg): <input type="number" id="pesoMaxContenedor" value="30480"></label>
+            <label>Altura Segura Máxima (cm): <input type="number" id="alturaSegura" value="239"></label>
+            <label>Margen de Maniobra (%): <input type="number" id="margen" value="5" min="0" max="50"></label>
         </div>
 
         <div class="section">
-            <h2>Ingrese las medidas del producto</h2>
-            <label for="altoProducto">Alto (cm):</label>
-            <input type="number" id="altoProducto" step="0.01"><br>
-            <label for="anchoProducto">Ancho (cm):</label>
-            <input type="number" id="anchoProducto" step="0.01"><br>
-            <label for="largoProducto">Largo (cm):</label>
-            <input type="number" id="largoProducto" step="0.01"><br>
-            <label for="pesoProducto">Peso (kg):</label>
-            <input type="number" id="pesoProducto" step="0.01"><br>
+            <h2>Ingrese los productos</h2>
+            <div id="productsContainer">
+                <div class="product">
+                    <h3>Producto 1</h3>
+                    <label>Alto (cm): <input type="number" class="altoProducto" value="110"></label>
+                    <label>Ancho (cm): <input type="number" class="anchoProducto" value="63"></label>
+                    <label>Largo (cm): <input type="number" class="largoProducto" value="110"></label>
+                    <label>Peso (kg): <input type="number" class="pesoProducto" value="456"></label>
+                    <label>Forma:
+                        <select class="shape">
+                            <option value="prism">Prisma</option>
+                            <option value="cylinder">Cilindro</option>
+                            <option value="sphere">Esfera</option>
+                        </select>
+                    </label>
+                    <label><input type="checkbox" class="fragil"> Frágil</label>
+                    <label><input type="checkbox" class="noApilable"> No Apilable</label>
+                    <label>Máximo de Filas Apiladas (si es frágil): <input type="number" class="maxStack" value="3" disabled></label>
+                </div>
+            </div>
+            <button onclick="addProduct()">Agregar Otro Producto</button>
         </div>
 
         <div class="section">
             <h2>Opciones de Orientación</h2>
-            <label><input type="radio" name="orientacion" id="orientacionNinguna" value="none" checked> Ninguna (Permitir todas)</label><br>
-            <label><input type="radio" name="orientacion" id="orientacionHorizontal" value="horizontal"> Horizontal (Rotar solo en base)</label><br>
-            <label><input type="radio" name="orientacion" id="orientacionVertical" value="vertical"> Vertical (Mantener altura fija)</label><br>
-            <label><input type="radio" name="orientacion" id="orientacionFija" value="fixed"> Fija (Sin rotar)</label><br>
-        </div>
-
-        <div class="section">
-            <h2>Restricciones del Producto</h2>
-            <label for="fragil"><input type="checkbox" id="fragil"> Frágil</label><br>
-            <label for="maxStack">Máximo de Filas Apiladas:</label>
-            <input type="number" id="maxStack" disabled step="1"><br>
-            <label for="noApilable"><input type="checkbox" id="noApilable"> No Apilable</label><br>
-            <label for="shape">Forma del Producto:</label>
-            <select id="shape">
-                <option value="prism">Prisma</option>
-                <option value="cylinder">Cilindro</option>
-                <option value="sphere">Esfera</option>
-            </select><br>
+            <label><input type="radio" name="orientacion" value="none" checked> Ninguna (Permitir todas)</label>
+            <label><input type="radio" name="orientacion" value="horizontal"> Horizontal (Rotar solo en base)</label>
+            <label><input type="radio" name="orientacion" value="vertical"> Vertical (Mantener altura fija)</label>
         </div>
 
         <button onclick="calcularCubicaje()">Calcular Cubicaje</button>
 
-        <div id="result"></div>
+        <div class="section" id="result"></div>
+
         <button id="exportPdf" style="display: none;" onclick="exportToPdf()">Exportar a PDF</button>
 
         <div class="section">
             <h2>Visualización 3D</h2>
             <div id="threejs-container"></div>
-            <div class="zoom-controls">
-                <button onclick="zoomIn()">Acercar</button>
-                <button onclick="zoomOut()">Alejar</button>
-            </div>
+            <button onclick="zoomIn()">Acercar</button>
+            <button onclick="zoomOut()">Alejar</button>
         </div>
 
         <div class="section">
@@ -97,7 +83,6 @@
             <canvas id="resultsChart" width="400" height="200"></canvas>
         </div>
     </div>
-
     <script src="scriptcu.js"></script>
 </body>
 </html>
