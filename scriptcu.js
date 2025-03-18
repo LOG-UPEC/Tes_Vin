@@ -19,44 +19,6 @@ function applyPreset() {
     if (window.scene) initThreeJS();
 }
 
-let productCount = 1;
-
-function addProduct() {
-    productCount++;
-    const productsContainer = document.getElementById("productsContainer");
-    const newProductDiv = document.createElement("div");
-    newProductDiv.className = "product";
-    newProductDiv.innerHTML = `
-        <h3>Producto ${productCount}</h3>
-        <label>Alto (cm): <input type="number" class="altoProducto" value="110"></label>
-        <label>Ancho (cm): <input type="number" class="anchoProducto" value="63"></label>
-        <label>Largo (cm): <input type="number" class="largoProducto" value="110"></label>
-        <label>Peso (kg): <input type="number" class="pesoProducto" value="456"></label>
-        <label>Forma:
-            <select class="shape">
-                <option value="prism">Prisma</option>
-                <option value="cylinder">Cilindro</option>
-                <option value="sphere">Esfera</option>
-            </select>
-        </label>
-        <label><input type="checkbox" class="fragil"> Frágil</label>
-        <label><input type="checkbox" class="noApilable"> No Apilable</label>
-        <label>Máximo de Filas Apiladas (si es frágil): <input type="number" class="maxStack" value="3" disabled></label>
-        <button onclick="this.parentElement.remove()">Eliminar Producto</button>
-    `;
-    productsContainer.appendChild(newProductDiv);
-    updateFragilListeners();
-}
-
-function updateFragilListeners() {
-    document.querySelectorAll(".fragil").forEach(checkbox => {
-        checkbox.addEventListener("change", function() {
-            const maxStackInput = this.parentElement.parentElement.querySelector(".maxStack");
-            maxStackInput.disabled = !this.checked;
-        });
-    });
-}
-
 let scene, camera, renderer, products = [];
 let cameraDistance = 3;
 let chart;
@@ -64,8 +26,8 @@ let controls;
 
 function initThreeJS() {
     console.log("Inicializando Three.js...");
-    if (typeof THREE === 'undefined') {
-        console.error("Three.js no está definido. Verifica que la librería se cargó.");
+    if (!window.THREE) {
+        console.error("Three.js no está definido.");
         return;
     }
 
@@ -116,42 +78,32 @@ function initThreeJS() {
 }
 
 function updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth) {
-    camera.position.set(
-        containerDepth / 2 + cameraDistance,
-        containerHeight / 2 + cameraDistance,
-        containerWidth / 2 + cameraDistance
-    );
+    camera.position.set(containerDepth / 2 + cameraDistance, containerHeight / 2 + cameraDistance, containerWidth / 2 + cameraDistance);
     camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2);
 }
 
 function zoomIn() {
-    const maxDim = Math.max(
-        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+    const maxDim = Math.max((parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
         (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
-        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
-    );
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1);
     cameraDistance -= maxDim * 0.2;
     cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
     updateCameraPosition(maxDim,
         (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
         (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
-        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
-    );
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1);
 }
 
 function zoomOut() {
-    const maxDim = Math.max(
-        (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
+    const maxDim = Math.max((parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
         (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
-        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
-    );
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1);
     cameraDistance += maxDim * 0.2;
     cameraDistance = Math.max(0.5, Math.min(cameraDistance, maxDim * 10));
     updateCameraPosition(maxDim,
         (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
         (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
-        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1
-    );
+        (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1);
 }
 
 function animate() {
@@ -161,27 +113,20 @@ function animate() {
 }
 
 function addProducts(result) {
-    console.log("Añadiendo productos:", result);
+    console.log("Añadiendo productos con Skyline:", result);
     const gap = 0.01;
 
-    // Validar que result.placedProducts sea un array
-    if (!Array.isArray(result.placedProducts)) {
-        console.error("placedProducts no es un array:", result.placedProducts);
-        return;
-    }
+    const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1;
 
-    // Si no hay productos colocados, salir
-    if (result.placedProducts.length === 0) {
-        console.warn("No hay productos para mostrar en el gráfico 3D.");
-        return;
-    }
+    const geometry = new THREE.BoxGeometry(result.placedProducts[0].largo / 100, result.placedProducts[0].alto / 100, result.placedProducts[0].ancho / 100);
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+    const edgesGeometry = new THREE.EdgesGeometry(geometry);
+    const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
     result.placedProducts.forEach(product => {
-        const geometry = new THREE.BoxGeometry(product.largo / 100, product.alto / 100, product.ancho / 100);
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
-        const edgesGeometry = new THREE.EdgesGeometry(geometry);
-        const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-
         const placedProduct = new THREE.Mesh(geometry, material);
         placedProduct.position.set(
             (product.x + product.largo / 2) / 100,
@@ -220,25 +165,34 @@ function createChart(volumeUsage, weightUsage) {
                 y: {
                     beginAtZero: true,
                     max: 100,
-                    title: {
-                        display: true,
-                        text: 'Porcentaje (%)'
-                    }
+                    title: { display: true, text: 'Porcentaje (%)' }
                 }
             },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
+            plugins: { legend: { display: false } }
         }
     });
 }
 
-function calcularCubicaje() {
-    console.log("Ejecutando calcularCubicaje() con algoritmo Corner Points...");
+function addProductRow() {
+    const tbody = document.getElementById('productsTable').getElementsByTagName('tbody')[0];
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input type="number" class="product-alto" value="110"></td>
+        <td><input type="number" class="product-ancho" value="63"></td>
+        <td><input type="number" class="product-largo" value="110"></td>
+        <td><input type="number" class="product-peso" value="456"></td>
+        <td><button onclick="removeProduct(this)">Eliminar</button></td>
+    `;
+    tbody.appendChild(row);
+}
 
-    // Obtener datos del contenedor
+function removeProduct(button) {
+    button.parentElement.parentElement.remove();
+}
+
+function calcularCubicaje() {
+    console.log("Ejecutando calcularCubicaje() con Skyline FFD...");
+
     const contenedor = {
         alto: parseFloat(document.getElementById("altoContenedor").value) || 0,
         ancho: parseFloat(document.getElementById("anchoContenedor").value) || 0,
@@ -247,42 +201,20 @@ function calcularCubicaje() {
         alturaSegura: parseFloat(document.getElementById("alturaSegura").value) || 0,
         margen: parseFloat(document.getElementById("margen").value) / 100 || 0.05
     };
-
-    // Obtener datos de los productos
-    const products = [];
-    const productElements = document.querySelectorAll(".product");
-    productElements.forEach((element, index) => {
-        const producto = {
-            alto: parseFloat(element.querySelector(".altoProducto").value) || 0,
-            ancho: parseFloat(element.querySelector(".anchoProducto").value) || 0,
-            largo: parseFloat(element.querySelector(".largoProducto").value) || 0,
-            peso: parseFloat(element.querySelector(".pesoProducto").value) || 0,
-            shape: element.querySelector(".shape").value,
-            fragil: element.querySelector(".fragil").checked,
-            noApilable: element.querySelector(".noApilable").checked,
-            maxStack: parseInt(element.querySelector(".maxStack").value) || 3
-        };
-        products.push(producto);
-    });
-
     const orientacion = document.querySelector('input[name="orientacion"]:checked').value;
+    const shape = document.getElementById("shape").value;
+    const fragil = document.getElementById("fragil").checked;
+    const noApilable = document.getElementById("noApilable").checked;
+    const maxStack = fragil ? parseFloat(document.getElementById("maxStack").value) || 3 : Infinity;
+
     const resultDiv = document.getElementById("result");
 
     // Validaciones
     if (isNaN(contenedor.alto) || isNaN(contenedor.ancho) || isNaN(contenedor.largo) || isNaN(contenedor.pesoMax) ||
         contenedor.alto <= 0 || contenedor.ancho <= 0 || contenedor.largo <= 0 || contenedor.pesoMax <= 0) {
-        resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas del contenedor correctamente (valores positivos).</div>";
+        resultDiv.innerHTML = "<div id='error'>Por favor, ingrese las medidas del contenedor correctamente.</div>";
         document.getElementById("exportPdf").style.display = "none";
         return;
-    }
-
-    for (let producto of products) {
-        if (isNaN(producto.alto) || isNaN(producto.ancho) || isNaN(producto.largo) || isNaN(producto.peso) ||
-            producto.alto <= 0 || producto.ancho <= 0 || producto.largo <= 0 || producto.peso <= 0) {
-            resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas de los productos correctamente (valores positivos).</div>";
-            document.getElementById("exportPdf").style.display = "none";
-            return;
-        }
     }
 
     // Ajuste por margen
@@ -291,211 +223,164 @@ function calcularCubicaje() {
         anchoAjustado: contenedor.ancho * (1 - contenedor.margen),
         largoAjustado: contenedor.largo * (1 - contenedor.margen),
         pesoMax: contenedor.pesoMax,
-        alturaSegura: contenedor.alturaSegura || contenedor.alto
+        alturaSegura: Math.min(contenedor.alturaSegura, contenedor.alto * (1 - contenedor.margen))
     };
 
+    // Factor de volumen según forma
+    let volumeFactor = 1.0;
+    switch (shape) {
+        case "cylinder": volumeFactor = 0.785; break;
+        case "sphere": volumeFactor = 0.524; break;
+    }
+
+    // Obtener productos de la tabla
+    const productRows = document.getElementById('productsTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    let productos = [];
+    for (let row of productRows) {
+        const inputs = row.getElementsByTagName('input');
+        const alto = parseFloat(inputs[0].value) || 0;
+        const ancho = parseFloat(inputs[1].value) || 0;
+        const largo = parseFloat(inputs[2].value) || 0;
+        const peso = parseFloat(inputs[3].value) || 0;
+        if (alto > 0 && ancho > 0 && largo > 0 && peso > 0) {
+            productos.push({ alto, ancho, largo, peso });
+        }
+    }
+    if (productos.length === 0) {
+        resultDiv.innerHTML = "<div id='error'>Por favor, ingrese al menos un producto válido.</div>";
+        document.getElementById("exportPdf").style.display = "none";
+        return;
+    }
+
     // Generar orientaciones para cada producto
-    const allItems = [];
-    products.forEach((producto, index) => {
-        let orientaciones = [];
+    let allOrientations = [];
+    productos.forEach((prod, index) => {
+        const orients = [];
         switch (orientacion) {
             case "none":
-                orientaciones = [
-                    { ancho: producto.ancho, largo: producto.largo, alto: producto.alto, volumen: producto.ancho * producto.largo * producto.alto },
-                    { ancho: producto.ancho, largo: producto.alto, alto: producto.largo, volumen: producto.ancho * producto.alto * producto.largo },
-                    { ancho: producto.largo, largo: producto.ancho, alto: producto.alto, volumen: producto.largo * producto.ancho * producto.alto },
-                    { ancho: producto.largo, largo: producto.alto, alto: producto.ancho, volumen: producto.largo * producto.alto * producto.ancho },
-                    { ancho: producto.alto, largo: producto.ancho, alto: producto.largo, volumen: producto.alto * producto.ancho * producto.largo },
-                    { ancho: producto.alto, largo: producto.largo, alto: producto.ancho, volumen: producto.alto * producto.largo * producto.ancho }
-                ];
+                orients.push({ ancho: prod.ancho, largo: prod.largo, alto: prod.alto, peso: prod.peso, index });
+                orients.push({ ancho: prod.ancho, largo: prod.alto, alto: prod.largo, peso: prod.peso, index });
+                orients.push({ ancho: prod.largo, largo: prod.ancho, alto: prod.alto, peso: prod.peso, index });
+                orients.push({ ancho: prod.largo, largo: prod.alto, alto: prod.ancho, peso: prod.peso, index });
+                orients.push({ ancho: prod.alto, largo: prod.ancho, alto: prod.largo, peso: prod.peso, index });
+                orients.push({ ancho: prod.alto, largo: prod.largo, alto: prod.ancho, peso: prod.peso, index });
                 break;
             case "horizontal":
-                orientaciones = [
-                    { ancho: producto.ancho, largo: producto.largo, alto: producto.alto, volumen: producto.ancho * producto.largo * producto.alto },
-                    { ancho: producto.largo, largo: producto.ancho, alto: producto.alto, volumen: producto.largo * producto.ancho * producto.alto }
-                ];
+                orients.push({ ancho: prod.ancho, largo: prod.largo, alto: prod.alto, peso: prod.peso, index });
+                orients.push({ ancho: prod.largo, largo: prod.ancho, alto: prod.alto, peso: prod.peso, index });
                 break;
             case "vertical":
-                orientaciones = [{ ancho: producto.ancho, largo: producto.largo, alto: producto.alto, volumen: producto.ancho * producto.largo * producto.alto }];
+                orients.push({ ancho: prod.ancho, largo: prod.largo, alto: prod.alto, peso: prod.peso, index });
+                break;
+            case "fixed":
+                orients.push({ ancho: prod.ancho, largo: prod.largo, alto: prod.alto, peso: prod.peso, index });
                 break;
         }
-
-        // Generar items basados en el peso máximo permitido
-        const maxItemsByWeight = Math.floor(contenedor.pesoMax / producto.peso);
-        orientaciones.forEach(orient => {
-            for (let i = 0; i < maxItemsByWeight; i++) {
-                allItems.push({
-                    ...orient,
-                    peso: producto.peso,
-                    shape: producto.shape,
-                    fragil: producto.fragil,
-                    noApilable: producto.noApilable,
-                    maxStack: producto.maxStack,
-                    productIndex: index
-                });
-            }
-        });
+        allOrientations = allOrientations.concat(orients);
     });
 
-    // Ordenar por volumen decreciente
-    allItems.sort((a, b) => b.volumen - a.volumen);
+    // Ordenar por volumen decreciente (FFD)
+    allOrientations.sort((a, b) => (b.ancho * b.largo * b.alto) - (a.ancho * a.largo * a.alto));
 
-    // Algoritmo Corner Points
-    let cornerPoints = [{ x: 0, y: 0, z: 0 }];
+    // Skyline inicial
+    let skyline = [{ x: 0, z: 0, height: 0, width: contenedorAjustado.anchoAjustado }];
     let placedProducts = [];
     let totalWeight = 0;
-    let occupiedSpaces = [];
+    let maxIterations = 1000;
 
-    for (let item of allItems) {
-        if (totalWeight + item.peso > contenedor.pesoMax) continue;
+    for (let orient of allOrientations) {
+        if (totalWeight >= contenedor.pesoMax || maxIterations-- <= 0) break;
 
         let placed = false;
-        let bestPoint = null;
-        let bestScore = Infinity;
+        for (let i = 0; i < skyline.length && !placed; i++) {
+            const segment = skyline[i];
+            if (orient.ancho <= contenedorAjustado.anchoAjustado - segment.x && 
+                orient.largo <= contenedorAjustado.largoAjustado - segment.z && 
+                orient.alto <= Math.min(contenedorAjustado.alturaSegura - segment.height, maxStack * orient.alto)) {
 
-        // Asegurarse de que cornerPoints sea un array
-        if (!Array.isArray(cornerPoints)) {
-            console.error("cornerPoints no es un array:", cornerPoints);
-            cornerPoints = [];
-        }
+                // Encontrar la mejor posición en el segmento
+                const x = segment.x;
+                const z = segment.z;
+                const y = segment.height;
 
-        // Evaluar cada punto de esquina
-        for (let point of cornerPoints) {
-            const { x, y, z } = point;
-            const endX = x + item.largo;
-            const endY = y + item.alto;
-            const endZ = z + item.ancho;
+                // Colocar producto
+                placedProducts.push({
+                    ancho: orient.ancho,
+                    largo: orient.largo,
+                    alto: orient.alto,
+                    peso: orient.peso,
+                    x: x,
+                    y: y,
+                    z: z,
+                    productIndex: orient.index
+                });
+                totalWeight += orient.peso;
 
-            // Verificar límites del contenedor y altura segura
-            if (endX > contenedorAjustado.largoAjustado || endY > contenedorAjustado.alturaSegura || endZ > contenedorAjustado.anchoAjustado) {
-                continue;
-            }
+                // Actualizar skyline
+                const newHeight = y + orient.alto;
+                skyline[i].height = newHeight;
 
-            // Verificar restricciones de apilamiento
-            if (item.noApilable && y > 0) continue;
-            if (item.fragil && y > 0) {
-                const itemsBelow = placedProducts.filter(p =>
-                    p.x < endX && p.x + p.largo > x &&
-                    p.z < endZ && p.z + p.ancho > z &&
-                    p.y + p.alto === y
-                ).length;
-                if (itemsBelow >= item.maxStack) continue;
-            }
-
-            // Verificar colisiones
-            let collides = false;
-            for (let placed of occupiedSpaces) {
-                if (!(endX <= placed.x || x >= placed.x + placed.largo ||
-                      endY <= placed.y || y >= placed.y + placed.alto ||
-                      endZ <= placed.z || z >= placed.z + placed.ancho)) {
-                    collides = true;
-                    break;
+                // Dividir o ajustar segmentos si es necesario
+                if (orient.ancho < contenedorAjustado.anchoAjustado - segment.x) {
+                    skyline.splice(i + 1, 0, { x: x + orient.ancho, z: z, height: y, width: contenedorAjustado.anchoAjustado - (x + orient.ancho) });
                 }
-            }
-            if (collides) continue;
-
-            // Calcular un "score" para priorizar puntos (menor Y, luego menor X, luego menor Z)
-            const score = y * 1000000 + x * 1000 + z;
-            if (score < bestScore) {
-                bestScore = score;
-                bestPoint = point;
-            }
-        }
-
-        if (bestPoint) {
-            const { x, y, z } = bestPoint;
-            placedProducts.push({
-                x, y, z,
-                largo: item.largo,
-                alto: item.alto,
-                ancho: item.ancho,
-                peso: item.peso,
-                shape: item.shape,
-                productIndex: item.productIndex
-            });
-            occupiedSpaces.push({ x, y, z, largo: item.largo, alto: item.alto, ancho: item.ancho });
-            totalWeight += item.peso;
-
-            // Añadir nuevos puntos de esquina
-            cornerPoints = cornerPoints.filter(p => p !== bestPoint);
-            cornerPoints.push({ x: x + item.largo, y, z });
-            cornerPoints.push({ x, y: y + item.alto, z });
-            cornerPoints.push({ x, y, z: z + item.ancho });
-
-            // Filtrar puntos de esquina redundantes o fuera de límites
-            cornerPoints = cornerPoints.filter(p =>
-                p.x <= contenedorAjustado.largoAjustado &&
-                p.y <= contenedorAjustado.alturaSegura &&
-                p.z <= contenedorAjustado.anchoAjustado
-            );
-
-            // Eliminar puntos que están dentro de espacios ocupados
-            cornerPoints = cornerPoints.filter(point => {
-                for (let space of occupiedSpaces) {
-                    if (point.x >= space.x && point.x <= space.x + space.largo &&
-                        point.y >= space.y && point.y <= space.y + space.alto &&
-                        point.z >= space.z && point.z <= space.z + space.ancho) {
-                        return false;
-                    }
+                if (orient.largo < contenedorAjustado.largoAjustado - segment.z) {
+                    skyline.splice(i + 1, 0, { x: x, z: z + orient.largo, height: y, width: contenedorAjustado.anchoAjustado - x });
                 }
-                return true;
-            });
 
-            placed = true;
+                // Limpiar segmentos inválidos o fusionar si es posible
+                skyline = skyline.filter(s => s.width > 1 && s.height <= contenedorAjustado.alturaSegura);
+                skyline.sort((a, b) => a.z - b.z || a.x - b.x);
+                placed = true;
+            }
         }
-
-        if (!placed) continue;
     }
 
     // Calcular estadísticas
     const totalProductos = placedProducts.length;
-    let usedVolume = 0;
-    placedProducts.forEach(product => {
-        let volumeFactor = 1.0;
-        switch (product.shape) {
-            case "cylinder": volumeFactor = 0.785; break;
-            case "sphere": volumeFactor = 0.524; break;
-        }
-        usedVolume += (product.ancho * product.largo * product.alto) * volumeFactor;
-    });
+    const usedVolume = placedProducts.reduce((sum, p) => sum + (p.ancho * p.largo * p.alto), 0) * volumeFactor;
     const contenedorVolumen = contenedorAjustado.altoAjustado * contenedorAjustado.anchoAjustado * contenedorAjustado.largoAjustado;
     const volumeUsage = Math.min(100, (usedVolume / contenedorVolumen) * 100);
     const weightUsage = (totalWeight / contenedor.pesoMax) * 100;
     const loadDensity = totalProductos > 0 ? (totalWeight) / (usedVolume / 1000000) : 0;
     const centerOfGravity = totalProductos > 0 ? placedProducts.reduce((sum, p) => sum + (p.y + p.alto / 2), 0) / totalProductos : 0;
 
-    // Desglose por producto
-    const productCounts = {};
-    placedProducts.forEach(p => {
-        productCounts[p.productIndex] = (productCounts[p.productIndex] || 0) + 1;
-    });
+    // Desglose aproximado
+    const mejorDesglose = {
+        productosAncho: Math.max(...placedProducts.map(p => p.ancho)) || 0,
+        productosLargo: Math.max(...placedProducts.map(p => p.largo)) || 0,
+        capasCompletas: totalProductos > 0 ? Math.floor(totalProductos / (Math.max(...placedProducts.map(p => p.ancho)) * Math.max(...placedProducts.map(p => p.largo)) / (productos[0].ancho * productos[0].largo))) : 0,
+        sobrantes: totalProductos % (Math.max(...placedProducts.map(p => p.ancho)) * Math.max(...placedProducts.map(p => p.largo)) / (productos[0].ancho * productos[0].largo)) || 0
+    };
 
-    let resultHTML = `
+    const shapeText = shape === "prism" ? "Prisma" : shape === "cylinder" ? "Cilindro (78.5%)" : "Esfera (52.4%)";
+    resultDiv.innerHTML = `
         <div id='success'>
+            <p><strong>Orientación óptima (Ancho x Largo x Alto):</strong> Varias (Skyline FFD)</p>
             <p><strong>Total productos:</strong> ${totalProductos}</p>
-    `;
-    Object.keys(productCounts).forEach(index => {
-        resultHTML += `<p><strong>Producto ${parseInt(index) + 1}:</strong> ${productCounts[index]} unidades</p>`;
-    });
-    resultHTML += `
+            <p><strong>Productos por ancho:</strong> ${mejorDesglose.productosAncho.toFixed(2)}</p>
+            <p><strong>Productos por largo:</strong> ${mejorDesglose.productosLargo.toFixed(2)}</p>
+            <p><strong>Capas completas:</strong> ${mejorDesglose.capasCompletas}</p>
+            <p><strong>Sobrantes:</strong> ${mejorDesglose.sobrantes}</p>
             <p><strong>Porcentaje de espacio utilizado:</strong> ${volumeUsage.toFixed(2)}%</p>
             <p><strong>Porcentaje de peso utilizado:</strong> ${weightUsage.toFixed(2)}%</p>
             <p><strong>Densidad de carga:</strong> ${loadDensity.toFixed(2)} kg/m³</p>
             <p><strong>Centro de gravedad:</strong> ${centerOfGravity.toFixed(2)} cm (Altura segura: ${contenedor.alturaSegura} cm)</p>
+            <p><strong>Forma ajustada:</strong> ${shapeText}</p>
         </div>
     `;
-    resultDiv.innerHTML = resultHTML;
-
     document.getElementById("exportPdf").style.display = "block";
     window.bestResult = {
+        orientacionOptima: "Varias (Skyline FFD)",
         totalProductos: totalProductos,
-        productCounts: productCounts,
+        desglose: mejorDesglose,
         volumeUsage: volumeUsage,
         weightUsage: weightUsage,
         loadDensity: loadDensity,
         centerOfGravity: centerOfGravity,
         placedProducts: placedProducts
     };
+    window.shapeText = shapeText;
     window.inputData = {
         altoContenedor: contenedor.alto,
         anchoContenedor: contenedor.ancho,
@@ -503,10 +388,14 @@ function calcularCubicaje() {
         pesoMaxContenedor: contenedor.pesoMax,
         alturaSegura: contenedor.alturaSegura,
         margen: contenedor.margen * 100,
-        products: products
+        productos: productos
     };
     initThreeJS();
-    addProducts({ placedProducts: placedProducts });
+    addProducts({
+        placedProducts: placedProducts,
+        desglose: mejorDesglose,
+        contenedor: contenedorAjustado
+    });
     createChart(volumeUsage, weightUsage);
 }
 
@@ -517,23 +406,20 @@ function exportToPdf() {
     
     let yPosition = 10;
 
-    // Título
     doc.setFontSize(16);
     doc.text("Resultado de Cubicaje - OPTITRANS", 10, yPosition);
     yPosition += 10;
 
-    // Fecha
     doc.setFontSize(12);
     doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, yPosition);
     yPosition += 10;
 
-    // Información ingresada por el usuario
     doc.setFontSize(14);
     doc.text("Datos Ingresados", 10, yPosition);
     yPosition += 8;
     doc.setFontSize(12);
     const inputData = window.inputData;
-    let inputText = [
+    const inputText = [
         "Medidas del Contenedor:",
         `Alto: ${inputData.altoContenedor} cm`,
         `Ancho: ${inputData.anchoContenedor} cm`,
@@ -541,40 +427,37 @@ function exportToPdf() {
         `Capacidad Máxima: ${inputData.pesoMaxContenedor} kg`,
         `Altura Segura: ${inputData.alturaSegura} cm`,
         `Margen de Maniobra: ${inputData.margen}%`,
-        ""
+        "",
+        "Medidas de los Productos:"
     ];
-    inputData.products.forEach((product, index) => {
-        inputText.push(`Producto ${index + 1}:`);
-        inputText.push(`Alto: ${product.alto} cm`);
-        inputText.push(`Ancho: ${product.ancho} cm`);
-        inputText.push(`Largo: ${product.largo} cm`);
-        inputText.push(`Peso: ${product.peso} kg`);
-        inputText.push(`Forma: ${product.shape === "prism" ? "Prisma" : product.shape === "cylinder" ? "Cilindro (78.5%)" : "Esfera (52.4%)"}`);
-        inputText.push("");
+    inputData.productos.forEach((prod, i) => {
+        inputText.push(`Producto ${i + 1}: Alto ${prod.alto} cm, Ancho ${prod.ancho} cm, Largo ${prod.largo} cm, Peso ${prod.peso} kg`);
     });
     doc.text(inputText, 10, yPosition, { maxWidth: 180 });
     yPosition += inputText.length * 5 + 10;
 
-    // Resultados
     doc.setFontSize(14);
     doc.text("Resultados", 10, yPosition);
     yPosition += 8;
     doc.setFontSize(12);
     const result = window.bestResult;
-    let resultText = [
-        `Total productos: ${result.totalProductos}`
+    const shapeText = window.shapeText;
+    const resultText = [
+        `Orientación óptima (Ancho x Largo x Alto): ${result.orientacionOptima}`,
+        `Total productos: ${result.totalProductos}`,
+        `Productos por ancho: ${result.desglose.productosAncho.toFixed(2)}`,
+        `Productos por largo: ${result.desglose.productosLargo.toFixed(2)}`,
+        `Capas completas: ${result.desglose.capasCompletas}`,
+        `Sobrantes: ${result.desglose.sobrantes}`,
+        `Porcentaje de espacio utilizado: ${result.volumeUsage.toFixed(2)}%`,
+        `Porcentaje de peso utilizado: ${result.weightUsage.toFixed(2)}%`,
+        `Densidad de carga: ${result.loadDensity.toFixed(2)} kg/m³`,
+        `Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${inputData.alturaSegura} cm)`,
+        `Forma ajustada: ${shapeText}`
     ];
-    Object.keys(result.productCounts).forEach(index => {
-        resultText.push(`Producto ${parseInt(index) + 1}: ${result.productCounts[index]} unidades`);
-    });
-    resultText.push(`Porcentaje de espacio utilizado: ${result.volumeUsage.toFixed(2)}%`);
-    resultText.push(`Porcentaje de peso utilizado: ${result.weightUsage.toFixed(2)}%`);
-    resultText.push(`Densidad de carga: ${result.loadDensity.toFixed(2)} kg/m³`);
-    resultText.push(`Centro de gravedad: ${result.centerOfGravity.toFixed(2)} cm (Altura segura: ${inputData.alturaSegura} cm)`);
     doc.text(resultText, 10, yPosition, { maxWidth: 180 });
     yPosition += resultText.length * 5 + 10;
 
-    // Añadir el gráfico 3D
     const canvas = document.querySelector('#threejs-container canvas');
     if (canvas) {
         const imgData = canvas.toDataURL('image/png');
@@ -585,7 +468,6 @@ function exportToPdf() {
         yPosition += 60;
     }
 
-    // Añadir el diagrama de barras
     const chartCanvas = document.getElementById('resultsChart');
     if (chartCanvas) {
         const chartImgData = chartCanvas.toDataURL('image/png');
@@ -598,5 +480,8 @@ function exportToPdf() {
     doc.save("cubicaje_optitrans.pdf");
 }
 
-updateFragilListeners();
+document.getElementById("fragil").addEventListener("change", function() {
+    document.getElementById("maxStack").disabled = !this.checked;
+});
+
 initThreeJS();
