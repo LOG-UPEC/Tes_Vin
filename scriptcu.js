@@ -135,7 +135,7 @@ function addProducts(result) {
     const productWidth = pWidth / 100; // Ancho del producto
     const productHeight = pHeight / 100; // Alto del producto
     const productDepth = pDepth / 100; // Largo del producto
-    const gap = 0.01;
+    const gap = 0; // Eliminamos el gap para evitar que los productos sobresalgan
 
     const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
     const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1;
@@ -148,22 +148,22 @@ function addProducts(result) {
     const edgesGeometry = new THREE.EdgesGeometry(geometry);
     const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
-    const totalWidth = result.desglose.productosAncho * productDepth + (result.desglose.productosAncho - 1) * gap;
-    const totalDepth = result.desglose.productosLargo * productWidth + (result.desglose.productosLargo - 1) * gap;
-    const totalHeight = result.desglose.capasCompletas * productHeight + (result.desglose.capasCompletas - 1) * gap;
+    const totalWidth = result.desglose.productosAncho * productDepth;
+    const totalDepth = result.desglose.productosLargo * productWidth;
+    const totalHeight = result.desglose.capasCompletas * productHeight;
 
     const offsetX = (containerDepth - totalWidth) / 2;
     const offsetZ = (containerWidth - totalDepth) / 2;
 
-    // Dibujar filas completas
+    // Dibujar capas completas
     for (let y = 0; y < result.desglose.capasCompletas; y++) {
         for (let x = 0; x < result.desglose.productosAncho; x++) {
             for (let z = 0; z < result.desglose.productosLargo; z++) {
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
-                    offsetX + x * (productDepth + gap) + productDepth / 2, // X = largo
-                    y * (productHeight + gap) + productHeight / 2, // Y = alto
-                    offsetZ + z * (productWidth + gap) + productWidth / 2 // Z = ancho
+                    offsetX + x * productDepth + productDepth / 2, // X = largo
+                    y * productHeight + productHeight / 2, // Y = alto
+                    offsetZ + z * productWidth + productWidth / 2 // Z = ancho
                 );
 
                 const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
@@ -176,31 +176,33 @@ function addProducts(result) {
         }
     }
 
-    // Dibujar sobrantes
+    // Dibujar sobrantes como productos individuales
     if (result.desglose.sobrantes > 0) {
         const capaSobrante = result.desglose.capasCompletas;
         let sobrantesRestantes = result.desglose.sobrantes;
-        let filaSobrante = 0;
+        let x = 0, z = 0;
 
-        while (sobrantesRestantes > 0) {
-            const sobrantesPorFila = Math.min(sobrantesRestantes, result.desglose.productosAncho);
-            for (let x = 0; x < sobrantesPorFila; x++) {
-                const product = new THREE.Mesh(geometry, material);
-                product.position.set(
-                    offsetX + x * (productDepth + gap) + productDepth / 2, // X = largo
-                    capaSobrante * (productHeight + gap) + productHeight / 2, // Y = alto
-                    offsetZ + filaSobrante * (productWidth + gap) + productWidth / 2 // Z = ancho, ajustado por fila
-                );
+        while (sobrantesRestantes > 0 && x < result.desglose.productosAncho && z < result.desglose.productosLargo) {
+            const product = new THREE.Mesh(geometry, material);
+            product.position.set(
+                offsetX + x * productDepth + productDepth / 2, // X = largo
+                capaSobrante * productHeight + productHeight / 2, // Y = alto
+                offsetZ + z * productWidth + productWidth / 2 // Z = ancho
+            );
 
-                const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
-                edges.position.copy(product.position);
+            const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+            edges.position.copy(product.position);
 
-                products.push(product);
-                scene.add(product);
-                scene.add(edges);
+            products.push(product);
+            scene.add(product);
+            scene.add(edges);
+
+            sobrantesRestantes--;
+            z++;
+            if (z >= result.desglose.productosLargo) {
+                z = 0;
+                x++;
             }
-            sobrantesRestantes -= sobrantesPorFila;
-            filaSobrante++;
         }
     }
 }
@@ -349,24 +351,40 @@ function calcularCubicaje() {
 
         const productosPorCapa = productosAncho * productosLargo;
         let totalProductos = productosPorCapa * productosAlto;
-        let pesoTotal = totalProductos * producto.peso;
 
-        // Ajustar productosAlto para no exceder el peso máximo
-        while (pesoTotal > contenedor.pesoMax && productosAlto > 0) {
-            productosAlto--;
-            totalProductos = productosPorCapa * productosAlto;
-            pesoTotal = totalProductos * producto.peso;
-        }
-
-        // Ajustar totalProductos para no exceder el peso máximo, pero respetando la altura
+        // Ajustar totalProductos para no exceder el peso máximo
         const maxProductosPorPeso = Math.floor(contenedor.pesoMax / producto.peso);
         totalProductos = Math.min(maxProductosPorPeso, totalProductos);
 
-        // Recalcular capas completas y sobrantes
-        const capasCompletas = Math.floor(totalProductos / productosPorCapa);
-        const sobrantes = totalProductos % productosPorCapa;
+        // Calcular capas completas y sobrantes
+        let capasCompletas = Math.floor(totalProductos / productosPorCapa);
+        let sobrantes = totalProductos % productosPorCapa;
 
-        console.log(`Orientación ${orient}: ${totalProductos} productos, peso total: ${pesoTotal}`);
+        // Ajustar capas completas para no exceder la altura segura
+        const alturaTotal = capasCompletas * altoP;
+        if (alturaTotal > contenedorAjustado.alturaSegura) {
+            capasCompletas = Math.floor(contenedorAjustado.alturaSegura / altoP);
+            totalProductos = capasCompletas * productosPorCapa;
+            sobrantes = Math.min(maxProductosPorPeso - totalProductos, productosPorCapa);
+            totalProductos += sobrantes;
+        }
+
+        // Intentar añadir productos individuales en la siguiente capa si hay espacio
+        let productosRestantes = maxProductosPorPeso - totalProductos;
+        if (productosRestantes > 0) {
+            const alturaConSobrantes = (capasCompletas + 1) * altoP;
+            if (alturaConSobrantes <= contenedorAjustado.alturaSegura) {
+                const productosAdicionales = Math.min(productosRestantes, productosPorCapa);
+                totalProductos += productosAdicionales;
+                sobrantes = productosAdicionales;
+                if (sobrantes === productosPorCapa) {
+                    capasCompletas++;
+                    sobrantes = 0;
+                }
+            }
+        }
+
+        console.log(`Orientación ${orient}: ${totalProductos} productos, peso total: ${totalProductos * producto.peso}`);
 
         if (totalProductos > maxProductos) {
             maxProductos = totalProductos;
@@ -388,10 +406,10 @@ function calcularCubicaje() {
         document.getElementById("exportPdf").style.display = "none";
     } else {
         const usedVolume = maxProductos * (mejorOrientacion[0] * mejorOrientacion[1] * mejorOrientacion[2] * volumeFactor);
-        const volumeUsage = Math.min(100, (usedVolume / contenedorVolumen) * 100); // Asegurarse de que no exceda el 100%
+        const volumeUsage = Math.min(100, (usedVolume / contenedorVolumen) * 100);
         const weightUsage = (maxProductos * producto.peso / contenedor.pesoMax) * 100;
         const loadDensity = (maxProductos * producto.peso) / (usedVolume / 1000000);
-        const centerOfGravity = (mejorDesglose.capasCompletas * mejorOrientacion[2]) / 2;
+        const centerOfGravity = (mejorDesglose.capasCompletas * mejorOrientacion[2] + (mejorDesglose.sobrantes > 0 ? mejorOrientacion[2] : 0)) / 2;
 
         const shapeText = shape === "prism" ? "Prisma" : shape === "cylinder" ? "Cilindro (78.5%)" : "Esfera (52.4%)";
         resultDiv.innerHTML = `
