@@ -92,9 +92,9 @@ header .info p {
 }
 
 header .logo {
-    width: 40%;
+    width: 65%;
     height: auto;
-    max-width: 400px;
+    max-width: 700px;
 }
 
 .auth-buttons {
@@ -173,8 +173,8 @@ header .logo {
     }
 
     header .logo {
-        width: 70%;
-        max-width: 300px;
+        width: 90%;
+        max-width: 400px;
     }
 
     .inicio-btn {
@@ -224,8 +224,8 @@ header .logo {
     }
 
     header .logo {
-        width: 80%;
-        max-width: 250px;
+        width: 90%;
+        max-width: 320px;
     }
 
     .inicio-btn {
