@@ -1,4 +1,4 @@
-// Presets de contenedores
+// Presets de contenedores (sin cambios)
 const containerPresets = {
     "20ft": { height: 239, width: 235, depth: 590, maxWeight: 28000, safeHeight: 239 },
     "40ft": { height: 239, width: 235, depth: 1200, maxWeight: 30480, safeHeight: 239 },
@@ -48,10 +48,11 @@ function initThreeJS() {
     document.getElementById('threejs-container').innerHTML = '';
     const canvas = document.getElementById('threejs-container').appendChild(renderer.domElement);
 
-    // Contenedor
-    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
-    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
-    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1;
+    // Contenedor (ajustamos el orden: ancho, alto, largo)
+    const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1; // Z = ancho
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1; // Y = alto
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1; // X = largo
     const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth); // X = largo, Y = alto, Z = ancho
     const containerEdges = new THREE.EdgesGeometry(containerGeometry);
     const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
@@ -89,10 +90,9 @@ function updateCameraPosition(maxDim, containerWidth, containerHeight, container
         containerHeight / 2 + cameraDistance, // Y = alto
         containerWidth / 2 + cameraDistance // Z = ancho
     );
-    camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2);
+    camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2); // Mirar al centro del contenedor
 }
 
-// Funciones para los botones de zoom
 function zoomIn() {
     const maxDim = Math.max(
         (parseFloat(document.getElementById("anchoContenedor").value) * (1 - (parseFloat(document.getElementById("margen").value) / 100 || 0.05))) / 100 || 1,
@@ -131,16 +131,16 @@ function animate() {
 
 function addProducts(result) {
     console.log("Añadiendo productos:", result);
-    const [pWidth, pDepth, pHeight] = result.orientacionOptima; // ancho, largo, alto
-    const productWidth = pWidth / 100; // Ancho del producto
-    const productHeight = pHeight / 100; // Alto del producto
-    const productDepth = pDepth / 100; // Largo del producto
-    const gap = 0; // Eliminamos el gap para evitar que los productos sobresalgan
+    const [pWidth, pDepth, pHeight] = result.orientacionOptima.map(x => x / 100); // ancho, largo, alto en metros
+    const productWidth = pWidth; // Z = ancho
+    const productHeight = pHeight; // Y = alto
+    const productDepth = pDepth; // X = largo
+    const gap = 0; // Sin espacio entre productos
 
     const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
-    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1;
-    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1;
-    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1;
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1; // Z = ancho
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1; // Y = alto
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1; // X = largo
 
     const geometry = new THREE.BoxGeometry(productDepth, productHeight, productWidth); // X = largo, Y = alto, Z = ancho
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
@@ -207,6 +207,9 @@ function addProducts(result) {
     }
 }
 
+// Resto del código (calcularCubicaje, createChart, exportToPdf, etc.) permanece igual
+// Solo incluimos las partes modificadas para brevity
+
 function createChart(volumeUsage, weightUsage) {
     console.log("Creando gráfico con volumeUsage:", volumeUsage, "weightUsage:", weightUsage);
     const ctx = document.getElementById('resultsChart').getContext('2d');
@@ -268,8 +271,7 @@ function calcularCubicaje() {
 
     const resultDiv = document.getElementById("result");
 
-    // Validaciones
-    console.log("Validando datos:", contenedor, producto);
+    // Validaciones (sin cambios)
     if (isNaN(contenedor.alto) || isNaN(contenedor.ancho) || isNaN(contenedor.largo) || isNaN(contenedor.pesoMax) ||
         isNaN(producto.alto) || isNaN(producto.ancho) || isNaN(producto.largo) || isNaN(producto.peso) ||
         contenedor.alto <= 0 || contenedor.ancho <= 0 || contenedor.largo <= 0 || contenedor.pesoMax <= 0 ||
@@ -280,16 +282,16 @@ function calcularCubicaje() {
         return;
     }
 
-    // Ajuste por margen
+    // Ajuste por margen (sin cambios)
     const contenedorAjustado = {
         altoAjustado: contenedor.alto * (1 - contenedor.margen),
         anchoAjustado: contenedor.ancho * (1 - contenedor.margen),
         largoAjustado: contenedor.largo * (1 - contenedor.margen),
         pesoMax: contenedor.pesoMax,
-        alturaSegura: contenedor.alturaSegura || contenedor.alto // Usar altura del contenedor si no se especifica
+        alturaSegura: contenedor.alturaSegura || contenedor.alto
     };
 
-    // Factor de volumen según forma
+    // Factor de volumen según forma (sin cambios)
     let volumeFactor = 1.0;
     switch (shape) {
         case "cylinder": volumeFactor = 0.785; break;
@@ -298,7 +300,6 @@ function calcularCubicaje() {
     const productoVolumen = producto.alto * producto.ancho * producto.largo * volumeFactor;
     const contenedorVolumen = contenedorAjustado.altoAjustado * contenedorAjustado.anchoAjustado * contenedorAjustado.largoAjustado;
 
-    console.log("Volumen producto:", productoVolumen, "Volumen contenedor:", contenedorVolumen);
     if (productoVolumen > contenedorVolumen) {
         console.log("Error: Producto no cabe en el contenedor.");
         resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por volumen (con margen).</div>";
@@ -306,7 +307,7 @@ function calcularCubicaje() {
         return;
     }
 
-    // Generar orientaciones
+    // Generar orientaciones (sin cambios)
     let orientaciones = [];
     switch (orientacion) {
         case "none":
@@ -333,7 +334,7 @@ function calcularCubicaje() {
             break;
     }
 
-    // Cálculo óptimo
+    // Cálculo óptimo (sin cambios en esta parte)
     let maxProductos = 0, mejorOrientacion = [], mejorDesglose = {};
     orientaciones.forEach(orient => {
         const [anchoP, largoP, altoP] = orient;
@@ -457,7 +458,7 @@ function calcularCubicaje() {
             desglose: mejorDesglose,
             contenedor: contenedorAjustado
         });
-        createChart(volumeUsage, weightUsage); // Crear el gráfico de barras
+        createChart(volumeUsage, weightUsage);
     }
 }
 
