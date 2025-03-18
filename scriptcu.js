@@ -64,7 +64,7 @@ let controls;
 
 function initThreeJS() {
     console.log("Inicializando Three.js...");
-    if (!window.THREE) {
+    if (typeof THREE === 'undefined') {
         console.error("Three.js no está definido. Verifica que la librería se cargó.");
         return;
     }
@@ -163,6 +163,18 @@ function animate() {
 function addProducts(result) {
     console.log("Añadiendo productos:", result);
     const gap = 0.01;
+
+    // Validar que result.placedProducts sea un array
+    if (!Array.isArray(result.placedProducts)) {
+        console.error("placedProducts no es un array:", result.placedProducts);
+        return;
+    }
+
+    // Si no hay productos colocados, salir
+    if (result.placedProducts.length === 0) {
+        console.warn("No hay productos para mostrar en el gráfico 3D.");
+        return;
+    }
 
     result.placedProducts.forEach(product => {
         const geometry = new THREE.BoxGeometry(product.largo / 100, product.alto / 100, product.ancho / 100);
@@ -340,6 +352,12 @@ function calcularCubicaje() {
         let placed = false;
         let bestPoint = null;
         let bestScore = Infinity;
+
+        // Asegurarse de que cornerPoints sea un array
+        if (!Array.isArray(cornerPoints)) {
+            console.error("cornerPoints no es un array:", cornerPoints);
+            cornerPoints = [];
+        }
 
         // Evaluar cada punto de esquina
         for (let point of cornerPoints) {
