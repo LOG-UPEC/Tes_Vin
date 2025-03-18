@@ -48,10 +48,10 @@ function initThreeJS() {
 
     // Contenedor (X = largo, Y = alto, Z = ancho)
     const margin = parseFloat(document.getElementById("margen").value) / 100 || 0.05;
-    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1; // Z
-    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1; // Y
-    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1; // X
-    const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth);
+    const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1; // X = largo
+    const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1; // Y = alto
+    const containerWidth = (parseFloat(document.getElementById("anchoContenedor").value) * (1 - margin)) / 100 || 1; // Z = ancho
+    const containerGeometry = new THREE.BoxGeometry(containerDepth, containerHeight, containerWidth); // X = largo, Y = alto, Z = ancho
     const containerEdges = new THREE.EdgesGeometry(containerGeometry);
     const containerMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
     const containerWireframe = new THREE.LineSegments(containerEdges, containerMaterial);
@@ -60,7 +60,7 @@ function initThreeJS() {
 
     // Ajustar cámara
     const maxDim = Math.max(containerWidth, containerHeight, containerDepth);
-    cameraDistance = maxDim * 3;
+    cameraDistance = maxDim * 1.5; // Reducimos la distancia para una vista más cercana
     updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -69,6 +69,7 @@ function initThreeJS() {
     controls.screenSpacePanning = false;
     controls.minDistance = maxDim * 0.5;
     controls.maxDistance = maxDim * 10;
+    controls.target.set(containerDepth / 2, containerHeight / 2, containerWidth / 2); // Centrar la vista
 
     canvas.addEventListener('wheel', (event) => {
         event.preventDefault();
@@ -81,11 +82,11 @@ function initThreeJS() {
 }
 
 function updateCameraPosition(maxDim, containerWidth, containerHeight, containerDepth) {
-    // Ajustamos la cámara para que el largo (X) se vea como la dimensión más larga en la base
+    // Vista frontal alineada con el largo (X) como dimensión dominante
     camera.position.set(
         containerDepth + cameraDistance, // X (largo)
-        containerHeight / 2 + cameraDistance / 2, // Y (alto)
-        containerWidth / 2 // Z (ancho)
+        containerHeight / 2, // Y (alto, centrado)
+        containerWidth / 2 // Z (ancho, centrado)
     );
     camera.lookAt(containerDepth / 2, containerHeight / 2, containerWidth / 2);
 }
@@ -139,7 +140,7 @@ function addProducts(result) {
     const containerHeight = (parseFloat(document.getElementById("altoContenedor").value) * (1 - margin)) / 100 || 1; // Y
     const containerDepth = (parseFloat(document.getElementById("largoContenedor").value) * (1 - margin)) / 100 || 1; // X
 
-    const geometry = new THREE.BoxGeometry(productDepth, productHeight, productWidth);
+    const geometry = new THREE.BoxGeometry(productDepth, productHeight, productWidth); // X = largo, Y = alto, Z = ancho
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
 
     const edgesGeometry = new THREE.EdgesGeometry(geometry);
@@ -153,13 +154,13 @@ function addProducts(result) {
     const totalDepth = maxProductosLargo * productWidth;
     const totalHeight = result.desglose.capasCompletas * productHeight;
 
-    const offsetX = (containerDepth - totalWidth) / 2;
-    const offsetZ = (containerWidth - totalDepth) / 2;
+    const offsetX = (containerDepth - totalDepth) / 2; // Ajuste para largo
+    const offsetZ = (containerWidth - totalWidth) / 2; // Ajuste para ancho
 
     // Dibujar capas completas
     for (let y = 0; y < result.desglose.capasCompletas; y++) {
-        for (let x = 0; x < maxProductosAncho; x++) {
-            for (let z = 0; z < maxProductosLargo; z++) {
+        for (let x = 0; x < maxProductosLargo; x++) { // Cambiamos a largo (X)
+            for (let z = 0; z < maxProductosAncho; z++) { // Cambiamos a ancho (Z)
                 const product = new THREE.Mesh(geometry, material);
                 product.position.set(
                     offsetX + x * productDepth + productDepth / 2, // X = largo
@@ -183,7 +184,7 @@ function addProducts(result) {
         let sobrantesRestantes = result.desglose.sobrantes;
         let x = 0, z = 0;
 
-        while (sobrantesRestantes > 0 && x < maxProductosAncho && z < maxProductosLargo) {
+        while (sobrantesRestantes > 0 && x < maxProductosLargo && z < maxProductosAncho) {
             const product = new THREE.Mesh(geometry, material);
             product.position.set(
                 offsetX + x * productDepth + productDepth / 2, // X = largo
@@ -200,7 +201,7 @@ function addProducts(result) {
 
             sobrantesRestantes--;
             z++;
-            if (z >= maxProductosLargo) {
+            if (z >= maxProductosAncho) {
                 z = 0;
                 x++;
             }
@@ -208,7 +209,7 @@ function addProducts(result) {
     }
 }
 
-// Resto del código (calcularCubicaje, createChart, exportToPdf, etc.) permanece igual
+// Resto del código (calcularCubicaje, createChart, exportToPdf) permanece igual
 // Solo incluimos las partes modificadas para brevity
 
 function createChart(volumeUsage, weightUsage) {
