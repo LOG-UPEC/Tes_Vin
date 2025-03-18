@@ -6,6 +6,7 @@ const containerPresets = {
 };
 
 function applyPreset() {
+    console.log("Aplicando preset...");
     const preset = document.getElementById("containerPreset").value;
     if (preset !== "custom") {
         const { height, width, depth, maxWeight, safeHeight } = containerPresets[preset];
@@ -195,6 +196,7 @@ function addProducts(result) {
 }
 
 function createChart(volumeUsage, weightUsage) {
+    console.log("Creando gráfico con volumeUsage:", volumeUsage, "weightUsage:", weightUsage);
     const ctx = document.getElementById('resultsChart').getContext('2d');
     if (chart) chart.destroy(); // Destruir gráfico anterior si existe
 
@@ -230,7 +232,9 @@ function createChart(volumeUsage, weightUsage) {
     });
 }
 
-function calculateCubicaje() {
+function calcularCubicaje() {
+    console.log("Ejecutando calcularCubicaje()...");
+
     const contenedor = {
         alto: parseFloat(document.getElementById("altoContenedor").value) || 0,
         ancho: parseFloat(document.getElementById("anchoContenedor").value) || 0,
@@ -253,10 +257,12 @@ function calculateCubicaje() {
     const resultDiv = document.getElementById("result");
 
     // Validaciones
+    console.log("Validando datos:", contenedor, producto);
     if (isNaN(contenedor.alto) || isNaN(contenedor.ancho) || isNaN(contenedor.largo) || isNaN(contenedor.pesoMax) ||
         isNaN(producto.alto) || isNaN(producto.ancho) || isNaN(producto.largo) || isNaN(producto.peso) ||
         contenedor.alto <= 0 || contenedor.ancho <= 0 || contenedor.largo <= 0 || contenedor.pesoMax <= 0 ||
         producto.alto <= 0 || producto.ancho <= 0 || producto.largo <= 0 || producto.peso <= 0) {
+        console.log("Error: Datos inválidos.");
         resultDiv.innerHTML = "<div id='error'>Por favor, ingrese todas las medidas correctamente (valores positivos).</div>";
         document.getElementById("exportPdf").style.display = "none";
         return;
@@ -268,7 +274,7 @@ function calculateCubicaje() {
         anchoAjustado: contenedor.ancho * (1 - contenedor.margen),
         largoAjustado: contenedor.largo * (1 - contenedor.margen),
         pesoMax: contenedor.pesoMax,
-        alturaSegura: contenedor.alturaSegura
+        alturaSegura: contenedor.alturaSegura || contenedor.alto // Usar altura del contenedor si no se especifica
     };
 
     // Factor de volumen según forma
@@ -280,7 +286,9 @@ function calculateCubicaje() {
     const productoVolumen = producto.alto * producto.ancho * producto.largo * volumeFactor;
     const contenedorVolumen = contenedorAjustado.altoAjustado * contenedorAjustado.anchoAjustado * contenedorAjustado.largoAjustado;
 
+    console.log("Volumen producto:", productoVolumen, "Volumen contenedor:", contenedorVolumen);
     if (productoVolumen > contenedorVolumen) {
+        console.log("Error: Producto no cabe en el contenedor.");
         resultDiv.innerHTML = "<div id='error'>El producto no cabe en el contenedor por volumen (con margen).</div>";
         document.getElementById("exportPdf").style.display = "none";
         return;
@@ -318,6 +326,7 @@ function calculateCubicaje() {
     orientaciones.forEach(orient => {
         const [anchoP, largoP, altoP] = orient;
         if (anchoP > contenedorAjustado.anchoAjustado || largoP > contenedorAjustado.largoAjustado || altoP > contenedorAjustado.alturaSegura) {
+            console.log(`Orientación ${orient} descartada: excede dimensiones.`);
             return;
         }
 
@@ -331,6 +340,8 @@ function calculateCubicaje() {
         const productosPorCapa = productosAncho * productosLargo;
         const totalProductos = productosPorCapa * productosAlto;
         const pesoTotal = totalProductos * producto.peso;
+
+        console.log(`Orientación ${orient}: ${totalProductos} productos, peso total: ${pesoTotal}`);
 
         if (pesoTotal <= contenedor.pesoMax && totalProductos > maxProductos) {
             maxProductos = totalProductos;
@@ -351,7 +362,10 @@ function calculateCubicaje() {
     mejorDesglose.capasCompletas = capasCompletas;
     mejorDesglose.sobrantes = sobrantes;
 
-    if (!mejorOrientacion) {
+    console.log("Mejor desglose:", mejorDesglose);
+
+    if (!mejorOrientacion.length) {
+        console.log("Error: No se encontró orientación válida.");
         resultDiv.innerHTML = "<div id='error'>No se encontró una orientación válida para el producto en el contenedor.</div>";
         document.getElementById("exportPdf").style.display = "none";
     } else {
@@ -377,6 +391,7 @@ function calculateCubicaje() {
                 <p><strong>Forma ajustada:</strong> ${shapeText}</p>
             </div>
         `;
+        console.log("Mostrando botón exportPdf...");
         document.getElementById("exportPdf").style.display = "block";
         window.bestResult = {
             orientacionOptima: mejorOrientacion.join('x'),
@@ -411,6 +426,7 @@ function calculateCubicaje() {
 }
 
 function exportToPdf() {
+    console.log("Exportando a PDF...");
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
