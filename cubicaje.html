@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,8 +13,6 @@
     <!-- Franja azul con título y botón de atrás -->
     <div class="header-bar">
         <a href="inicio.html"><img src="regresar.svg" alt="Regresar" class="regresar-icon"></a>
-        </header>
-
         <h1 class="header-title">Calculadora de Cubicaje - OPTITRANS</h1>
     </div>
 
@@ -31,43 +29,43 @@
 
         <div class="section">
             <h2>Ingrese las medidas del contenedor</h2>
-            <label for="containerHeight">Alto (cm):</label>
-            <input type="number" id="containerHeight" step="0.01"><br>
-            <label for="containerWidth">Ancho (cm):</label>
-            <input type="number" id="containerWidth" step="0.01"><br>
-            <label for="containerDepth">Largo (cm):</label>
-            <input type="number" id="containerDepth" step="0.01"><br>
-            <label for="containerMaxWeight">Capacidad Máxima (kg):</label>
-            <input type="number" id="containerMaxWeight" step="0.01"><br>
-            <label for="safeHeight">Altura Segura Máxima (cm):</label>
-            <input type="number" id="safeHeight" step="0.01"><br>
-            <label for="margin">Margen de Maniobra (%):</label>
-            <input type="number" id="margin" value="5" step="0.01"><br>
+            <label for="altoContenedor">Alto (cm):</label>
+            <input type="number" id="altoContenedor" step="0.01"><br>
+            <label for="anchoContenedor">Ancho (cm):</label>
+            <input type="number" id="anchoContenedor" step="0.01"><br>
+            <label for="largoContenedor">Largo (cm):</label>
+            <input type="number" id="largoContenedor" step="0.01"><br>
+            <label for="pesoMaxContenedor">Capacidad Máxima (kg):</label>
+            <input type="number" id="pesoMaxContenedor" step="0.01"><br>
+            <label for="alturaSegura">Altura Segura Máxima (cm):</label>
+            <input type="number" id="alturaSegura" step="0.01"><br>
+            <label for="margen">Margen de Maniobra (%):</label>
+            <input type="number" id="margen" value="5" step="0.01"><br>
         </div>
 
         <div class="section">
             <h2>Ingrese las medidas del producto</h2>
-            <label for="productHeight">Alto (cm):</label>
-            <input type="number" id="productHeight" step="0.01"><br>
-            <label for="productWidth">Ancho (cm):</label>
-            <input type="number" id="productWidth" step="0.01"><br>
-            <label for="productDepth">Largo (cm):</label>
-            <input type="number" id="productDepth" step="0.01"><br>
-            <label for="productWeight">Peso (kg):</label>
-            <input type="number" id="productWeight" step="0.01"><br>
+            <label for="altoProducto">Alto (cm):</label>
+            <input type="number" id="altoProducto" step="0.01"><br>
+            <label for="anchoProducto">Ancho (cm):</label>
+            <input type="number" id="anchoProducto" step="0.01"><br>
+            <label for="largoProducto">Largo (cm):</label>
+            <input type="number" id="largoProducto" step="0.01"><br>
+            <label for="pesoProducto">Peso (kg):</label>
+            <input type="number" id="pesoProducto" step="0.01"><br>
         </div>
 
         <div class="section">
             <h2>Opciones de Orientación</h2>
-            <label><input type="radio" name="orientation" value="none" checked> Ninguna (Permitir todas)</label><br>
-            <label><input type="radio" name="orientation" value="horizontal"> Horizontal (Rotar solo en base)</label><br>
-            <label><input type="radio" name="orientation" value="vertical"> Vertical (Mantener altura fija)</label><br>
-            <label><input type="radio" name="orientation" value="fixed"> Fija (Sin rotar)</label><br>
+            <label><input type="radio" name="orientacion" id="orientacionNinguna" value="none" checked> Ninguna (Permitir todas)</label><br>
+            <label><input type="radio" name="orientacion" id="orientacionHorizontal" value="horizontal"> Horizontal (Rotar solo en base)</label><br>
+            <label><input type="radio" name="orientacion" id="orientacionVertical" value="vertical"> Vertical (Mantener altura fija)</label><br>
+            <label><input type="radio" name="orientacion" id="orientacionFija" value="fixed"> Fija (Sin rotar)</label><br>
         </div>
 
         <div class="section">
             <h2>Restricciones del Producto</h2>
-            <label for="fragile"><input type="checkbox" id="fragile"> Frágil</label><br>
+            <label for="fragil"><input type="checkbox" id="fragil"> Frágil</label><br>
             <label for="maxStack">Máximo de Filas Apiladas:</label>
             <input type="number" id="maxStack" disabled step="1"><br>
             <label for="nonStackable"><input type="checkbox" id="nonStackable"> No Apilable</label><br>
@@ -79,9 +77,9 @@
             </select><br>
         </div>
 
-        <button onclick="calculateCubicaje()">Calcular Cubicaje</button>
+        <button onclick="calcularCubicaje()">Calcular Cubicaje</button>
 
-        <div id="result"></div>
+        <div id="resultado"></div>
         <button id="exportPdf" style="display: none;" onclick="exportToPdf()">Exportar a PDF</button>
 
         <div class="section">
@@ -99,6 +97,109 @@
         </div>
     </div>
 
+    <script>
+        // Variables globales para Three.js
+        let scene, camera, renderer, contenedor;
+        let dataGlobal;
+
+        // Inicializar Three.js
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, document.getElementById('threejs-container').clientWidth / 400, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(document.getElementById('threejs-container').clientWidth, 400);
+            document.getElementById('threejs-container').appendChild(renderer.domElement);
+
+            camera.position.set(0, 200, 500);
+            camera.lookAt(0, 0, 0);
+
+            // Animación
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Ajustar tamaño
+            window.addEventListener('resize', () => {
+                renderer.setSize(document.getElementById('threejs-container').clientWidth, 400);
+                camera.aspect = document.getElementById('threejs-container').clientWidth / 400;
+                camera.updateProjectionMatrix();
+            });
+        }
+
+        // Funciones de zoom
+        function zoomIn() {
+            camera.position.z -= 50;
+        }
+
+        function zoomOut() {
+            camera.position.z += 50;
+        }
+
+        // Renderizar productos (mover desde render3d.html)
+        function renderizarProductos(data) {
+            if (!scene || !camera || !renderer) return;
+
+            // Limpiar escena
+            scene.children = [];
+
+            // Contenedor (gris)
+            const contenedorGeo = new THREE.BoxGeometry(data.contenedor.largoAjustado, data.contenedor.altoAjustado, data.contenedor.anchoAjustado);
+            const contenedorMat = new THREE.MeshBasicMaterial({ color: 0x808080 });
+            contenedor = new THREE.Mesh(contenedorGeo, contenedorMat);
+            scene.add(contenedor);
+
+            // Productos (rojo semitransparente)
+            const productoGeo = new THREE.BoxGeometry(data.orientacionOptima[2], data.orientacionOptima[0], data.orientacionOptima[1]);
+            const productoMat = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+
+            const [altoP, anchoP, largoP] = data.orientacionOptima;
+            const { productosAncho, productosLargo, capasCompletas, sobrantes } = data.desglose;
+
+            // Dibujar filas completas
+            for (let k = 0; k < capasCompletas; k++) {
+                for (let i = 0; i < productosAncho; i++) {
+                    for (let j = 0; j < productosLargo; j++) {
+                        const prod = new THREE.Mesh(productoGeo, productoMat);
+                        prod.position.set(
+                            (i * largoP) - (data.contenedor.largoAjustado / 2) + (largoP / 2),
+                            (k * altoP) - (data.contenedor.altoAjustado / 2) + (altoP / 2),
+                            (j * anchoP) - (data.contenedor.anchoAjustado / 2) + (anchoP / 2)
+                        );
+                        scene.add(prod);
+                    }
+                }
+            }
+
+            // Dibujar sobrantes en una nueva fila (si los hay)
+            if (sobrantes > 0) {
+                const capaSobrante = capasCompletas;
+                let sobrantesRestantes = sobrantes;
+                let filaSobrante = 0;
+
+                while (sobrantesRestantes > 0) {
+                    const sobrantesPorFila = Math.min(sobrantesRestantes, productosAncho);
+                    for (let i = 0; i < sobrantesPorFila; i++) {
+                        const prod = new THREE.Mesh(productoGeo, productoMat);
+                        prod.position.set(
+                            (i * largoP) - (data.contenedor.largoAjustado / 2) + (largoP / 2),
+                            (capaSobrante * altoP) - (data.contenedor.altoAjustado / 2) + (altoP / 2),
+                            (filaSobrante * anchoP) - (data.contenedor.anchoAjustado / 2) + (anchoP / 2)
+                        );
+                        scene.add(prod);
+                    }
+                    sobrantesRestantes -= sobrantesPorFila;
+                    filaSobrante++;
+                }
+            }
+        }
+
+        // Llamar a la inicialización de Three.js al cargar la página
+        window.onload = function() {
+            initThreeJS();
+        };
+    </script>
     <script src="scriptcu.js"></script>
 </body>
 </html>
