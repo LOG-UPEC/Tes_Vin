@@ -92,7 +92,7 @@ header .info {
 }
 
 header .info h1 {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     margin-bottom: 10px;
     color: #4285f4;
 }
@@ -166,7 +166,7 @@ header .logo {
     }
 
     header .info h1 {
-        font-size: 2rem;
+        font-size: 3.5rem;
     }
 
     header .info p {
@@ -217,7 +217,7 @@ header .logo {
     }
 
     header .info h1 {
-        font-size: 1.5rem;
+        font-size: 3rem;
     }
 
     header .info p {
