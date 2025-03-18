@@ -348,21 +348,23 @@ function calcularCubicaje() {
         if (producto.fragil) productosAlto = Math.min(productosAlto, 3);
 
         const productosPorCapa = productosAncho * productosLargo;
-        let totalProductos = productosPorCapa * productosAlto;
-        let pesoTotal = totalProductos * producto.peso;
+        let totalProductosEspacio = productosPorCapa * productosAlto; // Máximo por espacio
+        let pesoTotal = totalProductosEspacio * producto.peso;
 
         // Ajustar productosAlto para no exceder el peso máximo
         while (pesoTotal > contenedor.pesoMax && productosAlto > 0) {
             productosAlto--;
-            totalProductos = productosPorCapa * productosAlto;
-            pesoTotal = totalProductos * producto.peso;
+            totalProductosEspacio = productosPorCapa * productosAlto;
+            pesoTotal = totalProductosEspacio * producto.peso;
         }
 
         // Calcular el máximo número de productos posible dentro del peso máximo
         const maxProductosPorPeso = Math.floor(contenedor.pesoMax / producto.peso);
-        totalProductos = Math.min(maxProductosPorPeso, totalProductos + (maxProductosPorPeso - totalProductos));
 
-        console.log(`Orientación ${orient}: ${totalProductos} productos, peso total: ${pesoTotal}`);
+        // Ajustar totalProductos para respetar tanto el espacio como el peso
+        let totalProductos = Math.min(maxProductosPorPeso, totalProductosEspacio);
+
+        console.log(`Orientación ${orient}: ${totalProductos} productos, peso total: ${totalProductos * producto.peso}`);
 
         if (totalProductos > maxProductos) {
             maxProductos = totalProductos;
