@@ -6,8 +6,8 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0; /* Fondo claro para contraste */
-    color: #333; /* Color de texto principal */
+    background-color: #f0f0f0;
+    color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,11 +16,34 @@ body {
     margin: 0;
 }
 
+.app-download {
+    width: 100%;
+    background-color: #01266D; /* Color azul oscuro para destacar */
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.download-btn {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    background-color: #77A5FF;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #4285f4;
+    transform: scale(1.05);
+}
+
 nav {
     width: 100%;
-    background-color: #4285f4; /* Color azul */
-    padding: 20px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    background-color: #4285f4;
+    padding: 15px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
@@ -29,24 +52,28 @@ nav ul {
     justify-content: center;
     margin: 0;
     padding: 0;
-    gap: 20px;
+    gap: 15px;
 }
 
 nav ul li a {
     text-decoration: none;
-    color: #fff; /* Blanco */
+    color: #fff;
     font-weight: bold;
-    padding: 20px 15px;
+    padding: 10px 15px;
     transition: background-color 0.3s;
 }
 
 nav ul li a:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco con transparencia */
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+nav ul li {
+    font-size: 1rem;
 }
 
 header {
     width: 100%;
-    background-color: #ffffff; /* Fondo blanco */
+    background-color: #ffffff;
     padding: 20px;
     display: flex;
     align-items: center;
@@ -61,8 +88,8 @@ header {
     align-items: center;
     justify-content: space-between;
     max-width: 1200px;
-    width: 100%;
-    height: 100%; /* Asegurar que ocupe toda la altura */
+    width: 90%;
+    height: 100%;
 }
 
 header .info {
@@ -75,19 +102,21 @@ header .info {
 }
 
 header .info h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 10px;
-    color: #4285f4; /* Color azul */
+    color: #4285f4;
 }
 
 header .info p {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 header .logo {
-    width: 50%; /* Ajustar tamaño del logo para ocupar más espacio */
+    width: 40%; /* Reducido para equilibrar en pantallas grandes */
     height: auto;
+    max-width: 400px;
 }
 
 .auth-buttons {
@@ -102,101 +131,123 @@ header .logo {
 }
 
 .auth-buttons button {
-    padding: 6px 12px;
+    padding: 8px 16px;
     border: none;
     border-radius: 5px;
     background-color: #4285f4;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
-/* Estilos específicos para el botón "Inicio" */
 .inicio-btn {
-    background-color: #01266D; /* Color diferente para el botón Inicio */
-    font-size: 1.4rem; /* Tamaño de fuente diferente */
-    padding: 16px 42px; /* Tamaño de padding diferente */
-    color: #ffffff; /* Color de texto */
+    background-color: #01266D;
+    font-size: 1.2rem;
+    padding: 12px 30px;
+    color: #ffffff;
     border-radius: 9px;
     display: inline-block;
-    transition: background-color 0.3s, transform 0.3s; /* Transición para el cambio de color y escala */
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .inicio-btn:hover {
-    background-color: #77A5FF; /* Color diferente al pasar el cursor */
-    transform: scale(1.1); /* Aumenta el tamaño del botón "Inicio" */
+    background-color: #77A5FF;
+    transform: scale(1.1);
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
+        text-align: center;
     }
 
     header .info {
         margin-right: 0;
-        text-align: center;
         margin-bottom: 20px;
     }
 
-    header .info h1 {
-        font-size: 3.1rem;
-    }
-
-    header .info p {
-        font-size: 1.8rem;
-    }
-
-    header .logo {
-        width: 80%;
-    }
-
-    .inicio-btn {
-        font-size: 2.1rem; /* Tamaño de fuente diferente */
-        padding: 9px 28px; /* Tamaño de padding diferente */
-    }
-
-    .auth-buttons button {
-        padding: 8px 11px;
-        font-size: 0.56rem;
-    }
-
-    nav ul {
-        gap: 10px;
-    }
-
-    nav ul li a {
-        padding: 8px 10px;
-        font-size: 0.65rem;
-    }
-}
-
-@media (max-width: 480px) {
     header .info h1 {
         font-size: 2rem;
     }
 
     header .info p {
-        font-size: 0.5rem;
+        font-size: 0.9rem;
     }
 
     header .logo {
-        width: 100%;
+        width: 70%;
+        max-width: 300px;
+    }
+
+    .inicio-btn {
+        font-size: 1.5rem;
+        padding: 10px 25px;
     }
 
     .auth-buttons button {
-        padding: 6px 10px;
-        font-size: 0.5rem;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    nav ul {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav ul li a {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-content {
+        padding: 10px;
+    }
+
+    header .info h1 {
+        font-size: 1.5rem;
+    }
+
+    header .info p {
+        font-size: 0.8rem;
+    }
+
+    header .logo {
+        width: 80%;
+        max-width: 250px;
+    }
+
+    .inicio-btn {
+        font-size: 1.2rem;
+        padding: 8px 20px;
+    }
+
+    .auth-buttons button {
+        padding: 5px 10px;
+        font-size: 0.8rem;
     }
 
     nav ul {
         flex-direction: column;
+        align-items: center;
         gap: 5px;
     }
 
     nav ul li a {
-        font-size: 0.5rem;
-        padding: 6px 8px;
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+
+    .app-download {
+        padding: 8px 10px;
+    }
+
+    .download-btn {
+        font-size: 1rem;
+        padding: 8px 15px;
     }
 }
