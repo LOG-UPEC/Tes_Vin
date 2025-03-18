@@ -134,17 +134,6 @@ header .logo {
     transform: scale(1.1);
 }
 
-.download-btn {
-    background-color: #ff5722; /* Color naranja distintivo */
-    font-size: 1.2rem;
-    padding: 12px 30px;
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 9px;
-    display: inline-block;
-    transition: background-color 0.3s, transform 0.3s;
-    margin-top: 10px; /* Espacio superior para separarlo del "Inicio" */
 }
 
 .download-btn:hover {
@@ -173,8 +162,8 @@ header .logo {
     }
 
     header .logo {
-        width: 90%;
-        max-width: 400px;
+        width: 95%;
+        max-width: 550px;
     }
 
     .inicio-btn {
@@ -224,8 +213,8 @@ header .logo {
     }
 
     header .logo {
-        width: 90%;
-        max-width: 320px;
+        width: 95%;
+        max-width: 450px;
     }
 
     .inicio-btn {
