@@ -6,6 +6,7 @@
     <title>Calculadora de Cubicaje - OPTITRANS</title>
     <link rel="stylesheet" href="stylecu.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
@@ -97,17 +98,6 @@
         </div>
     </div>
 
-    <script>
-        // Añadir depuración para confirmar carga del script
-        window.onload = function() {
-            console.log("Página cargada. Verificando scriptcu.js...");
-            if (typeof calcularCubicaje === 'undefined') {
-                console.error("Error: La función calcularCubicaje no está definida. Verifica que scriptcu.js se cargó correctamente.");
-            } else {
-                console.log("Función calcularCubicaje encontrada.");
-            }
-        };
-    </script>
     <script src="scriptcu.js"></script>
 </body>
 </html>
