@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Identificación de producto</title>
     <link rel="stylesheet" href="styleip.css">
-    <script src="papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <header>
@@ -13,18 +14,34 @@
         <h1>Identificación de producto</h1>
     </header>
     <main>
-        <div class="main-content">
+        <div class="loading" id="loading">Cargando datos...</div>
+        <div class="error" id="error" style="display: none;">Error al cargar los datos. Por favor, intenta de nuevo.</div>
+        <div class="main-content" id="main-content" style="display: none;">
             <img src="identprod.svg" alt="Identificación de producto" class="product-image">
-            <div>
-                <div class="selector">
-                    <label for="producto">Selecciona un Producto:</label>
-                    <select id="producto">
-                        <!-- Options will be populated by JavaScript -->
-                    </select>
+            <div class="info-container">
+                <div class="filters">
+                    <div class="search">
+                        <label for="search">Buscar producto:</label>
+                        <input type="text" id="search" placeholder="Escribe el nombre del producto...">
+                    </div>
+                    <div class="selector">
+                        <label for="grupo">Filtrar por grupo:</label>
+                        <select id="grupo">
+                            <option value="">Todos</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="selector">
+                        <label for="producto">Selecciona un Producto:</label>
+                        <select id="producto">
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
                 </div>
                 <div id="info">
                     <!-- Product information will be displayed here -->
                 </div>
+                <button id="export-pdf">Exportar a PDF</button>
             </div>
         </div>
     </main>
