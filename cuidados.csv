@@ -1,0 +1,12 @@
+producto,tipo_cuidado,descr_cuidado,fuente_cuid
+Caballo,Transporte,Los animales deben ser transportados en condiciones que garanticen su bienestar.,Ministerio de Transporte
+Carne de vacuno,Refrigeración,La carne debe mantenerse a una temperatura de 4°C o menos.,Ministerio de Salud
+Salmón,Conservación,El salmón debe mantenerse en agua limpia y oxigenada.,Ministerio de Pesca
+Leche cruda,Almacenamiento,La leche debe mantenerse a una temperatura de 4°C o menos.,Ministerio de Salud
+Manzana,Almacenamiento,Las manzanas deben mantenerse en un lugar fresco y seco.,Ministerio de Agricultura
+Rosa,Almacenamiento,Las rosas deben mantenerse en un lugar fresco con agua.,Ministerio de Agricultura
+Papa,Almacenamiento,Las papas deben mantenerse en un lugar fresco, seco y oscuro.,Ministerio de Agricultura
+Mango,Almacenamiento,Los mangos deben mantenerse a temperatura ambiente hasta que maduren.,Ministerio de Agricultura
+Café en grano,Almacenamiento,El café debe almacenarse en un lugar fresco y seco, lejos de olores fuertes.,Ministerio de Agricultura
+Trigo,Almacenamiento,El trigo debe almacenarse en un lugar seco y ventilado.,Ministerio de Agricultura
+Harina de trigo,Almacenamiento,La harina debe almacenarse en un lugar fresco y seco, en un recipiente hermético.,Ministerio de Salud
