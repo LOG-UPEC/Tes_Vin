@@ -113,8 +113,33 @@ main {
     color: #1976d2;
 }
 
+#info h4 {
+    font-size: 1.1rem;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
 #info p {
     margin: 5px 0;
+}
+
+#info .general-docs, #info .specific-docs {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#info .general-docs {
+    background-color: #bbdefb; /* Fondo más oscuro para documentos generales */
+}
+
+#info .specific-docs {
+    background-color: #e3f2fd; /* Fondo más claro para documentos específicos */
+}
+
+#info .general-docs .importance {
+    color: #d32f2f; /* Color rojo para resaltar la importancia */
+    font-weight: bold;
 }
 
 #export-pdf {
@@ -168,6 +193,10 @@ main {
     #info h3 {
         font-size: 1.1rem;
     }
+
+    #info h4 {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -193,5 +222,9 @@ main {
 
     #info h3 {
         font-size: 1rem;
+    }
+
+    #info h4 {
+        font-size: 0.9rem;
     }
 }
