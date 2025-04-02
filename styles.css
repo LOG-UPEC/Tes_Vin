@@ -47,23 +47,28 @@ main {
 .carta-porte-container {
     position: relative;
     max-width: 100%;
+    width: 100%;
+    max-width: 800px; /* Tamaño máximo para pantallas grandes */
+    margin: 0 auto;
 }
 
 .responsive-img {
     width: 100%;
     height: auto;
+    display: block; /* Evita espacios no deseados debajo de la imagen */
 }
 
 .info-icon {
     position: absolute;
-    width: 100px; /* Tamaño del ícono */
-    height: auto; /* Tamaño del ícono */
+    width: 40px; /* Tamaño base más grande para mejor accesibilidad */
+    height: auto;
     cursor: pointer;
 }
+
 .info-iconp {
     position: absolute;
-    width: 70px; /* Tamaño del ícono */
-    height: auto; /* Tamaño del ícono */
+    width: 30px; /* Tamaño base más grande para mejor accesibilidad */
+    height: auto;
     cursor: pointer;
 }
 
@@ -93,14 +98,14 @@ main {
     position: absolute;
     top: 5px;
     right: 5px;
-    width: 55px;
+    width: 40px; /* Tamaño ajustado */
     height: auto;
     cursor: pointer;
 }
 
 .side-nav {
     position: fixed;
-    top: 52%;
+    top: 50%;
     left: 18px;
     transform: translateY(-50%);
     z-index: 20;
@@ -122,31 +127,58 @@ main {
 }
 
 .side-nav a img {
-    width: 95px;
+    width: 60px; /* Tamaño base más pequeño para mejor proporción */
     height: auto;
 }
 
+/* Media Queries para Responsividad */
 @media (max-width: 768px) {
+    header {
+        padding: 0.5rem 0; /* Reducir padding */
+    }
+
     header h1 {
-        font-size: 0.75rem;
+        font-size: 1.2rem; /* Tamaño más legible */
     }
 
     .header-left {
         width: 60px;
     }
+
     .header-right {
-        width: 25px;
+        width: 40px; /* Tamaño más pequeño */
+        top: 5px; /* Ajustar posición */
+        right: 5px;
+    }
+
+    main {
+        padding: 1rem; /* Reducir padding */
+    }
+
+    .carta-porte-container {
+        max-width: 100%; /* Asegurar que ocupe todo el ancho */
     }
 
     .info-icon {
-        width: 33.5px;
+        width: 30px; /* Tamaño más pequeño pero accesible */
     }
 
     .info-iconp {
-        width: 25px;
+        width: 20px; /* Tamaño más pequeño pero accesible */
     }
-    
-  
+
+    /* Ajustar posiciones de los íconos si es necesario */
+    .info-icon[data-info="n"], .info-icon[data-info="5"], .info-icon[data-info="6"],
+    .info-icon[data-info="7"], .info-icon[data-info="8"], .info-icon[data-info="9"],
+    .info-icon[data-info="15"], .info-icon[data-info="16"], .info-icon[data-info="21"],
+    .info-icon[data-info="22"], .info-icon[data-info="23"] {
+        left: 82%; /* Ajustar posición para pantallas más pequeñas */
+    }
+
+    .info-iconp[data-info="13"] {
+        left: 84%; /* Ajustar posición */
+    }
+
     #info-popup {
         width: 90%;
         max-width: 300px;
@@ -154,32 +186,92 @@ main {
         font-size: 1rem;
     }
 
-    header {
-        padding: 0.4rem 0;
+    #close-popup {
+        width: 30px; /* Reducir tamaño */
+        top: 3px;
+        right: 3px;
     }
+
+    .side-nav {
+        left: 10px; /* Ajustar posición */
+        padding: 5px; /* Reducir padding */
+    }
+
     .side-nav a img {
-        width: 34px;
+        width: 40px; /* Reducir tamaño de los íconos */
+    }
+
+    .side-nav li {
+        margin: 5px 0; /* Reducir margen */
     }
 }
 
 @media (max-width: 480px) {
-    header h1 {
-        font-size: 0.6rem;
+    header {
+        padding: 0.3rem 0; /* Reducir aún más el padding */
     }
 
-    .header-left, .header-right {
+    header h1 {
+        font-size: 1rem; /* Tamaño más legible */
+    }
+
+    .header-left {
         width: 50px;
     }
 
+    .header-right {
+        width: 30px; /* Tamaño más pequeño */
+        top: 3px;
+        right: 3px;
+    }
+
+    main {
+        padding: 0.5rem; /* Reducir padding */
+    }
+
     .info-icon {
-        width: 30px;
+        width: 24px; /* Tamaño mínimo para accesibilidad */
     }
 
     .info-iconp {
-        width: 15px;
+        width: 18px; /* Tamaño mínimo para accesibilidad */
+    }
+
+    /* Ajustar posiciones de los íconos si es necesario */
+    .info-icon[data-info="n"], .info-icon[data-info="5"], .info-icon[data-info="6"],
+    .info-icon[data-info="7"], .info-icon[data-info="8"], .info-icon[data-info="9"],
+    .info-icon[data-info="15"], .info-icon[data-info="16"], .info-icon[data-info="21"],
+    .info-icon[data-info="22"], .info-icon[data-info="23"] {
+        left: 80%; /* Ajustar posición para pantallas más pequeñas */
+    }
+
+    .info-iconp[data-info="13"] {
+        left: 82%; /* Ajustar posición */
+    }
+
+    #info-popup {
+        width: 90%;
+        max-width: 250px;
+        padding: 0.8rem;
+        font-size: 0.9rem; /* Reducir tamaño del texto */
+    }
+
+    #close-popup {
+        width: 25px; /* Reducir aún más */
+        top: 2px;
+        right: 2px;
+    }
+
+    .side-nav {
+        left: 5px; /* Ajustar posición */
+        padding: 3px; /* Reducir padding */
     }
 
     .side-nav a img {
-        width: 20px;
+        width: 30px; /* Reducir aún más */
+    }
+
+    .side-nav li {
+        margin: 3px 0; /* Reducir margen */
     }
 }
