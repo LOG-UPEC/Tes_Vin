@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let productosData = [];
     let cuidadosData = [];
     let etiquetadosData = [];
+    let documentosGenerales = [];
 
     // Función para cargar un CSV
     const loadCSV = (url) => {
@@ -26,12 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
     Promise.all([
         loadCSV('productos.csv'),
         loadCSV('cuidados.csv'),
-        loadCSV('etiquetados.csv')
+        loadCSV('etiquetados.csv'),
+        loadCSV('documentos_generales.csv')
     ])
-    .then(([productos, cuidados, etiquetados]) => {
+    .then(([productos, cuidados, etiquetados, generales]) => {
         productosData = productos;
         cuidadosData = cuidados;
         etiquetadosData = etiquetados;
+        documentosGenerales = generales;
 
         // Ocultar loading y mostrar contenido
         loading.style.display = 'none';
@@ -87,17 +90,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong>Grupo:</strong> ${grupo}</p>
                     <p><strong>Subgrupo:</strong> ${subgrupo}</p>
                     <h3>Documentación</h3>
+                    <h4>Documentos Generales (Aplican a Todas las Mercancías)</h4>
+                    <div class="general-docs"></div>
+                    <h4>Documentos Específicos</h4>
+                    <div class="specific-docs"></div>
                 `;
 
-                productoInfo.forEach(info => {
+                // Mostrar documentos generales
+                const generalDocsDiv = infoDiv.querySelector('.general-docs');
+                documentosGenerales.forEach(doc => {
                     const docDiv = document.createElement('div');
                     docDiv.innerHTML = `
-                        <p><strong>Documento:</strong> ${info.documentación}</p>
-                        <p><strong>Descripción:</strong> ${info.descripción_doc}</p>
+                        <p><strong>Documento:</strong> ${doc.Documento}</p>
+                        <p><strong>Descripción:</strong> ${doc.Descripción}</p>
+                        <p><strong>Importancia:</strong> <span class="importance">${doc.Importancia}</span></p>
                     `;
-                    infoDiv.appendChild(docDiv);
+                    generalDocsDiv.appendChild(docDiv);
                 });
 
+                // Mostrar documentos específicos
+                const specificDocsDiv = infoDiv.querySelector('.specific-docs');
+                if (productoInfo[0].documentación) { // Verificar si hay documentos específicos
+                    productoInfo.forEach(info => {
+                        const docDiv = document.createElement('div');
+                        docDiv.innerHTML = `
+                            <p><strong>Documento:</strong> ${info.documentación}</p>
+                            <p><strong>Descripción:</strong> ${info.descripción_doc}</p>
+                        `;
+                        specificDocsDiv.appendChild(docDiv);
+                    });
+                } else {
+                    specificDocsDiv.innerHTML = '<p>No hay documentos específicos para este producto.</p>';
+                }
+
+                // Mostrar información de cuidado
                 const cuidadoDiv = document.createElement('div');
                 cuidadoDiv.innerHTML = `
                     <h3>Cuidado</h3>
@@ -107,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 infoDiv.appendChild(cuidadoDiv);
 
+                // Mostrar información de etiquetado
                 const etiquetadoDiv = document.createElement('div');
                 etiquetadoDiv.innerHTML = `
                     <h3>Etiquetado</h3>
