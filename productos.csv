@@ -1,6 +1,18 @@
-subpartida,grupo,subgrupo,producto,documentación,descripción_doc,fuente_doc,tipo_cuidado,descr_cuidado,fuente_cuid,etiquetado,fuente_etiq
-0101,Animales vivos,Mamíferos,Caballo,Certificado de salud,"El certificado de salud debe indicar que el animal está libre de enfermedades contagiosas.",Ministerio de Agricultura,Transporte,"Los animales deben ser transportados en condiciones que garanticen su bienestar.",Ministerio de Transporte,"Los animales deben llevar una etiqueta con el nombre y dirección del propietario.",Ministerio de Agricultura
-0201,Carnes,Carnes frescas,Carne de vacuno,Guía de transporte,"La guía de transporte debe acompañar a la carne en todo momento.",Ministerio de Salud,Refrigeración,"La carne debe mantenerse a una temperatura de 4°C o menos.",Ministerio de Salud,"La carne debe estar etiquetada con el país de origen y la fecha de caducidad.",Ministerio de Salud
-0301,Pescados,Pescados vivos,Salmón,Certificado de origen,"El certificado de origen debe indicar el lugar de captura.",Ministerio de Pesca,Conservación,"El salmón debe mantenerse en agua limpia y oxigenada.",Ministerio de Pesca,"El salmón debe llevar una etiqueta con la especie y el peso.",Ministerio de Pesca
-0401,Productos lácteos,Leche,Leche cruda,Certificado sanitario,"El certificado sanitario debe indicar que la leche ha sido revisada y está libre de contaminantes.",Ministerio de Salud,Almacenamiento,"La leche debe mantenerse a una temperatura de 4°C o menos.",Ministerio de Salud,"La leche debe estar etiquetada con la fecha de producción y caducidad.",Ministerio de Salud
-0501,Productos vegetales,Frutas,Manzana,Certificado fitosanitario,"El certificado fitosanitario debe indicar que las manzanas están libres de plagas.",Ministerio de Agricultura,Almacenamiento,"Las manzanas deben mantenerse en un lugar fresco y seco.",Ministerio de Agricultura,"Las manzanas deben estar etiquetadas con la variedad y el país de origen.",Ministerio de Agricultura
+subpartida,grupo,subgrupo,producto,documentación,descripción_doc,fuente_doc
+01012100,Animales vivos,Mamíferos,Caballo,Carta Porte Internacional por Carretera,"Documento que prueba que el transportista autorizado ha tomado las mercancías bajo su responsabilidad y se ha obligado a transportarlas.",COPCI
+01012100,Animales vivos,Mamíferos,Caballo,Manifiesto de Carga Internacional por Carretera,Documento que ampara las mercancías que se transportan.,COPCI
+01012100,Animales vivos,Mamíferos,Caballo,Permiso Originario,Documento que acredita que un transportista ha sido autorizado para el transporte.,COPCI
+01012100,Animales vivos,Mamíferos,Caballo,Certificado de salud,El certificado de salud debe indicar que el animal está libre de enfermedades contagiosas.,Ministerio de Agricultura
+02011000,Carnes,Carnes frescas,Carne de vacuno,Carta Porte Internacional por Carretera,"Documento que prueba que el transportista autorizado ha tomado las mercancías bajo su responsabilidad y se ha obligado a transportarlas.",COPCI
+02011000,Carnes,Carnes frescas,Carne de vacuno,Manifiesto de Carga Internacional por Carretera,Documento que ampara las mercancías que se transportan.,COPCI
+02011000,Carnes,Carnes frescas,Carne de vacuno,Permiso Originario,Documento que acredita que un transportista ha sido autorizado para el transporte.,COPCI
+02011000,Carnes,Carnes frescas,Carne de vacuno,Guía de transporte,La guía de transporte debe acompañar a la carne en todo momento.,Ministerio de Salud
+03021100,Pescados,Pescados vivos,Salmón,Certificado de origen,El certificado de origen debe indicar el lugar de captura.,Ministerio de Pesca
+04011000,Productos lácteos,Leche,Leche cruda,Certificado sanitario,El certificado sanitario debe indicar que la leche ha sido revisada y está libre de contaminantes.,Ministerio de Salud
+08051000,Productos vegetales,Frutas,Manzana,Certificado fitosanitario,El certificado fitosanitario debe indicar que las manzanas están libres de plagas.,Ministerio de Agricultura
+06031000,Productos vegetales,Flores,Rosa,Certificado fitosanitario,El certificado fitosanitario debe indicar que las rosas están libres de plagas.,Ministerio de Agricultura
+07011000,Productos vegetales,Hortalizas,Papa,Certificado fitosanitario,El certificado fitosanitario debe indicar que las papas están libres de plagas.,Ministerio de Agricultura
+08045000,Frutas tropicales,Frutas frescas,Mango,Certificado fitosanitario,El certificado fitosanitario debe indicar que los mangos están libres de plagas.,Ministerio de Agricultura
+09011100,Café y té,Café,Café en grano,Certificado de origen,El certificado de origen debe indicar el lugar de producción.,Ministerio de Agricultura
+10011900,Cereales,Granos,Trigo,Certificado fitosanitario,El certificado fitosanitario debe indicar que el trigo está libre de plagas.,Ministerio de Agricultura
+11010000,Productos de molinería,Harinas,Harina de trigo,Certificado sanitario,El certificado sanitario debe indicar que la harina está libre de contaminantes.,Ministerio de Salud
