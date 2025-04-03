@@ -1,12 +1,6 @@
 subpartida,grupo,subgrupo,producto,documentación,descripción_doc,fuente_doc
-01012100,Animales vivos,Mamíferos,Caballo,Carta Porte Internacional por Carretera,"Documento que prueba que el transportista autorizado ha tomado las mercancías bajo su responsabilidad y se ha obligado a transportarlas.",COPCI
-01012100,Animales vivos,Mamíferos,Caballo,Manifiesto de Carga Internacional por Carretera,Documento que ampara las mercancías que se transportan.,COPCI
-01012100,Animales vivos,Mamíferos,Caballo,Permiso Originario,Documento que acredita que un transportista ha sido autorizado para el transporte.,COPCI
 01012100,Animales vivos,Mamíferos,Caballo,Certificado de salud,El certificado de salud debe indicar que el animal está libre de enfermedades contagiosas.,Ministerio de Agricultura
-02011000,Carnes,Carnes frescas,Carne de vacuno,Carta Porte Internacional por Carretera,"Documento que prueba que el transportista autorizado ha tomado las mercancías bajo su responsabilidad y se ha obligado a transportarlas.",COPCI
-02011000,Carnes,Carnes frescas,Carne de vacuno,Manifiesto de Carga Internacional por Carretera,Documento que ampara las mercancías que se transportan.,COPCI
-02011000,Carnes,Carnes frescas,Carne de vacuno,Permiso Originario,Documento que acredita que un transportista ha sido autorizado para el transporte.,COPCI
-02011000,Carnes,Carnes frescas,Carne de vacuno,Guía de transporte,La guía de transporte debe acompañar a la carne en todo momento.,Ministerio de Salud
+02011000,Carnes,Carnes frescas,Carne de vacuno,Certificado fitosanitario,El certificado fitosanitario debe indicar que las carnes están libres de plagas.,Ministerio de Agricultura y Ganadería
 03021100,Pescados,Pescados vivos,Salmón,Certificado de origen,El certificado de origen debe indicar el lugar de captura.,Ministerio de Pesca
 04011000,Productos lácteos,Leche,Leche cruda,Certificado sanitario,El certificado sanitario debe indicar que la leche ha sido revisada y está libre de contaminantes.,Ministerio de Salud
 08051000,Productos vegetales,Frutas,Manzana,Certificado fitosanitario,El certificado fitosanitario debe indicar que las manzanas están libres de plagas.,Ministerio de Agricultura
