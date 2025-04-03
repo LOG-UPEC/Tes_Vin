@@ -5,17 +5,17 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f7fa;
     color: #333;
     line-height: 1.6;
 }
 
 nav {
     width: 100%;
-    background-color: #4285f4;
-    padding: 10px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #1a73e8;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
 }
@@ -26,19 +26,24 @@ nav {
 }
 
 .home-icon {
-    width: 62px;
+    width: 40px;
     height: auto;
-    margin-right: 10px;
+    margin-right: 15px;
+    transition: opacity 0.3s;
+}
+
+.home-icon:hover {
+    opacity: 0.8;
 }
 
 .nav-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #fff;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 main {
-    padding: 20px;
+    padding: 30px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -49,8 +54,9 @@ main {
 
 .guide-section h1 {
     font-size: 2.5rem;
-    color: #4285f4;
+    color: #1a73e8;
     margin-bottom: 20px;
+    font-weight: 500;
 }
 
 .intro {
@@ -58,40 +64,71 @@ main {
     margin-bottom: 30px;
     color: #555;
     text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .guide-container {
     background-color: #fff;
-    padding: 25px;
+    padding: 30px;
     margin: 20px 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #1a73e8;
     text-align: left;
+}
+
+.guide-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .guide-container h2 {
     font-size: 1.6rem;
-    color: #357ae8;
+    color: #333;
     margin-bottom: 15px;
+    font-weight: 500;
+    border-bottom: 2px solid #1a73e8;
+    padding-bottom: 5px;
 }
 
 .guide-container p {
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    color: #444;
 }
 
 .guide-container ul, .guide-container ol {
     margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.guide-container ul li {
+    list-style-type: none;
+    position: relative;
+    margin-bottom: 10px;
+    padding-left: 25px;
+}
+
+.guide-container ul li:before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #1a73e8;
+    font-size: 1.2rem;
+}
+
+.guide-container ol li {
     margin-bottom: 10px;
 }
 
-.guide-container li {
-    margin-bottom: 8px;
-}
-
 .guide-container p strong {
-    color: #4285f4;
-    font-weight: bold;
+    color: #1a73e8;
+    font-weight: 500;
 }
 
 footer {
@@ -99,17 +136,55 @@ footer {
     padding: 20px;
     font-size: 0.9rem;
     color: #777;
-    margin-top: 20px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
 }
 
 @media (max-width: 768px) {
+    main {
+        padding: 20px;
+    }
+
     .guide-section h1 {
         font-size: 2rem;
     }
+
     .guide-container h2 {
         font-size: 1.4rem;
     }
+
     .guide-container p, .guide-container li {
         font-size: 0.95rem;
+    }
+
+    .guide-image {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-title {
+        font-size: 1.5rem;
+    }
+
+    .home-icon {
+        width: 30px;
+    }
+
+    .guide-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .guide-container h2 {
+        font-size: 1.3rem;
+    }
+
+    .guide-container p, .guide-container li {
+        font-size: 0.9rem;
+    }
+
+    .guide-container {
+        padding: 20px;
     }
 }
