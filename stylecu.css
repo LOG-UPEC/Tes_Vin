@@ -1,93 +1,134 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f7fa;
+    color: #333;
 }
 
 .header-bar {
-    background-color: #2196F3; /* Franja azul */
-    padding: 10px 20px;
+    background-color: #1a73e8;
+    padding: 15px 20px;
     text-align: center;
     color: white;
     position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .regresar-icon {
     position: absolute;
-    left: 10px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    width: 55px;
+    width: 40px;
     height: auto;
+    transition: opacity 0.3s;
+}
+
+.regresar-icon:hover {
+    opacity: 0.8;
 }
 
 .header-title {
     margin: 0;
-    font-size: 24px;
-}
-
-.back-button:hover {
-    background-color: #1565C0;
+    font-size: 2rem;
+    font-weight: 500;
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 900px;
+    margin: 30px auto;
     background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 0; /* Ajuste para que no haya espacio innecesario con la franja */
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-}
-
-h2 {
-    color: #555;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .section {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-label {
+h2 {
+    font-size: 1.4rem;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #1a73e8;
+    padding-bottom: 5px;
+}
+
+.input-group, .radio-group, .checkbox-group {
+    margin-bottom: 15px;
+}
+
+.input-group label, .radio-group label, .checkbox-group label {
     display: inline-block;
-    width: 200px;
-    margin: 5px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+    margin-right: 10px;
+    margin-bottom: 5px;
 }
 
-input[type="number"], select {
+.input-group input[type="number"], .input-group select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
     width: 150px;
-    padding: 5px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input[type="number"]:focus, .input-group select:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
+    outline: none;
+}
+
+.radio-group label, .checkbox-group label {
+    display: block;
+    margin-bottom: 8px;
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #1a73e8;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s, transform 0.1s;
     margin: 10px 0;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #1557b0;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
 }
 
 #result {
     margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
     background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #444;
 }
 
 #success {
@@ -99,66 +140,104 @@ button:hover {
 }
 
 #threejs-container {
-    width: 100%; /* Hacerlo flexible */
-    max-width: 400px; /* Límite máximo */
-    height: 400px; /* Mantener altura fija por ahora */
+    width: 100%;
+    max-width: 500px;
+    height: 400px;
     margin: 20px auto;
-    background: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Evitar desbordamientos */
+    background: #e8ecef;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-/* Estilo para los botones de zoom */
 .zoom-controls {
     text-align: center;
     margin-top: 10px;
     display: flex;
     justify-content: center;
-    gap: 10px; /* Espacio entre botones */
+    gap: 15px;
 }
 
 .zoom-controls button {
     margin: 0;
-    padding: 5px 10px;
-    background-color: #2196F3;
+    padding: 8px 15px;
+    background-color: #1a73e8;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .zoom-controls button:hover {
-    background-color: #1976D2;
+    background-color: #1557b0;
 }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 600px) {
-    .container {
-        max-width: 100%;
-        padding: 10px;
-    }
-
-    label {
-        width: 120px;
-    }
-
-    input[type="number"], select {
-        width: 100px;
-    }
-
-    #threejs-container {
-        max-width: 100%;
-        height: 300px; /* Reducir altura en móviles */
-    }
-}
-
-/* Estilo para el canvas del gráfico */
 #resultsChart {
     max-width: 100%;
     height: auto;
     margin: 20px auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        margin: 20px 10px;
+        padding: 20px;
+    }
+
+    .section {
+        padding: 15px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .input-group input[type="number"], .input-group select {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #threejs-container {
+        max-width: 100%;
+        height: 300px;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title {
+        font-size: 1.6rem;
+    }
+
+    .regresar-icon {
+        width: 30px;
+    }
+
+    .section {
+        padding: 10px;
+    }
+
+    #threejs-container {
+        height: 250px;
+    }
+
+    .zoom-controls button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
 }
