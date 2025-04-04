@@ -1,0 +1,186 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+nav {
+    width: 100%;
+    background-color: #1a73e8;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.home-icon {
+    width: 40px;
+    height: auto;
+    margin-right: 15px;
+    transition: opacity 0.3s;
+}
+
+.home-icon:hover {
+    opacity: 0.8;
+}
+
+.nav-title {
+    font-size: 1.8rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+main {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.social-section {
+    text-align: center;
+}
+
+.social-section h1 {
+    font-size: 2.5rem;
+    color: #1a73e8;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.intro {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #555;
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.social-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.social-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.social-card:hover {
+    transform: translateY(-5px);
+}
+
+.social-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #1a73e8;
+}
+
+.social-card h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.social-card p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.social-button {
+    display: inline-block;
+    background-color: #1a73e8;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.social-button:hover {
+    background-color: #1557b0;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    color: #777;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 20px;
+    }
+
+    .social-section h1 {
+        font-size: 2rem;
+    }
+
+    .social-container {
+        grid-template-columns: 1fr;
+    }
+
+    .social-card h2 {
+        font-size: 1.4rem;
+    }
+
+    .social-card p {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-title {
+        font-size: 1.5rem;
+    }
+
+    .home-icon {
+        width: 30px;
+    }
+
+    .social-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .social-card {
+        padding: 15px;
+    }
+
+    .social-card h2 {
+        font-size: 1.3rem;
+    }
+
+    .social-card p {
+        font-size: 0.9rem;
+    }
+
+    .social-icon {
+        font-size: 2rem;
+    }
+}
