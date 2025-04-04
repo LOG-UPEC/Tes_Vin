@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactos - OPTITRANS</title>
+    <link rel="stylesheet" href="stylecontactos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="index.html"><img src="home.svg" alt="Home" class="home-icon"></a>
+            <span class="nav-title">OPTITRANS</span>
+        </div>
+    </nav>
+    <main>
+        <section class="contact-section">
+            <h1>Contáctanos</h1>
+            <p class="intro">Estamos aquí para ayudarte con tus dudas sobre logística y transporte. ¡Ponte en contacto con nosotros!</p>
+
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2>Información de Contacto</h2>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <p><strong>Correo:</strong> <a href="mailto:optitrans.ec@gmail.com">optitrans.ec@gmail.com</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone contact-icon"></i>
+                        <p><strong>Teléfono:</strong> +593 99 520 8735</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt contact-icon"></i>
+                        <p><strong>Dirección:</strong> Av. Universitaria, Tulcán, Carchi, Ecuador</p>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h2>Envíanos un Mensaje</h2>
+                    <form action="#" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nombre:</label>
+                            <input type="text" id="name" name="name" placeholder="Pedro Belalcázar" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico:</label>
+                            <input type="email" id="email" name="email" placeholder="pedro.belalcazar01@gmail.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensaje:</label>
+                            <textarea id="message" name="message" placeholder="Necesito más información del sitio web OPTITRANS" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-button">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 OPTITRANS - Contáctanos para más información</p>
+    </footer>
+</body>
+</html>
