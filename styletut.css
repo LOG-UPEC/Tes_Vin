@@ -1,0 +1,206 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+nav {
+    width: 100%;
+    background-color: #1a73e8;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.home-icon {
+    width: 40px;
+    height: auto;
+    margin-right: 15px;
+    transition: opacity 0.3s;
+}
+
+.home-icon:hover {
+    opacity: 0.8;
+}
+
+.nav-title {
+    font-size: 1.8rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+main {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tutorials-section {
+    text-align: center;
+}
+
+.tutorials-section h1 {
+    font-size: 2.5rem;
+    color: #1a73e8;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.intro {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #555;
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tutorials-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.tutorial-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: transform 0.3s;
+}
+
+.tutorial-card:hover {
+    transform: translateY(-5px);
+}
+
+.tutorial-card h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 500;
+    border-bottom: 2px solid #1a73e8;
+    padding-bottom: 5px;
+}
+
+.tutorial-card p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.tutorial-steps h3 {
+    font-size: 1.2rem;
+    color: #1a73e8;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.tutorial-steps ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.tutorial-steps ol li {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.tutorial-steps ol li a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tutorial-steps ol li a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    color: #777;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 20px;
+    }
+
+    .tutorials-section h1 {
+        font-size: 2rem;
+    }
+
+    .tutorials-container {
+        grid-template-columns: 1fr;
+    }
+
+    .tutorial-card h2 {
+        font-size: 1.4rem;
+    }
+
+    .tutorial-card p {
+        font-size: 0.95rem;
+    }
+
+    .tutorial-steps h3 {
+        font-size: 1.1rem;
+    }
+
+    .tutorial-steps ol li {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-title {
+        font-size: 1.5rem;
+    }
+
+    .home-icon {
+        width: 30px;
+    }
+
+    .tutorials-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .tutorial-card {
+        padding: 15px;
+    }
+
+    .tutorial-card h2 {
+        font-size: 1.3rem;
+    }
+
+    .tutorial-card p {
+        font-size: 0.9rem;
+    }
+
+    .tutorial-steps h3 {
+        font-size: 1rem;
+    }
+
+    .tutorial-steps ol li {
+        font-size: 0.9rem;
+    }
+}
