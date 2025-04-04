@@ -1,0 +1,164 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+nav {
+    width: 100%;
+    background-color: #1a73e8;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.home-icon {
+    width: 40px;
+    height: auto;
+    margin-right: 15px;
+    transition: opacity 0.3s;
+}
+
+.home-icon:hover {
+    opacity: 0.8;
+}
+
+.nav-title {
+    font-size: 1.8rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+main {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-section {
+    text-align: center;
+}
+
+.about-section h1 {
+    font-size: 2.5rem;
+    color: #1a73e8;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.about-container {
+    background-color: #fff;
+    padding: 30px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #1a73e8;
+    text-align: left;
+}
+
+.about-container h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 500;
+    border-bottom: 2px solid #1a73e8;
+    padding-bottom: 5px;
+}
+
+.about-container p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.about-container ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.about-container ul li {
+    list-style-type: none;
+    position: relative;
+    margin-bottom: 10px;
+    padding-left: 25px;
+}
+
+.about-container ul li:before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #1a73e8;
+    font-size: 1.2rem;
+}
+
+.about-container p strong {
+    color: #1a73e8;
+    font-weight: 500;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    color: #777;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 20px;
+    }
+
+    .about-section h1 {
+        font-size: 2rem;
+    }
+
+    .about-container h2 {
+        font-size: 1.4rem;
+    }
+
+    .about-container p, .about-container li {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-title {
+        font-size: 1.5rem;
+    }
+
+    .home-icon {
+        width: 30px;
+    }
+
+    .about-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .about-container h2 {
+        font-size: 1.3rem;
+    }
+
+    .about-container p, .about-container li {
+        font-size: 0.9rem;
+    }
+
+    .about-container {
+        padding: 20px;
+    }
+}
